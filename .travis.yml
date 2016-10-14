@@ -1,0 +1,18 @@
+language: node_js
+node_js:
+- node
+services:
+- mongodb
+addons:
+  apt:
+    sources:
+    - mongodb-3.2-precise
+    packages:
+    - mongodb-org-server
+deploy:
+  provider: heroku
+  api_key:
+    secure: ujWXTiugmFnd6kILTlh6YbRtUFl9ZdMfGk5jgwvyT60msdoW7/vYRB8P544/P+bJLnwgT30H24UFAXTmSIImngIrwSRasKOYw0eDK4xWDjbGx1U3m93HwWbjjV2G+4S3A8cKKTZ/xUnVP1yOR0WyDBuYdTtlbNO4p3/YwU+hByaSfXb1oxvdloyIM8qfO9G2TrlkE5uBPjDIeQDdcXhfpLaoiaT7josbMKxMIHSU3SBAm94IqgwllMW3sB0Icn86FL3iADQklVtL9jM2uyz3w8vBre62agYNfIuEMFPhfytqD9TFkcuD8OuFoukztJ7GH4qrsnBuOyppKegXHj6XfxU55TmAFKA36U5MIuRr9K+jA+zxZJysOvP8CxSO95NZWmljer/GQqGd0LOskkCtye0/5/BBfVJjrUmogD4NtOeAlH0vUTDOlj6y/L9Cw55sjk46SxH5XrHKUMd2hSo9yWB90/XrOu17dSrXN5bHFCnUp9fR4NXeThf09YAQLDAX46y+9uxAe6XQIgpVCKXnaY3sGrfsZ75bzMG2k7LPelOS+MGzhVdbdTE2XfO9ix5fO8gUgGwcezpTv4kQ8z2/H/5BntTGK2TT8RVbuW4CikhBp/5ugWT/KlB4OcpBM6rkMPENPykKrh8HJQrGsVNyt8IAAQ6xTNXV/EHbdbSTVaA=
+  app: pathfinder-character-creator
+  on:
+    repo: KyloJorgensen/pathfinder-character-creator
