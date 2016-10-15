@@ -13,6 +13,10 @@ module.exports = function(app) {
 			return next(error);
 		}
 
+		if (error.name == 'AuthenticationError') {
+			res.status(401).end();
+		} 
+
 		res.status(500);
 		console.log(error);
 		if (error) {
