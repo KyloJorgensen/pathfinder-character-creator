@@ -3,6 +3,7 @@
 var path = require('path'),
 	cookie = require('cookie'),
 	btoa = require('btoa'),
+	SECRET = require('../../config/variables.express').SECRET,
 	User = require('../user/user.model');
 
 function LoginController() {};
@@ -21,8 +22,7 @@ LoginController.prototype.postLogin = function(req, res, next) {
 		})
 	}).then(function(user) {
 		if (user.length) {
-			return new Promise(function(resolve, reject) {
-				console.log(user[0]);
+			return new Promise(function(resolve, reject) { 
 				user[0].validatePassword(password, function(error, isVaild) {
 					if (error) {
 						reject(error);
@@ -32,7 +32,7 @@ LoginController.prototype.postLogin = function(req, res, next) {
 				});
 			}).then(function(isVaild) {
 				if (isVaild) {
-					var key = btoa(username + ':' + user[0].password);
+					var key = btoa(SECRET + ':' + username);
 					res.setHeader('Set-Cookie', cookie.serialize('UserKey', key, {
 			      		httpOnly: true,
 			      		maxAge: 60 * 60 * 24 * 7 // 1 week 
@@ -43,7 +43,7 @@ LoginController.prototype.postLogin = function(req, res, next) {
 			      		httpOnly: true,
 			      		maxAge: 60 * 60 * 24 * 7 // 1 week 
 			    	}));
-					res.redirect('/login');
+					res.redirect('/#/login');
 				}
 			}).catch(function(error) {
 				next(error);
@@ -53,15 +53,11 @@ LoginController.prototype.postLogin = function(req, res, next) {
 	      		httpOnly: true,
 	      		maxAge: 60 * 60 * 24 * 7 // 1 week 
 	    	}));
-			res.redirect('/login');
+			res.redirect('/#/login');
 		}
 	}).catch(function(error) {
 		next(error);
 	});
-};
-
-LoginController.prototype.getLogin = function(req, res) {
-    res.sendFile(path.join(__dirname, '../../../client/login.html'));
 };
 
 module.exports = LoginController.prototype;

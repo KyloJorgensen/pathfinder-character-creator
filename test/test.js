@@ -16,5 +16,32 @@ describe('Pathfinder character creator', function() {
             done();
         });
     });
+    it('should create User', function(done) {
+    	chai.request(app)
+    	.post('/user')
+    	.send({ 
+            username: 'kylo',
+            password: 'kylo',
+            name: 'kylo'           
+        })
+    	.end(function(error, res) {
+    		res.should.have.status(200);
+    		done();
+    	});
+    });
+    it('should login in user', function(done) {
+    	chai.request(app)
+    	.post('/login')
+    	.send({
+            username: 'kylo',
+            password: 'kylo'
+    	})
+    	.end(function(error, res) {
+    		res.should.have.status(200);
+    		done();
+    	})
+    });
 });
+
+
 

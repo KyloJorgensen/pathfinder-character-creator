@@ -14,8 +14,15 @@ module.exports = function(app) {
 		}
 
 		if (error.name == 'AuthenticationError') {
-			res.status(401).end();
-		} 
+			return res.status(401).end();
+		}
+
+		if (error.name == 'MongoError') {
+			if (error.code == 11000) {
+				console.log(error);
+				return res.status(400).json(error.message);
+			}			
+		}
 
 		res.status(500);
 		console.log(error);

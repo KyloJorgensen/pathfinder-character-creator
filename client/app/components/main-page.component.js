@@ -8,11 +8,6 @@ var mainPage = React.createClass({
 		return (
 		    <div className="main-page">
 		        <h1>Hello, Welcome to Pathfinder Character Creator.</h1>
-				<form action="/user" method="get">
-				    <div>
-				        <input type="submit" value="Users"/>
-				    </div>
-				</form>
 				<form action="/logout" method="get">
 				    <div>
 				        <input type="submit" value="LogOut"/>

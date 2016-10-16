@@ -1,7 +1,8 @@
 'use strict';
 
 var mongoose = require('mongoose'),
-    bcrypt = require('bcrypt');
+    bcrypt = require('bcrypt'),
+    Character = require('../character/character.model');
 
 var userSchema = mongoose.Schema({
 	username: {
@@ -16,7 +17,11 @@ var userSchema = mongoose.Schema({
     name: {
         type: String,
         required: true
-    }
+    },
+    dates: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Character'
+    }]
 });
 
 userSchema.methods.validatePassword = function(password, callback) {

@@ -1,25 +1,11 @@
 'use strict';
 
 var User = require('./user.model'),
-	bcrypt = require('bcrypt');
+	bcrypt = require('bcrypt'),
+	btoa = require('btoa'),
+	cookie = require('cookie');
 
 function UserController() {};
-
-UserController.prototype.getUser = function(req, res, next) {
-	return new Promise(function(resolve, reject) {
-		User.find({}, function(error, users) {
-			if (error) {
-				reject(error);
-			} else {
-				resolve(users);
-			}
-		});
-	}).then(function(users) {
-		res.json(users)
-	}).catch(function(error) {
-		next(error);
-	});
-};
 
 // creates new user from username, password, name
 UserController.prototype.createUser = function(req, res, next) {

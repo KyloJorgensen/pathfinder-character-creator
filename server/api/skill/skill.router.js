@@ -2,8 +2,8 @@
 
 var express = require('express');
 var router = express.Router();
-var controller = require('./user.controller');
+var controller = require('./skill.controller');
 
-router.post('/', controller.createUser);
+router.get('/', controller.getSkills)
 
 module.exports = router;
