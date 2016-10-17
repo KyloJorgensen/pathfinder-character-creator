@@ -60,6 +60,7 @@ module.exports = function() {
                         res.body.class.should.equal('CLASS');
                         res.body.level.should.equal(0);
                         res.body.base_attack_bonus.should.equal(0);
+                        res.body.hit_points.should.equal(0);
 
                         characterId = res.body._id;
                         done();
@@ -135,7 +136,8 @@ module.exports = function() {
                         size: 'Large',
                         class: 'Fighter',
                         level: 5,
-                        base_attack_bonus: 5
+                        base_attack_bonus: 5,
+                        hit_points: 50
                     };
                     agent.put('/character')
                     .send(changes)
@@ -156,6 +158,8 @@ module.exports = function() {
                         res.body.class.should.equal(changes.class);
                         res.body.level.should.equal(changes.level);
                         res.body.base_attack_bonus.should.equal(changes.base_attack_bonus);
+                        res.body.hit_points.should.equal(changes.hit_points);
+
                         done();
                     });
                 }).catch(function(error) {

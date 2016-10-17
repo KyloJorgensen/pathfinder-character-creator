@@ -119,6 +119,9 @@ LoginController.prototype.updateCharacter = function(req, res, next) {
 	    if ('base_attack_bonus' in req.body) {
 	    	changes.base_attack_bonus = req.body.base_attack_bonus;
 	    }
+	    if ('hit_points' in req.body) {
+	    	changes.hit_points = req.body.hit_points;
+	    }
 
 
 
