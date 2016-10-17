@@ -46,7 +46,6 @@ module.exports = function() {
                     })
                     .end(function (error, res) {
                         if (error) {return done(error)}
-                        console.log(res.body);
                         res.should.have.status(200);
                         res.body.name.should.equal(characterName);
                         res.body.ability_score_str.should.equal(10);
@@ -147,8 +146,169 @@ module.exports = function() {
                     agent.get('/character')
                     .end(function (error, res) {
                         if (error) {return done(error)}
-                        console.log(res.body);
                         res.should.have.status(200);
+                        res.body[0].name.should.be.a('string');
+                        res.body[0].ability_score_str.should.be.a('number');
+                        res.body[0].ability_score_dex.should.be.a('number');
+                        res.body[0].ability_score_con.should.be.a('number');
+                        res.body[0].ability_score_int.should.be.a('number');
+                        res.body[0].ability_score_wis.should.be.a('number');
+                        res.body[0].ability_score_cha.should.be.a('number');
+                        res.body[0].ability_score_str_temp.should.be.a('number');
+                        res.body[0].ability_score_dex_temp.should.be.a('number');
+                        res.body[0].ability_score_con_temp.should.be.a('number');
+                        res.body[0].ability_score_int_temp.should.be.a('number');
+                        res.body[0].ability_score_wis_temp.should.be.a('number');
+                        res.body[0].ability_score_cha_temp.should.be.a('number');
+                        res.body[0].race.should.be.a('string');
+                        res.body[0].size.should.be.a('string');
+                        res.body[0].class.should.be.a('string');
+                        res.body[0].level.should.be.a('number');
+                        res.body[0].base_attack_bonus.should.be.a('number');
+                        res.body[0].hit_points.should.be.a('number');
+                        res.body[0].land_speed.should.be.a('number');
+                        res.body[0].armor_speed.should.be.a('number');
+                        res.body[0].fly_speed.should.be.a('number');
+                        res.body[0].climb_speed.should.be.a('number');
+                        res.body[0].swim_speed.should.be.a('number');
+                        res.body[0].borrow_speed.should.be.a('number');
+                        res.body[0].fort_base_save.should.be.a('number');
+                        res.body[0].fort_magic_mod.should.be.a('number');
+                        res.body[0].fort_misc_mod.should.be.a('number');
+                        res.body[0].fort_temp_mod.should.be.a('number');
+                        res.body[0].ref_base_save.should.be.a('number');
+                        res.body[0].ref_magic_mod.should.be.a('number');
+                        res.body[0].ref_misc_mod.should.be.a('number');
+                        res.body[0].ref_temp_mod.should.be.a('number');
+                        res.body[0].will_base_save.should.be.a('number');
+                        res.body[0].will_magic_mod.should.be.a('number');
+                        res.body[0].will_misc_mod.should.be.a('number');
+                        res.body[0].will_temp_mod.should.be.a('number');
+                        res.body[0].init_misc_mod.should.be.a('number');
+                        res.body[0].weight.should.be.a('number');
+                        res.body[0].height.should.be.a('number');
+                        res.body[0].damage_reduction.should.be.a('number');
+                        res.body[0].spell_resistance.should.be.a('number');
+                        res.body[0].size_mod.should.be.a('number');
+                        res.body[0].xp_points.should.be.a('number');
+                        res.body[0].next_level.should.be.a('number');
+                        res.body[0].money_cp.should.be.a('number');
+                        res.body[0].money_sp.should.be.a('number');
+                        res.body[0].money_gp.should.be.a('number');
+                        res.body[0].money_pp.should.be.a('number');
+                        res.body[0].light_load.should.be.a('number');
+                        res.body[0].medium_load.should.be.a('number');
+                        res.body[0].heavy_load.should.be.a('number');
+                        res.body[0].lift_over_head.should.be.a('number');
+                        res.body[0].lift_off_ground.should.be.a('number');
+                        res.body[0].drag_or_push.should.be.a('number');
+                        res.body[0].age.should.be.a('number');
+                        res.body[0].gender.should.be.a('string');
+                        res.body[0].hair.should.be.a('string');
+                        res.body[0].eyes.should.be.a('string');
+                        res.body[0].deity.should.be.a('string');
+                        res.body[0].alignment.should.be.a('string');
+                        res.body[0].homeland.should.be.a('string');
+                        res.body[0].background_stories.should.be.a('string');
+                        res.body[0].languages.should.be.a('string');
+                        done();
+                    });
+                }).catch(function(error) {
+                    done(error);
+                });
+            });
+        });
+
+        it('should GET character', function(done) {
+            var agent = chai.request.agent(app);
+            agent.post('/login')
+            .send({
+                username: username,
+                password: username
+            })
+            .end(function(error, res) {
+                if (error) {return done(error)}
+                return new Promise(function(resolve, reject) {
+                    User.findOne({
+                        username: username
+                    }, function(error, user) {
+                        if (error) {
+                            reject(error);
+                        } else {
+                            resolve(user);
+                        }
+                    });
+                }).then(function(user) {
+                    res.should.have.status(200);
+                    res.request.cookies.should.equal(cookie.serialize('UserKey', btoa(SECRET + ':' + user._id)));
+                    agent.get('/character/' + characterId)
+                    .end(function (error, res) {
+                        if (error) {return done(error)}
+                        res.should.have.status(200);
+                        res.body.name.should.equal(characterName);
+                        res.body.ability_score_str.should.equal(10);
+                        res.body.ability_score_dex.should.equal(10);
+                        res.body.ability_score_con.should.equal(10);
+                        res.body.ability_score_int.should.equal(10);
+                        res.body.ability_score_wis.should.equal(10);
+                        res.body.ability_score_cha.should.equal(10);
+                        res.body.ability_score_str_temp.should.equal(0);
+                        res.body.ability_score_dex_temp.should.equal(0);
+                        res.body.ability_score_con_temp.should.equal(0);
+                        res.body.ability_score_int_temp.should.equal(0);
+                        res.body.ability_score_wis_temp.should.equal(0);
+                        res.body.ability_score_cha_temp.should.equal(0);
+                        res.body.race.should.equal('RACE');
+                        res.body.size.should.equal('Medium');
+                        res.body.class.should.equal('CLASS');
+                        res.body.level.should.equal(0);
+                        res.body.base_attack_bonus.should.equal(0);
+                        res.body.hit_points.should.equal(0);
+                        res.body.land_speed.should.equal(0);
+                        res.body.armor_speed.should.equal(0);
+                        res.body.fly_speed.should.equal(0);
+                        res.body.climb_speed.should.equal(0);
+                        res.body.swim_speed.should.equal(0);
+                        res.body.borrow_speed.should.equal(0);
+                        res.body.fort_base_save.should.equal(0);
+                        res.body.fort_magic_mod.should.equal(0);
+                        res.body.fort_misc_mod.should.equal(0);
+                        res.body.fort_temp_mod.should.equal(0);
+                        res.body.ref_base_save.should.equal(0);
+                        res.body.ref_magic_mod.should.equal(0);
+                        res.body.ref_misc_mod.should.equal(0);
+                        res.body.ref_temp_mod.should.equal(0);
+                        res.body.will_base_save.should.equal(0);
+                        res.body.will_magic_mod.should.equal(0);
+                        res.body.will_misc_mod.should.equal(0);
+                        res.body.will_temp_mod.should.equal(0);
+                        res.body.init_misc_mod.should.equal(0);
+                        res.body.weight.should.equal(0);
+                        res.body.height.should.equal(0);
+                        res.body.damage_reduction.should.equal(0);
+                        res.body.spell_resistance.should.equal(0);
+                        res.body.size_mod.should.equal(0);
+                        res.body.xp_points.should.equal(0);
+                        res.body.next_level.should.equal(0);
+                        res.body.money_cp.should.equal(0);
+                        res.body.money_sp.should.equal(0);
+                        res.body.money_gp.should.equal(0);
+                        res.body.money_pp.should.equal(0);
+                        res.body.light_load.should.equal(0);
+                        res.body.medium_load.should.equal(0);
+                        res.body.heavy_load.should.equal(0);
+                        res.body.lift_over_head.should.equal(0);
+                        res.body.lift_off_ground.should.equal(0);
+                        res.body.drag_or_push.should.equal(0);
+                        res.body.age.should.equal(0);
+                        res.body.gender.should.equal('GENDER');
+                        res.body.hair.should.equal('HAIR');
+                        res.body.eyes.should.equal('EYES');
+                        res.body.deity.should.equal('DEITY');
+                        res.body.alignment.should.equal('ALIGNMENT');
+                        res.body.homeland.should.equal('HOMELAND');
+                        res.body.background_stories.should.equal('BACKGROUND');
+                        res.body.languages.should.equal('LANGUAGES');
                         done();
                     });
                 }).catch(function(error) {
@@ -250,8 +410,6 @@ module.exports = function() {
                     .send(changes)
                     .end(function (error, res) {
                         if (error) {return done(error)}
-                        console.log(res.body);
-
                         res.should.have.status(200);
                         res.body.name.should.equal(changes.name);
                         res.body.ability_score_str.should.equal(changes.ability_score_str);

@@ -22,7 +22,7 @@ LoginController.prototype.getCharacters = function(req, res, next) {
 
 LoginController.prototype.getCharacter = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
-		Character.find({
+		Character.findOne({
 			_id: req.params.characterId, 
 			_userId: req._userId
 		}, function(error, character) {
