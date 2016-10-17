@@ -104,6 +104,24 @@ LoginController.prototype.updateCharacter = function(req, res, next) {
 		    if('ability_score_cha' in req.body) {
 		    	changes.ability_score_cha = req.body.ability_score_cha;
 		    }
+			if ('ability_score_str_temp' in req.body) {
+				changes.ability_score_str_temp = req.body.ability_score_str_temp;
+			}
+			if ('ability_score_dex_temp' in req.body) {
+				changes.ability_score_dex_temp = req.body.ability_score_dex_temp;
+			}
+			if ('ability_score_con_temp' in req.body) {
+				changes.ability_score_con_temp = req.body.ability_score_con_temp;
+			}
+			if ('ability_score_int_temp' in req.body) {
+				changes.ability_score_int_temp = req.body.ability_score_int_temp;
+			}
+			if ('ability_score_wis_temp' in req.body) {
+				changes.ability_score_wis_temp = req.body.ability_score_wis_temp;
+			}
+			if ('ability_score_cha_temp' in req.body) {
+				changes.ability_score_cha_temp = req.body.ability_score_cha_temp;
+			}
 		    if ('race' in req.body) {
 		    	changes.race = req.body.race;
 		    }

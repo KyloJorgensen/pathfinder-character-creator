@@ -55,6 +55,12 @@ module.exports = function() {
                         res.body.ability_score_int.should.equal(10);
                         res.body.ability_score_wis.should.equal(10);
                         res.body.ability_score_cha.should.equal(10);
+                        res.body.ability_score_str_temp.should.equal(0);
+                        res.body.ability_score_dex_temp.should.equal(0);
+                        res.body.ability_score_con_temp.should.equal(0);
+                        res.body.ability_score_int_temp.should.equal(0);
+                        res.body.ability_score_wis_temp.should.equal(0);
+                        res.body.ability_score_cha_temp.should.equal(0);
                         res.body.race.should.equal('RACE');
                         res.body.size.should.equal('Medium');
                         res.body.class.should.equal('CLASS');
@@ -167,7 +173,18 @@ module.exports = function() {
                     var changes = {
                         _id: characterId,
                         name: 'BOB',
-                        ability_score_str: 14,
+                        ability_score_str: 13,
+                        ability_score_dex: 14,
+                        ability_score_con: 16,
+                        ability_score_int: 17,
+                        ability_score_wis: 18,
+                        ability_score_cha: 12,
+                        ability_score_str_temp: 4,
+                        ability_score_dex_temp: 0,
+                        ability_score_con_temp: -2,
+                        ability_score_int_temp: 2,
+                        ability_score_wis_temp: 0,
+                        ability_score_cha_temp: 0,
                         race: 'Human',
                         size: 'Large',
                         class: 'Fighter',
@@ -220,11 +237,17 @@ module.exports = function() {
                         res.should.have.status(200);
                         res.body.name.should.equal(changes.name);
                         res.body.ability_score_str.should.equal(changes.ability_score_str);
-                        res.body.ability_score_dex.should.equal(10);
-                        res.body.ability_score_con.should.equal(10);
-                        res.body.ability_score_int.should.equal(10);
-                        res.body.ability_score_wis.should.equal(10);
-                        res.body.ability_score_cha.should.equal(10);
+                        res.body.ability_score_dex.should.equal(changes.ability_score_dex);
+                        res.body.ability_score_con.should.equal(changes.ability_score_con);
+                        res.body.ability_score_int.should.equal(changes.ability_score_int);
+                        res.body.ability_score_wis.should.equal(changes.ability_score_wis);
+                        res.body.ability_score_cha.should.equal(changes.ability_score_cha);
+                        res.body.ability_score_str_temp.should.equal(changes.ability_score_str_temp);
+                        res.body.ability_score_dex_temp.should.equal(changes.ability_score_dex_temp);
+                        res.body.ability_score_con_temp.should.equal(changes.ability_score_con_temp);
+                        res.body.ability_score_int_temp.should.equal(changes.ability_score_int_temp);
+                        res.body.ability_score_wis_temp.should.equal(changes.ability_score_wis_temp);
+                        res.body.ability_score_cha_temp.should.equal(changes.ability_score_cha_temp);
                         res.body.race.should.equal(changes.race);
                         res.body.size.should.equal(changes.size);
                         res.body.class.should.equal(changes.class);
