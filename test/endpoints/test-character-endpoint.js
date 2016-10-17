@@ -103,6 +103,7 @@ module.exports = function() {
                         res.body.lift_over_head.should.equal(0);
                         res.body.lift_off_ground.should.equal(0);
                         res.body.drag_or_push.should.equal(0);
+                        res.body.age.should.equal(0);
 
                         characterId = res.body._id;
                         done();
@@ -226,7 +227,8 @@ module.exports = function() {
                         heavy_load: 0,
                         lift_over_head: 0,
                         lift_off_ground: 0,
-                        drag_or_push: 0
+                        drag_or_push: 0,
+                        age: 100
                     };
                     agent.put('/character')
                     .send(changes)
@@ -290,6 +292,7 @@ module.exports = function() {
                         res.body.lift_over_head.should.equal(changes.lift_over_head);
                         res.body.lift_off_ground.should.equal(changes.lift_off_ground);
                         res.body.drag_or_push.should.equal(changes.drag_or_push);
+                        res.body.age.should.equal(changes.age);
 
                         done();
                     });

@@ -248,6 +248,9 @@ LoginController.prototype.updateCharacter = function(req, res, next) {
 			if ('drag_or_push' in req.body) {
 				changes.drag_or_push = req.body.drag_or_push;
 			}
+			if ('age' in req.body) {
+				changes.age = req.body.age;
+			}
 		} else {
 			var error = new Error('missing Body');
 			error.name = 'BadRequest'
