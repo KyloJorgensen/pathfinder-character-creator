@@ -80,11 +80,36 @@ LoginController.prototype.deleteCharacter = function(req, res, next) {
 
 LoginController.prototype.updateCharacter = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
+
+		var changes = {};
+
+		if ('name' in req.body) {
+			changes.name = req.body.name;
+		}
+	    if('ability_score_str' in req.body) {
+	    	changes.ability_score_str = req.body.ability_score_str;
+	    }
+	    if('ability_score_dex' in req.body) {
+	    	changes.ability_score_dex = req.body.ability_score_dex;
+	    }
+	    if('ability_score_con' in req.body) {
+	    	changes.ability_score_con = req.body.ability_score_con;
+	    }
+	    if('ability_score_int' in req.body) {
+	    	changes.ability_score_int = req.body.ability_score_int;
+	    }
+	    if('ability_score_wis' in req.body) {
+	    	changes.ability_score_wis = req.body.ability_score_wis;
+	    }
+	    if('ability_score_cha' in req.body) {
+	    	changes.ability_score_cha = req.body.ability_score_cha;
+	    }
+
 		Character.findOneAndUpdate({
-			_id: req.body._characterId,
+			_id: req.body._id,
 			_userId: req._userId
 		}, {
-			$set: {name: req.body.name}
+			$set: changes
 		}, {
 			new: true
 		}, function(error, character) {

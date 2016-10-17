@@ -14,6 +14,12 @@ var characterSchema = mongoose.Schema({
 		type: String,
 		required: true
 	},
+    ability_score_str: {type: Number, require: true, default: 10},
+    ability_score_dex: {type: Number, require: true, default: 10},
+    ability_score_con: {type: Number, require: true, default: 10},
+    ability_score_int: {type: Number, require: true, default: 10},
+    ability_score_wis: {type: Number, require: true, default: 10},
+    ability_score_cha: {type: Number, require: true, default: 10},
     skills: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Skill'

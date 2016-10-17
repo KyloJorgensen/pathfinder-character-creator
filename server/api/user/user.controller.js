@@ -3,7 +3,8 @@
 var User = require('./user.model'),
 	bcrypt = require('bcrypt'),
 	btoa = require('btoa'),
-	cookie = require('cookie');
+	cookie = require('cookie'),
+    SECRET = require('../../config/variables.express').SECRET;
 
 function UserController() {};
 
@@ -33,8 +34,7 @@ UserController.prototype.createUser = function(req, res, next) {
                     }
                 })
             }).then(function(user) {
-				var key = btoa(req.body.username + ':' + hash);
-				res.setHeader('Set-Cookie', cookie.serialize('UserKey', key, {
+				res.setHeader('Set-Cookie', cookie.serialize('UserKey', btoa(SECRET + ':' + user._id), {
 				    	httpOnly: true,
 				      	maxAge: 60 * 60 * 24 * 7 // 1 week 
 				    }));

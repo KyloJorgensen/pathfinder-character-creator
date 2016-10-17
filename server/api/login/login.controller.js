@@ -35,8 +35,7 @@ LoginController.prototype.postLogin = function(req, res, next) {
 			});
 		}).then(function(_id) {
 			if (_id) {
-				var key = btoa(SECRET + ':' + _id);
-				res.setHeader('Set-Cookie', cookie.serialize('UserKey', key, {
+				res.setHeader('Set-Cookie', cookie.serialize('UserKey', btoa(SECRET + ':' + _id), {
 		      		httpOnly: true,
 		      		maxAge: 60 * 60 * 24 * 7 // 1 week 
 		    	}));
