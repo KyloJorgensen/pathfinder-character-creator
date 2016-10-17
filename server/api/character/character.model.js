@@ -26,6 +26,12 @@ var characterSchema = mongoose.Schema({
     level: {type: Number, require: true, default: 0},
     base_attack_bonus: {type: Number, require: true, default: 0},
     hit_points: {type: Number, require: true, default: 0},
+    land_speed: {type: Number, require: true, default: 0},
+    armor_speed: {type: Number, require: true, default: 0},
+    fly_speed: {type: Number, require: true, default: 0},
+    climb_speed: {type: Number, require: true, default: 0},
+    swim_speed: {type: Number, require: true, default: 0},
+    borrow_speed: {type: Number, require: true, default: 0},
     skills: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Skill'

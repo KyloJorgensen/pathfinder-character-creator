@@ -61,6 +61,12 @@ module.exports = function() {
                         res.body.level.should.equal(0);
                         res.body.base_attack_bonus.should.equal(0);
                         res.body.hit_points.should.equal(0);
+                        res.body.land_speed.should.equal(0);
+                        res.body.armor_speed.should.equal(0);
+                        res.body.fly_speed.should.equal(0);
+                        res.body.climb_speed.should.equal(0);
+                        res.body.swim_speed.should.equal(0);
+                        res.body.borrow_speed.should.equal(0);                   
 
                         characterId = res.body._id;
                         done();
@@ -137,7 +143,13 @@ module.exports = function() {
                         class: 'Fighter',
                         level: 5,
                         base_attack_bonus: 5,
-                        hit_points: 50
+                        hit_points: 50,
+                        land_speed: 0,
+                        armor_speed: 0,
+                        fly_speed: 0,
+                        climb_speed: 0,
+                        swim_speed: 0,
+                        borrow_speed: 0
                     };
                     agent.put('/character')
                     .send(changes)
@@ -159,6 +171,12 @@ module.exports = function() {
                         res.body.level.should.equal(changes.level);
                         res.body.base_attack_bonus.should.equal(changes.base_attack_bonus);
                         res.body.hit_points.should.equal(changes.hit_points);
+                        res.body.land_speed.should.equal(changes.land_speed);
+                        res.body.armor_speed.should.equal(changes.armor_speed);
+                        res.body.fly_speed.should.equal(changes.fly_speed);
+                        res.body.climb_speed.should.equal(changes.climb_speed);
+                        res.body.swim_speed.should.equal(changes.swim_speed);
+                        res.body.borrow_speed.should.equal(changes.borrow_speed);
 
                         done();
                     });

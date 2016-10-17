@@ -122,7 +122,24 @@ LoginController.prototype.updateCharacter = function(req, res, next) {
 	    if ('hit_points' in req.body) {
 	    	changes.hit_points = req.body.hit_points;
 	    }
-
+	    if ('land_speed' in req.body) {
+	    	changes.land_speed = req.body.land_speed;
+	    }
+	    if ('armor_speed' in req.body) {
+	    	changes.armor_speed = req.body.armor_speed;
+	    }
+	    if ('fly_speed' in req.body) {
+	    	changes.fly_speed = req.body.fly_speed;
+	    }
+	    if ('climb_speed' in req.body) {
+	    	changes.climb_speed = req.body.climb_speed;
+	    }
+	    if ('swim_speed' in req.body) {
+	    	changes.swim_speed = req.body.swim_speed;
+	    }
+	    if ('borrow_speed' in req.body) {
+	    	changes.borrow_speed = req.body.borrow_speed;
+	    }
 
 
 		Character.findOneAndUpdate({
