@@ -104,6 +104,14 @@ module.exports = function() {
                         res.body.lift_off_ground.should.equal(0);
                         res.body.drag_or_push.should.equal(0);
                         res.body.age.should.equal(0);
+                        res.body.gender.should.equal('GENDER');
+                        res.body.hair.should.equal('HAIR');
+                        res.body.eyes.should.equal('EYES');
+                        res.body.deity.should.equal('DEITY');
+                        res.body.alignment.should.equal('ALIGNMENT');
+                        res.body.homeland.should.equal('HOMELAND');
+                        res.body.background_stories.should.equal('BACKGROUND');
+                        res.body.languages.should.equal('LANGUAGES');
 
                         characterId = res.body._id;
                         done();
@@ -228,7 +236,15 @@ module.exports = function() {
                         lift_over_head: 0,
                         lift_off_ground: 0,
                         drag_or_push: 0,
-                        age: 100
+                        age: 100,
+                        gender: 'male',
+                        hair: 'black',
+                        eyes: 'brown',
+                        deity: 'god',
+                        alignment: 'lawful good',
+                        homeland: 'home',
+                        background_stories: 'live here.',
+                        languages: 'common, orc'
                     };
                     agent.put('/character')
                     .send(changes)
@@ -293,6 +309,14 @@ module.exports = function() {
                         res.body.lift_off_ground.should.equal(changes.lift_off_ground);
                         res.body.drag_or_push.should.equal(changes.drag_or_push);
                         res.body.age.should.equal(changes.age);
+                        res.body.gender.should.equal(changes.gender);
+                        res.body.hair.should.equal(changes.hair);
+                        res.body.eyes.should.equal(changes.eyes);
+                        res.body.deity.should.equal(changes.deity);
+                        res.body.alignment.should.equal(changes.alignment);
+                        res.body.homeland.should.equal(changes.homeland);
+                        res.body.background_stories.should.equal(changes.background_stories);
+                        res.body.languages.should.equal(changes.languages);
 
                         done();
                     });

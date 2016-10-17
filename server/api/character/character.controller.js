@@ -251,6 +251,30 @@ LoginController.prototype.updateCharacter = function(req, res, next) {
 			if ('age' in req.body) {
 				changes.age = req.body.age;
 			}
+			if ('gender' in req.body) {
+				changes.gender = req.body.gender;
+			}
+			if ('hair' in req.body) {
+				changes.hair = req.body.hair;
+			}
+			if ('eyes' in req.body) {
+				changes.eyes = req.body.eyes;
+			}
+			if ('deity' in req.body) {
+				changes.deity = req.body.deity;
+			}
+			if ('alignment' in req.body) {
+				changes.alignment = req.body.alignment;
+			}
+			if ('homeland' in req.body) {
+				changes.homeland = req.body.homeland;
+			}
+			if ('background_stories' in req.body) {
+				changes.background_stories = req.body.background_stories;
+			}
+			if ('languages' in req.body) {
+				changes.languages = req.body.languages;
+			}
 		} else {
 			var error = new Error('missing Body');
 			error.name = 'BadRequest'

@@ -69,7 +69,14 @@ var characterSchema = mongoose.Schema({
     lift_off_ground: {type: Number, require: true, default: 0},
     drag_or_push: {type: Number, require: true, default: 0},
     age: {type: Number, require: true, default: 0},
-
+    gender: {type: String, require: true, default: 'GENDER'},
+    hair: {type: String, require: true, default: 'HAIR'},
+    eyes: {type: String, require: true, default: 'EYES'},
+    deity: {type: String, require: true, default: 'DEITY'},
+    alignment: {type: String, require: true, default: 'ALIGNMENT'},
+    homeland: {type: String, require: true, default: 'HOMELAND'},
+    background_stories: {type: String, require: true, default: 'BACKGROUND'},
+    languages: {type: String, require: true, default: 'LANGUAGES'},
 
     skills: [{
         type: mongoose.Schema.Types.ObjectId,
