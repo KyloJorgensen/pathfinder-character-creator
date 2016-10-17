@@ -5,6 +5,7 @@ var mainRouter = require('../api/main/main.router'),
 	loginRouter = require('../api/login/login.router'),
 	logoutRouter = require('../api/logout/logout.router'),
 	characterRouter = require('../api/character/character.router'),
+	skillRouter = require('../api/skill/skill.router'),
 	authentication = require('../middleware/authentication');
 
 module.exports = function(app) {
@@ -13,4 +14,5 @@ module.exports = function(app) {
     	.use('/login', loginRouter)
     	.use('/logout', logoutRouter)
     	.use('/character', authentication, characterRouter)
+    	.use('/skill', authentication, skillRouter)
 };
