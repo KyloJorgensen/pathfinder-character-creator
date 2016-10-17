@@ -58,6 +58,7 @@ module.exports = function() {
                         res.body.race.should.equal('RACE');
                         res.body.size.should.equal('Medium');
                         res.body.class.should.equal('CLASS');
+                        res.body.level.should.equal(0);
                         characterId = res.body._id;
                         done();
                     });
@@ -130,7 +131,8 @@ module.exports = function() {
                         ability_score_str: 14,
                         race: 'Human',
                         size: 'Large',
-                        class: 'Fighter'
+                        class: 'Fighter',
+                        level: 5
                     };
                     agent.put('/character')
                     .send(changes)
@@ -149,6 +151,7 @@ module.exports = function() {
                         res.body.race.should.equal(changes.race);
                         res.body.size.should.equal(changes.size);
                         res.body.class.should.equal(changes.class);
+                        res.body.level.should.equal(changes.level);
 
 
                         done();

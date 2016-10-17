@@ -113,6 +113,10 @@ LoginController.prototype.updateCharacter = function(req, res, next) {
 	    if ('class' in req.body) {
 	    	changes.class = req.body.class;
 	    }
+	    if ('level' in req.body) {
+	    	changes.level = req.body.level;
+	    }
+
 
 		Character.findOneAndUpdate({
 			_id: req.body._id,
