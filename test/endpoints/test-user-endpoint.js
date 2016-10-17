@@ -12,7 +12,7 @@ var should = chai.should();
 var app = server.app;
 chai.use(chaiHttp);
 
-var username = 'kylo';
+var username = 'frank';
 
 module.exports = function() {
     describe('Pathfinder character creator /user endpoint', function() {
@@ -20,9 +20,9 @@ module.exports = function() {
         	chai.request(app)
         	.post('/user')
         	.send({ 
-                username: 'kylo',
-                password: 'kylo',
-                name: 'kylo'           
+                username: username,
+                password: username,
+                name: username           
             })
         	.end(function(error, res) {
                 if (error) {return done(error)}

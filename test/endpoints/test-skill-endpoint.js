@@ -12,7 +12,7 @@ var should = chai.should();
 var app = server.app;
 chai.use(chaiHttp);
 
-var username = 'kylo';
+var username = 'frank';
 
 module.exports = function () {
     describe('Pathfinder character creator /skill endpoint', function() {
