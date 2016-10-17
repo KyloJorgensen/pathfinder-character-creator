@@ -24,6 +24,7 @@ var characterSchema = mongoose.Schema({
     size: {type: String, require: true, default: 'Medium'},
     class: {type: String, require: true, default: 'CLASS'},
     level: {type: Number, require: true, default: 0},
+    base_attack_bonus: {type: Number, require: true, default: 0},
     skills: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Skill'

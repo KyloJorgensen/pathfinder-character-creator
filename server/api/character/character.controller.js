@@ -116,6 +116,10 @@ LoginController.prototype.updateCharacter = function(req, res, next) {
 	    if ('level' in req.body) {
 	    	changes.level = req.body.level;
 	    }
+	    if ('base_attack_bonus' in req.body) {
+	    	changes.base_attack_bonus = req.body.base_attack_bonus;
+	    }
+
 
 
 		Character.findOneAndUpdate({
