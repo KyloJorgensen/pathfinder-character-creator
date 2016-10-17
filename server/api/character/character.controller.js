@@ -104,6 +104,12 @@ LoginController.prototype.updateCharacter = function(req, res, next) {
 	    if('ability_score_cha' in req.body) {
 	    	changes.ability_score_cha = req.body.ability_score_cha;
 	    }
+	    if ('race' in req.body) {
+	    	changes.race = req.body.race;
+	    }
+	    if ('size' in req.body) {
+	    	changes.size = req.body.size;
+	    }
 
 		Character.findOneAndUpdate({
 			_id: req.body._id,

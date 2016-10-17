@@ -14,7 +14,6 @@ chai.use(chaiHttp);
 
 var username = 'frank';
 var characterName = 'bob';
-var newName = 'BOB'
 var characterId;
 
 module.exports = function() {
@@ -122,16 +121,31 @@ module.exports = function() {
                 }).then(function(user) {
                     res.should.have.status(200);
                     res.request.cookies.should.equal(cookie.serialize('UserKey', btoa(SECRET + ':' + user._id)));
-                    agent.put('/character')
-                    .send({
+                    var changes = {
                         _id: characterId,
-                        name: newName,
-                        ability_score_str: 14
-                    })
+                        name: 'BOB',
+                        ability_score_str: 14,
+                        race: 'Human',
+                        size: 'Large'
+                    };
+                    agent.put('/character')
+                    .send(changes)
                     .end(function (error, res) {
                         if (error) {return done(error)}
                         console.log(res.body);
+
                         res.should.have.status(200);
+                        res.body.name.should.equal(changes.name);
+                        res.body.ability_score_str.should.equal(changes.ability_score_str);
+                        res.body.ability_score_dex.should.equal(10);
+                        res.body.ability_score_con.should.equal(10);
+                        res.body.ability_score_int.should.equal(10);
+                        res.body.ability_score_wis.should.equal(10);
+                        res.body.ability_score_cha.should.equal(10);
+                        res.body.race.should.equal(changes.race);
+                        res.body.size.should.equal(changes.size);
+
+
                         done();
                     });
                 }).catch(function(error) {
