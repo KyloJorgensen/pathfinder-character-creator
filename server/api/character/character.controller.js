@@ -140,6 +140,42 @@ LoginController.prototype.updateCharacter = function(req, res, next) {
 	    if ('borrow_speed' in req.body) {
 	    	changes.borrow_speed = req.body.borrow_speed;
 	    }
+		if ('fort_base_save' in req.body) {
+			changes.fort_base_save = req.body.fort_base_save;
+		}
+		if ('fort_magic_mod' in req.body) {
+			changes.fort_magic_mod = req.body.fort_magic_mod;
+		}
+		if ('fort_misc_mod' in req.body) {
+			changes.fort_misc_mod = req.body.fort_misc_mod;
+		}
+		if ('fort_temp_mod' in req.body) {
+			changes.fort_temp_mod = req.body.fort_temp_mod;
+		}
+		if ('ref_base_save' in req.body) {
+			changes.ref_base_save = req.body.ref_base_save;
+		}
+		if ('ref_magic_mod' in req.body) {
+			changes.ref_magic_mod = req.body.ref_magic_mod;
+		}
+		if ('ref_misc_mod' in req.body) {
+			changes.ref_misc_mod = req.body.ref_misc_mod;
+		}
+		if ('ref_temp_mod' in req.body) {
+			changes.ref_temp_mod = req.body.ref_temp_mod;
+		}
+		if ('will_base_save' in req.body) {
+			changes.will_base_save = req.body.will_base_save;
+		}
+		if ('will_magic_mod' in req.body) {
+			changes.will_magic_mod = req.body.will_magic_mod;
+		}
+		if ('will_misc_mod' in req.body) {
+			changes.will_misc_mod = req.body.will_misc_mod;
+		}
+		if ('will_temp_mod' in req.body) {
+			changes.will_temp_mod = req.body.will_temp_mod;
+		}
 
 
 		Character.findOneAndUpdate({

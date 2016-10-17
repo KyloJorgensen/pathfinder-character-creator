@@ -66,7 +66,19 @@ module.exports = function() {
                         res.body.fly_speed.should.equal(0);
                         res.body.climb_speed.should.equal(0);
                         res.body.swim_speed.should.equal(0);
-                        res.body.borrow_speed.should.equal(0);                   
+                        res.body.borrow_speed.should.equal(0);
+                        res.body.fort_base_save.should.equal(0);
+                        res.body.fort_magic_mod.should.equal(0);
+                        res.body.fort_misc_mod.should.equal(0);
+                        res.body.fort_temp_mod.should.equal(0);
+                        res.body.ref_base_save.should.equal(0);
+                        res.body.ref_magic_mod.should.equal(0);
+                        res.body.ref_misc_mod.should.equal(0);
+                        res.body.ref_temp_mod.should.equal(0);
+                        res.body.will_base_save.should.equal(0);
+                        res.body.will_magic_mod.should.equal(0);
+                        res.body.will_misc_mod.should.equal(0);
+                        res.body.will_temp_mod  .should.equal(0);              
 
                         characterId = res.body._id;
                         done();
@@ -149,7 +161,19 @@ module.exports = function() {
                         fly_speed: 0,
                         climb_speed: 0,
                         swim_speed: 0,
-                        borrow_speed: 0
+                        borrow_speed: 0,
+                        fort_base_save: 0,
+                        fort_magic_mod: 0,
+                        fort_misc_mod: 0,
+                        fort_temp_mod: 0,
+                        ref_base_save: 0,
+                        ref_magic_mod: 0,
+                        ref_misc_mod: 0,
+                        ref_temp_mod: 0,
+                        will_base_save: 0,
+                        will_magic_mod: 0,
+                        will_misc_mod: 0,
+                        will_temp_mod: 0
                     };
                     agent.put('/character')
                     .send(changes)
@@ -177,6 +201,18 @@ module.exports = function() {
                         res.body.climb_speed.should.equal(changes.climb_speed);
                         res.body.swim_speed.should.equal(changes.swim_speed);
                         res.body.borrow_speed.should.equal(changes.borrow_speed);
+                        res.body.fort_base_save.should.equal(changes.fort_base_save);
+                        res.body.fort_magic_mod.should.equal(changes.fort_magic_mod);
+                        res.body.fort_misc_mod.should.equal(changes.fort_misc_mod);
+                        res.body.fort_temp_mod.should.equal(changes.fort_temp_mod);
+                        res.body.ref_base_save.should.equal(changes.ref_base_save);
+                        res.body.ref_magic_mod.should.equal(changes.ref_magic_mod);
+                        res.body.ref_misc_mod.should.equal(changes.ref_misc_mod);
+                        res.body.ref_temp_mod.should.equal(changes.ref_temp_mod);
+                        res.body.will_base_save.should.equal(changes.will_base_save);
+                        res.body.will_magic_mod.should.equal(changes.will_magic_mod);
+                        res.body.will_misc_mod.should.equal(changes.will_misc_mod);
+                        res.body.will_temp_mod.should.equal(changes.will_temp_mod);
 
                         done();
                     });

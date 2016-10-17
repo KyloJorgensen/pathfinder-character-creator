@@ -32,6 +32,18 @@ var characterSchema = mongoose.Schema({
     climb_speed: {type: Number, require: true, default: 0},
     swim_speed: {type: Number, require: true, default: 0},
     borrow_speed: {type: Number, require: true, default: 0},
+    fort_base_save: {type: Number, require: true, default: 0},
+    fort_magic_mod: {type: Number, require: true, default: 0},
+    fort_misc_mod: {type: Number, require: true, default: 0},
+    fort_temp_mod: {type: Number, require: true, default: 0},
+    ref_base_save: {type: Number, require: true, default: 0},
+    ref_magic_mod: {type: Number, require: true, default: 0},
+    ref_misc_mod: {type: Number, require: true, default: 0},
+    ref_temp_mod: {type: Number, require: true, default: 0},
+    will_base_save: {type: Number, require: true, default: 0},
+    will_magic_mod: {type: Number, require: true, default: 0},
+    will_misc_mod: {type: Number, require: true, default: 0},
+    will_temp_mod: {type: Number, require: true, default: 0},
     skills: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Skill'
