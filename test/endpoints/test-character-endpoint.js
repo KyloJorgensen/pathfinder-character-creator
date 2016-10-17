@@ -55,6 +55,9 @@ module.exports = function() {
                         res.body.ability_score_int.should.equal(10);
                         res.body.ability_score_wis.should.equal(10);
                         res.body.ability_score_cha.should.equal(10);
+                        res.body.race.should.equal('RACE');
+                        res.body.size.should.equal('Medium');
+                        res.body.class.should.equal('CLASS');
                         characterId = res.body._id;
                         done();
                     });
@@ -126,7 +129,8 @@ module.exports = function() {
                         name: 'BOB',
                         ability_score_str: 14,
                         race: 'Human',
-                        size: 'Large'
+                        size: 'Large',
+                        class: 'Fighter'
                     };
                     agent.put('/character')
                     .send(changes)
@@ -144,6 +148,7 @@ module.exports = function() {
                         res.body.ability_score_cha.should.equal(10);
                         res.body.race.should.equal(changes.race);
                         res.body.size.should.equal(changes.size);
+                        res.body.class.should.equal(changes.class);
 
 
                         done();

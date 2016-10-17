@@ -22,6 +22,7 @@ var characterSchema = mongoose.Schema({
     ability_score_cha: {type: Number, require: true, default: 10},
     race: {type: String, require: true, default: 'RACE'},
     size: {type: String, require: true, default: 'Medium'},
+    class: {type: String, require: true, default: 'CLASS'},
     skills: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Skill'
