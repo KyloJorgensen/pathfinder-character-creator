@@ -78,7 +78,25 @@ module.exports = function() {
                         res.body.will_base_save.should.equal(0);
                         res.body.will_magic_mod.should.equal(0);
                         res.body.will_misc_mod.should.equal(0);
-                        res.body.will_temp_mod  .should.equal(0);              
+                        res.body.will_temp_mod.should.equal(0);
+                        res.body.init_misc_mod.should.equal(0);
+                        res.body.weight.should.equal(0);
+                        res.body.height.should.equal(0);
+                        res.body.damage_reduction.should.equal(0);
+                        res.body.spell_resistance.should.equal(0);
+                        res.body.size_mod.should.equal(0);
+                        res.body.xp_points.should.equal(0);
+                        res.body.next_level.should.equal(0);
+                        res.body.money_cp.should.equal(0);
+                        res.body.money_sp.should.equal(0);
+                        res.body.money_gp.should.equal(0);
+                        res.body.money_pp.should.equal(0);
+                        res.body.light_load.should.equal(0);
+                        res.body.medium_load.should.equal(0);
+                        res.body.heavy_load.should.equal(0);
+                        res.body.lift_over_head.should.equal(0);
+                        res.body.lift_off_ground.should.equal(0);
+                        res.body.drag_or_push.should.equal(0);
 
                         characterId = res.body._id;
                         done();
@@ -173,7 +191,25 @@ module.exports = function() {
                         will_base_save: 0,
                         will_magic_mod: 0,
                         will_misc_mod: 0,
-                        will_temp_mod: 0
+                        will_temp_mod: 0,
+                        init_misc_mod: 0,
+                        weight: 0,
+                        height: 0,
+                        damage_reduction: 0,
+                        spell_resistance: 0,
+                        size_mod: 0,
+                        xp_points: 0,
+                        next_level: 0,
+                        money_cp: 0,
+                        money_sp: 0,
+                        money_gp: 0,
+                        money_pp: 0,
+                        light_load: 0,
+                        medium_load: 0,
+                        heavy_load: 0,
+                        lift_over_head: 0,
+                        lift_off_ground: 0,
+                        drag_or_push: 0
                     };
                     agent.put('/character')
                     .send(changes)
@@ -213,6 +249,24 @@ module.exports = function() {
                         res.body.will_magic_mod.should.equal(changes.will_magic_mod);
                         res.body.will_misc_mod.should.equal(changes.will_misc_mod);
                         res.body.will_temp_mod.should.equal(changes.will_temp_mod);
+                        res.body.init_misc_mod.should.equal(changes.init_misc_mod);
+                        res.body.weight.should.equal(changes.weight);
+                        res.body.height.should.equal(changes.height);
+                        res.body.damage_reduction.should.equal(changes.damage_reduction);
+                        res.body.spell_resistance.should.equal(changes.spell_resistance);
+                        res.body.size_mod.should.equal(changes.size_mod);
+                        res.body.xp_points.should.equal(changes.xp_points);
+                        res.body.next_level.should.equal(changes.next_level);
+                        res.body.money_cp.should.equal(changes.money_cp);
+                        res.body.money_sp.should.equal(changes.money_sp);
+                        res.body.money_gp.should.equal(changes.money_gp);
+                        res.body.money_pp.should.equal(changes.money_pp);
+                        res.body.light_load.should.equal(changes.light_load);
+                        res.body.medium_load.should.equal(changes.medium_load);
+                        res.body.heavy_load.should.equal(changes.heavy_load);
+                        res.body.lift_over_head.should.equal(changes.lift_over_head);
+                        res.body.lift_off_ground.should.equal(changes.lift_off_ground);
+                        res.body.drag_or_push.should.equal(changes.drag_or_push);
 
                         done();
                     });
