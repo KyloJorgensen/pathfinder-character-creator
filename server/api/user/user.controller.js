@@ -46,4 +46,22 @@ UserController.prototype.createUser = function(req, res, next) {
     });
 };
 
+UserController.prototype.getUserName = function(req, res, next) {
+    return new Promise(function(resolve, reject) {
+        User.findOne({
+            _id: req._userId
+        }, function(error, user) {
+            if (error) {
+                reject(error);
+            } else {
+                resolve(user);
+            }
+        });
+    }).then(function(user) {
+        res.status(200).json(user.name);
+    }).catch(function(error) {
+        next(error);
+    });
+};
+
 module.exports = UserController.prototype;

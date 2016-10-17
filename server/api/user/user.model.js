@@ -18,7 +18,7 @@ var userSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    dates: [{
+    characters: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Character'
     }]

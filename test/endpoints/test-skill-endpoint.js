@@ -6,6 +6,7 @@ var server = require('../../server/server.js');
 var SECRET = require('../../server/config/variables.express.js').SECRET;
 var cookie = require('cookie');
 var btoa = require('btoa');
+var User = require('../../server/api/user/user.model');
 
 var should = chai.should();
 var app = server.app;
@@ -24,14 +25,28 @@ module.exports = function () {
             })
             .end(function(error, res) {
                 if (error) {return done(error)}
-                res.should.have.status(200);
-                res.request.cookies.should.equal(cookie.serialize('UserKey', btoa(SECRET + ':' + username)));
-                agent.get('/skill')
-                .end(function(error, res) {
-                    if (error) {return done(error)}
-                    console.log(res.body);
+                return new Promise(function(resolve, reject) {
+                    User.findOne({
+                        username: username
+                    }, function(error, user) {
+                        if (error) {
+                            reject(error);
+                        } else {
+                            resolve(user);
+                        }
+                    });
+                }).then(function(user) {
                     res.should.have.status(200);
-                    done();
+                    res.request.cookies.should.equal(cookie.serialize('UserKey', btoa(SECRET + ':' + user._id)));
+                    agent.get('/skill')
+                    .end(function (error, res) {
+                        if (error) {return done(error)}
+                        console.log(res.body);
+                        res.should.have.status(200);
+                        done();
+                    });
+                }).catch(function(error) {
+                    done(error);
                 });
             });
         });

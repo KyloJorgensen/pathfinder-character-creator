@@ -14,7 +14,7 @@ module.exports = function(req, res, next) {
         _userKey = _userKey.split(':');
         if (_userKey[0] == SECRET) {
             return new Promise(function(resolve, reject) {
-                User.findOne({username: _userKey[1]}, function(error, user) {
+                User.findOne({_id: _userKey[1]}, function(error, user) {
                     if (error) {
                         reject(error);
                     } else {

@@ -13,7 +13,7 @@ LoginController.prototype.postLogin = function(req, res, next) {
 	var password = req.body.password;
 
 	return new Promise(function(resolve, reject) {
-		User.find({username: username}, function(error, user) {
+		User.findOne({username: username}, function(error, user) {
 			if (error) {
 				reject(error);
 			} else {
@@ -21,40 +21,36 @@ LoginController.prototype.postLogin = function(req, res, next) {
 			}
 		})
 	}).then(function(user) {
-		if (user.length) {
-			return new Promise(function(resolve, reject) { 
-				user[0].validatePassword(password, function(error, isVaild) {
-					if (error) {
-						reject(error);
-					} else {
-						resolve(isVaild);
-					}
-				});
-			}).then(function(isVaild) {
-				if (isVaild) {
-					var key = btoa(SECRET + ':' + username);
-					res.setHeader('Set-Cookie', cookie.serialize('UserKey', key, {
-			      		httpOnly: true,
-			      		maxAge: 60 * 60 * 24 * 7 // 1 week 
-			    	}));
-					res.redirect('/');
+		return new Promise(function(resolve, reject) { 
+			user.validatePassword(password, function(error, isVaild) {
+				if (error) {
+					reject(error);
 				} else {
-					res.setHeader('Set-Cookie', cookie.serialize('UserKey', null, {
-			      		httpOnly: true,
-			      		maxAge: 60 * 60 * 24 * 7 // 1 week 
-			    	}));
-					res.redirect('/#/login');
+					if (isVaild) {
+						resolve(user._id);
+					} else {
+						resolve(false);
+					}
 				}
-			}).catch(function(error) {
-				next(error);
 			});
-		} else {
-			res.setHeader('Set-Cookie', cookie.serialize('UserKey', null, {
-	      		httpOnly: true,
-	      		maxAge: 60 * 60 * 24 * 7 // 1 week 
-	    	}));
-			res.redirect('/#/login');
-		}
+		}).then(function(_id) {
+			if (_id) {
+				var key = btoa(SECRET + ':' + _id);
+				res.setHeader('Set-Cookie', cookie.serialize('UserKey', key, {
+		      		httpOnly: true,
+		      		maxAge: 60 * 60 * 24 * 7 // 1 week 
+		    	}));
+				res.redirect('/');
+			} else {
+				res.setHeader('Set-Cookie', cookie.serialize('UserKey', null, {
+		      		httpOnly: true,
+		      		maxAge: 60 * 60 * 24 * 7 // 1 week 
+		    	}));
+				res.redirect('/#/login');
+			}
+		}).catch(function(error) {
+			next(error);
+		});
 	}).catch(function(error) {
 		next(error);
 	});
