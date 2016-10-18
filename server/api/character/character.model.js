@@ -2,7 +2,6 @@
 
 var mongoose = require('mongoose');
 var User = require('../user/user.model');
-var Skill = require('../skill/skill.model');
 
 var characterSchema = mongoose.Schema({
 	_userId: {
@@ -77,10 +76,29 @@ var characterSchema = mongoose.Schema({
     homeland: {type: String, require: true, default: 'HOMELAND'},
     background_stories: {type: String, require: true, default: 'BACKGROUND'},
     languages: {type: String, require: true, default: 'LANGUAGES'},
-
     skills: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Skill'
+    }],
+    features: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Feature'
+    }],
+    feats: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Feat'
+    }],
+    gear: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Gear'
+    }],
+    acitems: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Acitem'
+    }],
+    weapons: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Weapon'
     }]
 });
 
