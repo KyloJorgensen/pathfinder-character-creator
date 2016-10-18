@@ -1,11 +1,10 @@
 'use strict';
 
-var chai = require('chai');
-var chaiHttp = require('chai-http');
-var server = require('../../server/server.js');
-
-var should = chai.should();
-var app = server.app;
+var chai = require('chai'),
+    chaiHttp = require('chai-http'),
+    server = require('../../server/server.js'),
+    should = chai.should(),
+    app = server.app;
 chai.use(chaiHttp);
 
 module.exports = function() {

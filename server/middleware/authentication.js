@@ -1,8 +1,8 @@
 'use strict';
 
-var atob = require('atob');
-var User = require('../api/user/user.model');
-var SECRET = require('../config/variables.express').SECRET;
+var atob = require('atob'),
+    User = require('../api/user/user.model'),
+    SECRET = require('../config/variables.express').SECRET;
 
 
 // Takes Looks for UserKey Cookie and returns if successful _userId to endpoint.

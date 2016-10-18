@@ -1,24 +1,22 @@
 'use strict';
 
-var chai = require('chai');
-var chaiHttp = require('chai-http');
-var server = require('../../server/server.js');
-var SECRET = require('../../server/config/variables.express.js').SECRET;
-var cookie = require('cookie');
-var btoa = require('btoa');
-var User = require('../../server/api/user/user.model');
-var Feature = require('../../server/api/feature/feature.model');
-
-var should = chai.should();
-var app = server.app;
+var chai = require('chai'),
+    chaiHttp = require('chai-http'),
+    server = require('../../server/server.js'),
+    SECRET = require('../../server/config/variables.express.js').SECRET,
+    cookie = require('cookie'),
+    btoa = require('btoa'),
+    User = require('../../server/api/user/user.model'),
+    Feature = require('../../server/api/feature/feature.model'),
+    should = chai.should(),
+    app = server.app,
+    username = 'frank',
+    characterName = 'bob',
+    _characterId,
+    featureName = 'Swim',
+    featureAbility = 'str',
+    _featureId;
 chai.use(chaiHttp);
-
-var username = 'frank';
-var characterName = 'bob';
-var _characterId;
-var featureName = 'Swim';
-var featureAbility = 'str';
-var _featureId;
 
 module.exports = function () {
     describe('Pathfinder character creator /feature endpoint', function() {

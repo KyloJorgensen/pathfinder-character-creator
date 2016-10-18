@@ -1,24 +1,22 @@
 'use strict';
 
-var chai = require('chai');
-var chaiHttp = require('chai-http');
-var server = require('../../server/server.js');
-var SECRET = require('../../server/config/variables.express.js').SECRET;
-var cookie = require('cookie');
-var btoa = require('btoa');
-var User = require('../../server/api/user/user.model');
-var Acitem = require('../../server/api/acitem/acitem.model');
-
-var should = chai.should();
-var app = server.app;
+var chai = require('chai'),
+    chaiHttp = require('chai-http'),
+    server = require('../../server/server.js'),
+    SECRET = require('../../server/config/variables.express.js').SECRET,
+    cookie = require('cookie'),
+    btoa = require('btoa'),
+    User = require('../../server/api/user/user.model'),
+    Acitem = require('../../server/api/acitem/acitem.model'),
+    should = chai.should(),
+    app = server.app,
+    username = 'frank',
+    characterName = 'bob',
+    _characterId,
+    acitemName = 'Swim',
+    acitemAbility = 'str',
+    _acitemId;
 chai.use(chaiHttp);
-
-var username = 'frank';
-var characterName = 'bob';
-var _characterId;
-var acitemName = 'Swim';
-var acitemAbility = 'str';
-var _acitemId;
 
 module.exports = function () {
     describe('Pathfinder character creator /acitem endpoint', function() {

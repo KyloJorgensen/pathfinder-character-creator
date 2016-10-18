@@ -1,26 +1,24 @@
 'use strict';
 
-var chai = require('chai');
-var chaiHttp = require('chai-http');
-var server = require('../../server/server.js');
-var SECRET = require('../../server/config/variables.express.js').SECRET;
-var cookie = require('cookie');
-var btoa = require('btoa');
-var User = require('../../server/api/user/user.model');
-var Spell = require('../../server/api/spell/spell.model');
-
-var should = chai.should();
-var app = server.app;
+var chai = require('chai'),
+    chaiHttp = require('chai-http'),
+    server = require('../../server/server.js'),
+    SECRET = require('../../server/config/variables.express.js').SECRET,
+    cookie = require('cookie'),
+    btoa = require('btoa'),
+    User = require('../../server/api/user/user.model'),
+    Spell = require('../../server/api/spell/spell.model'),
+    should = chai.should(),
+    app = server.app,
+    username = 'frank',
+    characterName = 'bob',
+    _characterId,
+    spellName = 'Swim',
+    spellAbility = 'str',
+    spellLevel = 2,
+    spellSchool = 'High',
+    _spellId;
 chai.use(chaiHttp);
-
-var username = 'frank';
-var characterName = 'bob';
-var _characterId;
-var spellName = 'Swim';
-var spellAbility = 'str';
-var spellLevel = 2;
-var spellSchool = 'High'
-var _spellId;
 
 module.exports = function () {
     describe('Pathfinder character creator /spell endpoint', function() {
