@@ -7,5 +7,6 @@ var controller = require('./skill.controller');
 router.get('/:characterId', controller.getSkills)
 	.get('/:characterId/:skillId', controller.getSkill)
 	.post('/', controller.createSkill)
+	.put('/', controller.deleteSkill)
 
 module.exports = router;

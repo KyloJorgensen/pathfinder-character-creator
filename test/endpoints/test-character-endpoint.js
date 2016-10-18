@@ -7,6 +7,7 @@ var SECRET = require('../../server/config/variables.express.js').SECRET;
 var cookie = require('cookie');
 var btoa = require('btoa');
 var User = require('../../server/api/user/user.model');
+var Character = require('../../server/api/character/character.model');
 
 var should = chai.should();
 var app = server.app;
@@ -509,12 +510,26 @@ module.exports = function() {
                     res.request.cookies.should.equal(cookie.serialize('UserKey', btoa(SECRET + ':' + user._id)));
                     agent.delete('/character')
                     .send({
-                        _id: characterId
+                        _characterId: characterId
                     })
                     .end(function (error, res) {
                         if (error) {return done(error)}
                         res.should.have.status(200);
-                        done();
+                        Character.findOne({
+                            _id: characterId,
+                            _userId: user.id
+                        }, function(error, character) {
+                            if (error) {
+                                done(error);
+                            } else {
+                                if (character == null) {
+                                    done();
+                                } else {
+                                    var error = new Error("Character didn't delete");
+                                    done(error);
+                                }
+                            }
+                        });                        
                     });
                 }).catch(function(error) {
                     done(error);

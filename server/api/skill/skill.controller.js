@@ -75,4 +75,53 @@ SkillController.prototype.createSkill = function(req, res, next) {
 	});
 };
 
+SkillController.prototype.deleteSkill = function(req, res, next) {
+	return new Promise(function(resolve, reject) {
+				var changes = {};
+		if ('body' in req) {
+			if ('name' in req.body) {
+				changes.name = req.body.name;
+			}
+            if('key_ability' in req.body) {
+            	changes.key_ability = req.body.key_ability;
+            }
+            if('misc_bonus' in req.body) {
+            	changes.misc_bonus = req.body.misc_bonus;
+            }
+            if('trained' in req.body) {
+            	changes.trained = req.body.trained;
+            }
+            if('train_only' in req.body) {
+            	changes.train_only = req.body.train_only;
+            }
+            if('rank' in req.body) {
+            	changes.rank = req.body.rank;
+            }
+		} else {
+			var error = new Error('missing Body');
+			error.name = 'BadRequest'
+			return next(error);
+		}
+
+		Skill.findOneAndUpdate({
+			_characterId: req.body._characterId,
+			_id: req.body._skillId
+		}, {
+			$set: changes
+		}, {
+			new: true
+		}, function(error, skill) {
+			if (error) {
+				reject(error);
+			} else {
+				resolve(skill);
+			}
+		});
+	}).then(function(skill) {
+		res.status(200).json(skill);
+	}).catch(function(error) {
+		next(error);
+	});
+};
+
 module.exports = SkillController.prototype;
