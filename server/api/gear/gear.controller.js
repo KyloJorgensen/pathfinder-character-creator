@@ -78,21 +78,20 @@ GearController.prototype.createGear = function(req, res, next) {
 
 // Update Gear queries: _characterId and _gearId update: name, specialties returns: new Gear 
 GearController.prototype.updateGear = function(req, res, next) {
-	return new Promise(function(resolve, reject) {
-		var changes = {};
-		if ('body' in req) {
-			if ('name' in req.body) {
-				changes.name = req.body.name;
-			}
-			if ('specialties' in req.body) {
-				changes.specialties = req.body.specialties;
-			}
-		} else {
-			var error = new Error('missing Body');
-			error.name = 'BadRequest'
-			return reject(error);
+	var changes = {};
+	if ('body' in req) {
+		if ('name' in req.body) {
+			changes.name = req.body.name;
 		}
-
+		if ('specialties' in req.body) {
+			changes.specialties = req.body.specialties;
+		}
+	} else {
+		var error = new Error('missing Body');
+		error.name = 'BadRequest'
+		return next(error);
+	}
+	return new Promise(function(resolve, reject) {
 		Gear.findOneAndUpdate({
 			_characterId: req.body._characterId,
 			_id: req.body._gearId

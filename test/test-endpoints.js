@@ -9,3 +9,4 @@ var testSkillEndpoint = require('./endpoints/test-skill-endpoint')();
 var testFeatEndpoint = require('./endpoints/test-feat-endpoint')();
 var testFeatureEndpoint = require('./endpoints/test-feature-endpoint')();
 var testAcitemEndpoint = require('./endpoints/test-acitem-endpoint')();
+var testSpellEndpoint = require('./endpoints/test-spell-endpoint')();

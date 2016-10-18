@@ -76,6 +76,47 @@ var characterSchema = mongoose.Schema({
     homeland: {type: String, require: true, default: 'HOMELAND'},
     background_stories: {type: String, require: true, default: 'BACKGROUND'},
     languages: {type: String, require: true, default: 'LANGUAGES'},
+    domain_and_specialty_school: {type: String, require: true, default: 'Domain and/or Specialty School'},
+    level_0_spell_per_day: {type: Number, require: true, default: 0},
+    level_0_bonus_spells: {type: Number, require: true, default: 0},
+    level_0_spell_save_dc: {type: Number, require: true, default: 0},
+    level_0_spells_known: {type: Number, require: true, default: 0},
+    level_1_spell_per_day: {type: Number, require: true, default: 0},
+    level_1_bonus_spells: {type: Number, require: true, default: 0},
+    level_1_spell_save_dc: {type: Number, require: true, default: 0},
+    level_1_spells_known: {type: Number, require: true, default: 0},
+    level_2_spell_per_day: {type: Number, require: true, default: 0},
+    level_2_bonus_spells: {type: Number, require: true, default: 0},
+    level_2_spell_save_dc: {type: Number, require: true, default: 0},
+    level_2_spells_known: {type: Number, require: true, default: 0},
+    level_3_spell_per_day: {type: Number, require: true, default: 0},
+    level_3_bonus_spells: {type: Number, require: true, default: 0},
+    level_3_spell_save_dc: {type: Number, require: true, default: 0},
+    level_3_spells_known: {type: Number, require: true, default: 0},
+    level_4_spell_per_day: {type: Number, require: true, default: 0},
+    level_4_bonus_spells: {type: Number, require: true, default: 0},
+    level_4_spell_save_dc: {type: Number, require: true, default: 0},
+    level_4_spells_known: {type: Number, require: true, default: 0},
+    level_5_spell_per_day: {type: Number, require: true, default: 0},
+    level_5_bonus_spells: {type: Number, require: true, default: 0},
+    level_5_spell_save_dc: {type: Number, require: true, default: 0},
+    level_5_spells_known: {type: Number, require: true, default: 0},
+    level_6_spell_per_day: {type: Number, require: true, default: 0},
+    level_6_bonus_spells: {type: Number, require: true, default: 0},
+    level_6_spell_save_dc: {type: Number, require: true, default: 0},
+    level_6_spells_known: {type: Number, require: true, default: 0},
+    level_7_spell_per_day: {type: Number, require: true, default: 0},
+    level_7_bonus_spells: {type: Number, require: true, default: 0},
+    level_7_spell_save_dc: {type: Number, require: true, default: 0},
+    level_7_spells_known: {type: Number, require: true, default: 0},
+    level_8_spell_per_day: {type: Number, require: true, default: 0},
+    level_8_bonus_spells: {type: Number, require: true, default: 0},
+    level_8_spell_save_dc: {type: Number, require: true, default: 0},
+    level_8_spells_known: {type: Number, require: true, default: 0},
+    level_9_spell_per_day: {type: Number, require: true, default: 0},
+    level_9_bonus_spells: {type: Number, require: true, default: 0},
+    level_9_spell_save_dc: {type: Number, require: true, default: 0},
+    level_9_spells_known: {type: Number, require: true, default: 0},
     skills: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Skill'
@@ -99,6 +140,10 @@ var characterSchema = mongoose.Schema({
     weapons: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Weapon'
+    }],
+    spells: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Spell'
     }]
 });
 

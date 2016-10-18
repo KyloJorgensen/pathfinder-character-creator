@@ -112,7 +112,47 @@ module.exports = function() {
                         res.body.homeland.should.equal('HOMELAND');
                         res.body.background_stories.should.equal('BACKGROUND');
                         res.body.languages.should.equal('LANGUAGES');
-
+                        res.body.domain_and_specialty_school.should.equal('Domain and/or Specialty School');
+                        res.body.level_0_spell_per_day.should.equal(0);
+                        res.body.level_0_bonus_spells.should.equal(0);
+                        res.body.level_0_spell_save_dc.should.equal(0);
+                        res.body.level_0_spells_known.should.equal(0);
+                        res.body.level_1_spell_per_day.should.equal(0);
+                        res.body.level_1_bonus_spells.should.equal(0);
+                        res.body.level_1_spell_save_dc.should.equal(0);
+                        res.body.level_1_spells_known.should.equal(0);
+                        res.body.level_2_spell_per_day.should.equal(0);
+                        res.body.level_2_bonus_spells.should.equal(0);
+                        res.body.level_2_spell_save_dc.should.equal(0);
+                        res.body.level_2_spells_known.should.equal(0);
+                        res.body.level_3_spell_per_day.should.equal(0);
+                        res.body.level_3_bonus_spells.should.equal(0);
+                        res.body.level_3_spell_save_dc.should.equal(0);
+                        res.body.level_3_spells_known.should.equal(0);
+                        res.body.level_4_spell_per_day.should.equal(0);
+                        res.body.level_4_bonus_spells.should.equal(0);
+                        res.body.level_4_spell_save_dc.should.equal(0);
+                        res.body.level_4_spells_known.should.equal(0);
+                        res.body.level_5_spell_per_day.should.equal(0);
+                        res.body.level_5_bonus_spells.should.equal(0);
+                        res.body.level_5_spell_save_dc.should.equal(0);
+                        res.body.level_5_spells_known.should.equal(0);
+                        res.body.level_6_spell_per_day.should.equal(0);
+                        res.body.level_6_bonus_spells.should.equal(0);
+                        res.body.level_6_spell_save_dc.should.equal(0);
+                        res.body.level_6_spells_known.should.equal(0);
+                        res.body.level_7_spell_per_day.should.equal(0);
+                        res.body.level_7_bonus_spells.should.equal(0);
+                        res.body.level_7_spell_save_dc.should.equal(0);
+                        res.body.level_7_spells_known.should.equal(0);
+                        res.body.level_8_spell_per_day.should.equal(0);
+                        res.body.level_8_bonus_spells.should.equal(0);
+                        res.body.level_8_spell_save_dc.should.equal(0);
+                        res.body.level_8_spells_known.should.equal(0);
+                        res.body.level_9_spell_per_day.should.equal(0);
+                        res.body.level_9_bonus_spells.should.equal(0);
+                        res.body.level_9_spell_save_dc.should.equal(0);
+                        res.body.level_9_spells_known.should.equal(0);
                         characterId = res.body._id;
                         done();
                     });
@@ -213,6 +253,47 @@ module.exports = function() {
                         res.body[0].homeland.should.be.a('string');
                         res.body[0].background_stories.should.be.a('string');
                         res.body[0].languages.should.be.a('string');
+                        res.body[0].domain_and_specialty_school.should.equal('Domain and/or Specialty School');
+                        res.body[0].level_0_spell_per_day.should.equal(0);
+                        res.body[0].level_0_bonus_spells.should.equal(0);
+                        res.body[0].level_0_spell_save_dc.should.equal(0);
+                        res.body[0].level_0_spells_known.should.equal(0);
+                        res.body[0].level_1_spell_per_day.should.equal(0);
+                        res.body[0].level_1_bonus_spells.should.equal(0);
+                        res.body[0].level_1_spell_save_dc.should.equal(0);
+                        res.body[0].level_1_spells_known.should.equal(0);
+                        res.body[0].level_2_spell_per_day.should.equal(0);
+                        res.body[0].level_2_bonus_spells.should.equal(0);
+                        res.body[0].level_2_spell_save_dc.should.equal(0);
+                        res.body[0].level_2_spells_known.should.equal(0);
+                        res.body[0].level_3_spell_per_day.should.equal(0);
+                        res.body[0].level_3_bonus_spells.should.equal(0);
+                        res.body[0].level_3_spell_save_dc.should.equal(0);
+                        res.body[0].level_3_spells_known.should.equal(0);
+                        res.body[0].level_4_spell_per_day.should.equal(0);
+                        res.body[0].level_4_bonus_spells.should.equal(0);
+                        res.body[0].level_4_spell_save_dc.should.equal(0);
+                        res.body[0].level_4_spells_known.should.equal(0);
+                        res.body[0].level_5_spell_per_day.should.equal(0);
+                        res.body[0].level_5_bonus_spells.should.equal(0);
+                        res.body[0].level_5_spell_save_dc.should.equal(0);
+                        res.body[0].level_5_spells_known.should.equal(0);
+                        res.body[0].level_6_spell_per_day.should.equal(0);
+                        res.body[0].level_6_bonus_spells.should.equal(0);
+                        res.body[0].level_6_spell_save_dc.should.equal(0);
+                        res.body[0].level_6_spells_known.should.equal(0);
+                        res.body[0].level_7_spell_per_day.should.equal(0);
+                        res.body[0].level_7_bonus_spells.should.equal(0);
+                        res.body[0].level_7_spell_save_dc.should.equal(0);
+                        res.body[0].level_7_spells_known.should.equal(0);
+                        res.body[0].level_8_spell_per_day.should.equal(0);
+                        res.body[0].level_8_bonus_spells.should.equal(0);
+                        res.body[0].level_8_spell_save_dc.should.equal(0);
+                        res.body[0].level_8_spells_known.should.equal(0);
+                        res.body[0].level_9_spell_per_day.should.equal(0);
+                        res.body[0].level_9_bonus_spells.should.equal(0);
+                        res.body[0].level_9_spell_save_dc.should.equal(0);
+                        res.body[0].level_9_spells_known.should.equal(0);
                         done();
                     });
                 }).catch(function(error) {
@@ -311,6 +392,47 @@ module.exports = function() {
                         res.body.homeland.should.equal('HOMELAND');
                         res.body.background_stories.should.equal('BACKGROUND');
                         res.body.languages.should.equal('LANGUAGES');
+                        res.body.domain_and_specialty_school.should.equal('Domain and/or Specialty School');
+                        res.body.level_0_spell_per_day.should.equal(0);
+                        res.body.level_0_bonus_spells.should.equal(0);
+                        res.body.level_0_spell_save_dc.should.equal(0);
+                        res.body.level_0_spells_known.should.equal(0);
+                        res.body.level_1_spell_per_day.should.equal(0);
+                        res.body.level_1_bonus_spells.should.equal(0);
+                        res.body.level_1_spell_save_dc.should.equal(0);
+                        res.body.level_1_spells_known.should.equal(0);
+                        res.body.level_2_spell_per_day.should.equal(0);
+                        res.body.level_2_bonus_spells.should.equal(0);
+                        res.body.level_2_spell_save_dc.should.equal(0);
+                        res.body.level_2_spells_known.should.equal(0);
+                        res.body.level_3_spell_per_day.should.equal(0);
+                        res.body.level_3_bonus_spells.should.equal(0);
+                        res.body.level_3_spell_save_dc.should.equal(0);
+                        res.body.level_3_spells_known.should.equal(0);
+                        res.body.level_4_spell_per_day.should.equal(0);
+                        res.body.level_4_bonus_spells.should.equal(0);
+                        res.body.level_4_spell_save_dc.should.equal(0);
+                        res.body.level_4_spells_known.should.equal(0);
+                        res.body.level_5_spell_per_day.should.equal(0);
+                        res.body.level_5_bonus_spells.should.equal(0);
+                        res.body.level_5_spell_save_dc.should.equal(0);
+                        res.body.level_5_spells_known.should.equal(0);
+                        res.body.level_6_spell_per_day.should.equal(0);
+                        res.body.level_6_bonus_spells.should.equal(0);
+                        res.body.level_6_spell_save_dc.should.equal(0);
+                        res.body.level_6_spells_known.should.equal(0);
+                        res.body.level_7_spell_per_day.should.equal(0);
+                        res.body.level_7_bonus_spells.should.equal(0);
+                        res.body.level_7_spell_save_dc.should.equal(0);
+                        res.body.level_7_spells_known.should.equal(0);
+                        res.body.level_8_spell_per_day.should.equal(0);
+                        res.body.level_8_bonus_spells.should.equal(0);
+                        res.body.level_8_spell_save_dc.should.equal(0);
+                        res.body.level_8_spells_known.should.equal(0);
+                        res.body.level_9_spell_per_day.should.equal(0);
+                        res.body.level_9_bonus_spells.should.equal(0);
+                        res.body.level_9_spell_save_dc.should.equal(0);
+                        res.body.level_9_spells_known.should.equal(0);
                         done();
                     });
                 }).catch(function(error) {
@@ -406,7 +528,48 @@ module.exports = function() {
                         alignment: 'lawful good',
                         homeland: 'home',
                         background_stories: 'live here.',
-                        languages: 'common, orc'
+                        languages: 'common, orc',
+                        domain_and_specialty_school: 'all magic',
+                        level_0_spell_per_day: 2,
+                        level_0_bonus_spells: 2,
+                        level_0_spell_save_dc: 2,
+                        level_0_spells_known: 2,
+                        level_1_spell_per_day: 2,
+                        level_1_bonus_spells: 2,
+                        level_1_spell_save_dc: 2,
+                        level_1_spells_known: 2,
+                        level_2_spell_per_day: 2,
+                        level_2_bonus_spells: 2,
+                        level_2_spell_save_dc: 2,
+                        level_2_spells_known: 2,
+                        level_3_spell_per_day: 2,
+                        level_3_bonus_spells: 2,
+                        level_3_spell_save_dc: 2,
+                        level_3_spells_known: 2,
+                        level_4_spell_per_day: 2,
+                        level_4_bonus_spells: 2,
+                        level_4_spell_save_dc: 2,
+                        level_4_spells_known: 2,
+                        level_5_spell_per_day: 2,
+                        level_5_bonus_spells: 2,
+                        level_5_spell_save_dc: 2,
+                        level_5_spells_known: 2,
+                        level_6_spell_per_day: 2,
+                        level_6_bonus_spells: 2,
+                        level_6_spell_save_dc: 2,
+                        level_6_spells_known: 2,
+                        level_7_spell_per_day: 2,
+                        level_7_bonus_spells: 2,
+                        level_7_spell_save_dc: 2,
+                        level_7_spells_known: 2,
+                        level_8_spell_per_day: 2,
+                        level_8_bonus_spells: 2,
+                        level_8_spell_save_dc: 2,
+                        level_8_spells_known: 2,
+                        level_9_spell_per_day: 2,
+                        level_9_bonus_spells: 2,
+                        level_9_spell_save_dc: 2,
+                        level_9_spells_known: 2
                     };
                     agent.put('/character')
                     .send(changes)
@@ -477,7 +640,47 @@ module.exports = function() {
                         res.body.homeland.should.equal(changes.homeland);
                         res.body.background_stories.should.equal(changes.background_stories);
                         res.body.languages.should.equal(changes.languages);
-
+                        res.body.domain_and_specialty_school.should.equal(changes.domain_and_specialty_school);
+                        res.body.level_0_spell_per_day.should.equal(changes.level_0_spell_per_day);
+                        res.body.level_0_bonus_spells.should.equal(changes.level_0_bonus_spells);
+                        res.body.level_0_spell_save_dc.should.equal(changes.level_0_spell_save_dc);
+                        res.body.level_0_spells_known.should.equal(changes.level_0_spells_known);
+                        res.body.level_1_spell_per_day.should.equal(changes.level_1_spell_per_day);
+                        res.body.level_1_bonus_spells.should.equal(changes.level_1_bonus_spells);
+                        res.body.level_1_spell_save_dc.should.equal(changes.level_1_spell_save_dc);
+                        res.body.level_1_spells_known.should.equal(changes.level_1_spells_known);
+                        res.body.level_2_spell_per_day.should.equal(changes.level_2_spell_per_day);
+                        res.body.level_2_bonus_spells.should.equal(changes.level_2_bonus_spells);
+                        res.body.level_2_spell_save_dc.should.equal(changes.level_2_spell_save_dc);
+                        res.body.level_2_spells_known.should.equal(changes.level_2_spells_known);
+                        res.body.level_3_spell_per_day.should.equal(changes.level_3_spell_per_day);
+                        res.body.level_3_bonus_spells.should.equal(changes.level_3_bonus_spells);
+                        res.body.level_3_spell_save_dc.should.equal(changes.level_3_spell_save_dc);
+                        res.body.level_3_spells_known.should.equal(changes.level_3_spells_known);
+                        res.body.level_4_spell_per_day.should.equal(changes.level_4_spell_per_day);
+                        res.body.level_4_bonus_spells.should.equal(changes.level_4_bonus_spells);
+                        res.body.level_4_spell_save_dc.should.equal(changes.level_4_spell_save_dc);
+                        res.body.level_4_spells_known.should.equal(changes.level_4_spells_known);
+                        res.body.level_5_spell_per_day.should.equal(changes.level_5_spell_per_day);
+                        res.body.level_5_bonus_spells.should.equal(changes.level_5_bonus_spells);
+                        res.body.level_5_spell_save_dc.should.equal(changes.level_5_spell_save_dc);
+                        res.body.level_5_spells_known.should.equal(changes.level_5_spells_known);
+                        res.body.level_6_spell_per_day.should.equal(changes.level_6_spell_per_day);
+                        res.body.level_6_bonus_spells.should.equal(changes.level_6_bonus_spells);
+                        res.body.level_6_spell_save_dc.should.equal(changes.level_6_spell_save_dc);
+                        res.body.level_6_spells_known.should.equal(changes.level_6_spells_known);
+                        res.body.level_7_spell_per_day.should.equal(changes.level_7_spell_per_day);
+                        res.body.level_7_bonus_spells.should.equal(changes.level_7_bonus_spells);
+                        res.body.level_7_spell_save_dc.should.equal(changes.level_7_spell_save_dc);
+                        res.body.level_7_spells_known.should.equal(changes.level_7_spells_known);
+                        res.body.level_8_spell_per_day.should.equal(changes.level_8_spell_per_day);
+                        res.body.level_8_bonus_spells.should.equal(changes.level_8_bonus_spells);
+                        res.body.level_8_spell_save_dc.should.equal(changes.level_8_spell_save_dc);
+                        res.body.level_8_spells_known.should.equal(changes.level_8_spells_known);
+                        res.body.level_9_spell_per_day.should.equal(changes.level_9_spell_per_day);
+                        res.body.level_9_bonus_spells.should.equal(changes.level_9_bonus_spells);
+                        res.body.level_9_spell_save_dc.should.equal(changes.level_9_spell_save_dc);
+                        res.body.level_9_spells_known.should.equal(changes.level_9_spells_known);
                         done();
                     });
                 }).catch(function(error) {

@@ -78,36 +78,35 @@ SkillController.prototype.createSkill = function(req, res, next) {
 
 // Update Skill queries: _characterId and _skillId update: name, key_ability, misc_bonus, trained, train_only, and/or rank returns: new Skill 
 SkillController.prototype.updateSkill = function(req, res, next) {
-	return new Promise(function(resolve, reject) {
-		var changes = {};
-		if ('body' in req) {
-			if ('name' in req.body) {
-				changes.name = req.body.name;
-			}
-			if ('specialties' in req.body) {
-				changes.specialties = req.body.specialties;
-			}
-            if('key_ability' in req.body) {
-            	changes.key_ability = req.body.key_ability;
-            }
-            if('misc_bonus' in req.body) {
-            	changes.misc_bonus = req.body.misc_bonus;
-            }
-            if('trained' in req.body) {
-            	changes.trained = req.body.trained;
-            }
-            if('train_only' in req.body) {
-            	changes.train_only = req.body.train_only;
-            }
-            if('rank' in req.body) {
-            	changes.rank = req.body.rank;
-            }
-		} else {
-			var error = new Error('missing Body');
-			error.name = 'BadRequest'
-			return reject(error);
+	var changes = {};
+	if ('body' in req) {
+		if ('name' in req.body) {
+			changes.name = req.body.name;
 		}
-
+		if ('specialties' in req.body) {
+			changes.specialties = req.body.specialties;
+		}
+           if('key_ability' in req.body) {
+           	changes.key_ability = req.body.key_ability;
+           }
+           if('misc_bonus' in req.body) {
+           	changes.misc_bonus = req.body.misc_bonus;
+           }
+           if('trained' in req.body) {
+           	changes.trained = req.body.trained;
+           }
+           if('train_only' in req.body) {
+           	changes.train_only = req.body.train_only;
+           }
+           if('rank' in req.body) {
+           	changes.rank = req.body.rank;
+           }
+	} else {
+		var error = new Error('missing Body');
+		error.name = 'BadRequest'
+		return next(error);
+	}
+	return new Promise(function(resolve, reject) {
 		Skill.findOneAndUpdate({
 			_characterId: req.body._characterId,
 			_id: req.body._skillId

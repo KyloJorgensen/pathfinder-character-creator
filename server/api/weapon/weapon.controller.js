@@ -77,37 +77,35 @@ WeaponController.prototype.createAcitem = function(req, res, next) {
 
 // Update Acitem queries: _characterId and _weaponId update: name, specialties returns: new Acitem 
 WeaponController.prototype.updateAcitem = function(req, res, next) {
-	return new Promise(function(resolve, reject) {
-		var changes = {};
-		if ('body' in req) {
-			if ('name' in req.body) {
-				changes.name = req.body.name;
-			}
-			if ('damage_type' in req.body) {
-				changes.damage_type = req.body.damage_type;
-			}
-			if ('range' in req.body) {
-				changes.range = req.body.range;
-			}
-			if ('crit' in req.body) {
-				changes.crit = req.body.crit;
-			}
-			if ('attack_bonus' in req.body) {
-				changes.attack_bonus = req.body.attack_bonus;
-			}
-			if ('damage_bonus' in req.body) {
-				changes.damage_bonus = req.body.damage_bonus;
-			}
-			if ('damage_dice' in req.body) {
-				changes.damage_dice = req.body.damage_dice;
-			}
-
-		} else {
-			var error = new Error('missing Body');
-			error.name = 'BadRequest'
-			return reject(error);
+	var changes = {};
+	if ('body' in req) {
+		if ('name' in req.body) {
+			changes.name = req.body.name;
 		}
-
+		if ('damage_type' in req.body) {
+			changes.damage_type = req.body.damage_type;
+		}
+		if ('range' in req.body) {
+			changes.range = req.body.range;
+		}
+		if ('crit' in req.body) {
+			changes.crit = req.body.crit;
+		}
+		if ('attack_bonus' in req.body) {
+			changes.attack_bonus = req.body.attack_bonus;
+		}
+		if ('damage_bonus' in req.body) {
+			changes.damage_bonus = req.body.damage_bonus;
+		}
+		if ('damage_dice' in req.body) {
+			changes.damage_dice = req.body.damage_dice;
+		}
+	} else {
+		var error = new Error('missing Body');
+		error.name = 'BadRequest'
+		return next(error);
+	}
+	return new Promise(function(resolve, reject) {
 		Acitem.findOneAndUpdate({
 			_characterId: req.body._characterId,
 			_id: req.body._weaponId

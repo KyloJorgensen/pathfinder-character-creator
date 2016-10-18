@@ -77,39 +77,38 @@ AcitemController.prototype.createAcitem = function(req, res, next) {
 
 // Update Acitem queries: _characterId and _acitemId update: name, specialties returns: new Acitem 
 AcitemController.prototype.updateAcitem = function(req, res, next) {
-	return new Promise(function(resolve, reject) {
-		var changes = {};
-		if ('body' in req) {
-			if ('name' in req.body) {
-				changes.name = req.body.name;
-			}
-			if ('bonus' in req.body) {
-				changes.bonus = req.body.bonus;
-			}
-			if ('type' in req.body) {
-				changes.type = req.body.type;
-			}
-			if ('check_penalty' in req.body) {
-				changes.check_penalty = req.body.check_penalty;
-			}
-			if ('spell_failure' in req.body) {
-				changes.spell_failure = req.body.spell_failure;
-			}
-			if ('weight' in req.body) {
-				changes.weight = req.body.weight;
-			}
-			if ('properties' in req.body) {
-				changes.properties = req.body.properties;
-			}
-			if ('max_dex_bonus' in req.body) {
-				changes.max_dex_bonus = req.body.max_dex_bonus;
-			}
-		} else {
-			var error = new Error('missing Body');
-			error.name = 'BadRequest'
-			return reject(error);
+	var changes = {};
+	if ('body' in req) {
+		if ('name' in req.body) {
+			changes.name = req.body.name;
 		}
-
+		if ('bonus' in req.body) {
+			changes.bonus = req.body.bonus;
+		}
+		if ('type' in req.body) {
+			changes.type = req.body.type;
+		}
+		if ('check_penalty' in req.body) {
+			changes.check_penalty = req.body.check_penalty;
+		}
+		if ('spell_failure' in req.body) {
+			changes.spell_failure = req.body.spell_failure;
+		}
+		if ('weight' in req.body) {
+			changes.weight = req.body.weight;
+		}
+		if ('properties' in req.body) {
+			changes.properties = req.body.properties;
+		}
+		if ('max_dex_bonus' in req.body) {
+			changes.max_dex_bonus = req.body.max_dex_bonus;
+		}
+	} else {
+		var error = new Error('missing Body');
+		error.name = 'BadRequest'
+		return next(error);
+	}	
+	return new Promise(function(resolve, reject) {
 		Acitem.findOneAndUpdate({
 			_characterId: req.body._characterId,
 			_id: req.body._acitemId

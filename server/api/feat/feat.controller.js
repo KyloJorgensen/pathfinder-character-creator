@@ -78,21 +78,20 @@ FeatController.prototype.createFeat = function(req, res, next) {
 
 // Update Feat queries: _characterId and _featId update: name, specialties returns: new Feat 
 FeatController.prototype.updateFeat = function(req, res, next) {
-	return new Promise(function(resolve, reject) {
-		var changes = {};
-		if ('body' in req) {
-			if ('name' in req.body) {
-				changes.name = req.body.name;
-			}
-			if ('specialties' in req.body) {
-				changes.specialties = req.body.specialties;
-			}
-		} else {
-			var error = new Error('missing Body');
-			error.name = 'BadRequest'
-			return reject(error);
+	var changes = {};
+	if ('body' in req) {
+		if ('name' in req.body) {
+			changes.name = req.body.name;
 		}
-
+		if ('specialties' in req.body) {
+			changes.specialties = req.body.specialties;
+		}
+	} else {
+		var error = new Error('missing Body');
+		error.name = 'BadRequest'
+		return next(error);
+	}
+	return new Promise(function(resolve, reject) {
 		Feat.findOneAndUpdate({
 			_characterId: req.body._characterId,
 			_id: req.body._featId

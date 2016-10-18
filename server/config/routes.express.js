@@ -10,6 +10,7 @@ var mainRouter = require('../api/main/main.router'),
 	featureRouter = require('../api/feature/feature.router'),
 	gearRouter = require('../api/gear/gear.router'),
 	acitemRouter = require('../api/acitem/acitem.router'),
+	spellRouter = require('../api/spell/spell.router'),
 	authentication = require('../middleware/authentication');
 
 module.exports = function(app) {
@@ -23,4 +24,5 @@ module.exports = function(app) {
     	.use('/feature', authentication, featureRouter)
     	.use('/gear', authentication, gearRouter)
     	.use('/acitem', authentication, acitemRouter)
+    	.use('/spell', authentication, spellRouter)
 };
