@@ -79,7 +79,7 @@ SkillController.prototype.createSkill = function(req, res, next) {
 // Update Skill queries: _characterId and _skillId update: name, key_ability, misc_bonus, trained, train_only, and/or rank returns: new Skill 
 SkillController.prototype.updateSkill = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
-				var changes = {};
+		var changes = {};
 		if ('body' in req) {
 			if ('name' in req.body) {
 				changes.name = req.body.name;
@@ -105,7 +105,7 @@ SkillController.prototype.updateSkill = function(req, res, next) {
 		} else {
 			var error = new Error('missing Body');
 			error.name = 'BadRequest'
-			return next(error);
+			return reject(error);
 		}
 
 		Skill.findOneAndUpdate({

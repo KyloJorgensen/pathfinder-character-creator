@@ -89,7 +89,6 @@ CharacterController.prototype.deleteCharacter = function(req, res, next) {
 
 CharacterController.prototype.updateCharacter = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
-
 		var changes = {};
 		if ('body' in req) {
 			if ('name' in req.body) {
@@ -287,7 +286,7 @@ CharacterController.prototype.updateCharacter = function(req, res, next) {
 		} else {
 			var error = new Error('missing Body');
 			error.name = 'BadRequest'
-			return next(error);
+			return reject(error);
 		}
 
 		Character.findOneAndUpdate({

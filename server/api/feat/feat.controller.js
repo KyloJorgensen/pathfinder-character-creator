@@ -79,7 +79,7 @@ FeatController.prototype.createFeat = function(req, res, next) {
 // Update Feat queries: _characterId and _featId update: name, specialties returns: new Feat 
 FeatController.prototype.updateFeat = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
-				var changes = {};
+		var changes = {};
 		if ('body' in req) {
 			if ('name' in req.body) {
 				changes.name = req.body.name;
@@ -90,7 +90,7 @@ FeatController.prototype.updateFeat = function(req, res, next) {
 		} else {
 			var error = new Error('missing Body');
 			error.name = 'BadRequest'
-			return next(error);
+			return reject(error);
 		}
 
 		Feat.findOneAndUpdate({

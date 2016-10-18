@@ -79,7 +79,7 @@ FeatureController.prototype.createFeature = function(req, res, next) {
 // Update Feature queries: _characterId and _featureId update: name returns: new Feature 
 FeatureController.prototype.updateFeature = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
-				var changes = {};
+		var changes = {};
 		if ('body' in req) {
 			if ('name' in req.body) {
 				changes.name = req.body.name;
@@ -87,7 +87,7 @@ FeatureController.prototype.updateFeature = function(req, res, next) {
 		} else {
 			var error = new Error('missing Body');
 			error.name = 'BadRequest'
-			return next(error);
+			return reject(error);
 		}
 
 		Feature.findOneAndUpdate({

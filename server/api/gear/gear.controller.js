@@ -79,7 +79,7 @@ GearController.prototype.createGear = function(req, res, next) {
 // Update Gear queries: _characterId and _gearId update: name, specialties returns: new Gear 
 GearController.prototype.updateGear = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
-				var changes = {};
+		var changes = {};
 		if ('body' in req) {
 			if ('name' in req.body) {
 				changes.name = req.body.name;
@@ -90,7 +90,7 @@ GearController.prototype.updateGear = function(req, res, next) {
 		} else {
 			var error = new Error('missing Body');
 			error.name = 'BadRequest'
-			return next(error);
+			return reject(error);
 		}
 
 		Gear.findOneAndUpdate({
