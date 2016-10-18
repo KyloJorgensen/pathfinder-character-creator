@@ -1,6 +1,7 @@
 'use strict';
 
 var Character = require('./character.model');
+var User = require('../user/user.model');
 
 function LoginController() {};
 
@@ -42,14 +43,22 @@ LoginController.prototype.getCharacter = function(req, res, next) {
 
 LoginController.prototype.createCharacter = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
-		Character.create({
-			_userId: req._userId,
-			name: req.body.name
-		}, function(error, character) {
+		User.findOne({
+			_id: req._userId
+		}, function(error, user) {
 			if (error) {
 				reject(error);
 			} else {
-				resolve(character);
+				Character.create({
+					_userId: user._id,
+					name: req.body.name
+				}, function(error, character) {
+					if (error) {
+						reject(error);
+					} else {
+						resolve(character);
+					}
+				});				
 			}
 		});
 	}).then(function(character) {

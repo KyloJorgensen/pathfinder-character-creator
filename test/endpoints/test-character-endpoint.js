@@ -147,6 +147,7 @@ module.exports = function() {
                     .end(function (error, res) {
                         if (error) {return done(error)}
                         res.should.have.status(200);
+                        res.body.should.be.a('array');
                         res.body[0].name.should.be.a('string');
                         res.body[0].ability_score_str.should.be.a('number');
                         res.body[0].ability_score_dex.should.be.a('number');
@@ -476,6 +477,43 @@ module.exports = function() {
                         res.body.background_stories.should.equal(changes.background_stories);
                         res.body.languages.should.equal(changes.languages);
 
+                        done();
+                    });
+                }).catch(function(error) {
+                    done(error);
+                });
+            });
+        });
+
+        it('should delete character on delete', function(done) {
+            var agent = chai.request.agent(app);
+            agent.post('/login')
+            .send({
+                username: username,
+                password: username
+            })
+            .end(function(error, res) {
+                if (error) {return done(error)}
+                return new Promise(function(resolve, reject) {
+                    User.findOne({
+                        username: username
+                    }, function(error, user) {
+                        if (error) {
+                            reject(error);
+                        } else {
+                            resolve(user);
+                        }
+                    });
+                }).then(function(user) {
+                    res.should.have.status(200);
+                    res.request.cookies.should.equal(cookie.serialize('UserKey', btoa(SECRET + ':' + user._id)));
+                    agent.delete('/character')
+                    .send({
+                        _id: characterId
+                    })
+                    .end(function (error, res) {
+                        if (error) {return done(error)}
+                        res.should.have.status(200);
                         done();
                     });
                 }).catch(function(error) {

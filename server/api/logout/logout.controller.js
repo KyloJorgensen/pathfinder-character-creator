@@ -4,6 +4,7 @@ var cookie = require('cookie');
 
 function LogoutController() {};
 
+// Removes UserKey cookie 
 LogoutController.prototype.logout = function(req, res){
 	res.setHeader('Set-Cookie', cookie.serialize('UserKey', null, {
      		httpOnly: true,

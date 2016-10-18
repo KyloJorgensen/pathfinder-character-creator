@@ -8,7 +8,7 @@ var User = require('./user.model'),
 
 function UserController() {};
 
-// creates new user from username, password, name
+// creates new user from username, password, and name. Attaches UserKey cookie.
 UserController.prototype.createUser = function(req, res, next) {
     // generates the salt for bcrypt to encrypt the passwordz
     bcrypt.genSalt(10, function(err, salt) {
@@ -35,9 +35,9 @@ UserController.prototype.createUser = function(req, res, next) {
                 })
             }).then(function(user) {
 				res.setHeader('Set-Cookie', cookie.serialize('UserKey', btoa(SECRET + ':' + user._id), {
-				    	httpOnly: true,
-				      	maxAge: 60 * 60 * 24 * 7 // 1 week 
-				    }));
+				   	httpOnly: true,
+				   	maxAge: 60 * 60 * 24 * 7 // 1 week 
+				}));
 				res.redirect('/');
             }).catch(function(error) {
                 next(error);
@@ -46,6 +46,7 @@ UserController.prototype.createUser = function(req, res, next) {
     });
 };
 
+// one get returns users name
 UserController.prototype.getUserName = function(req, res, next) {
     return new Promise(function(resolve, reject) {
         User.findOne({

@@ -8,6 +8,7 @@ var path = require('path'),
 
 function LoginController() {};
 
+// Attaches UserKey if username and password are vaild.
 LoginController.prototype.postLogin = function(req, res, next) {
 	var username = req.body.username;
 	var password = req.body.password;
