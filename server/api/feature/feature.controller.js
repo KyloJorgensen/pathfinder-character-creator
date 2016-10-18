@@ -1,51 +1,51 @@
 'use strict';
 
-var Feat = require('./feat.model');
+var Feature = require('./feature.model');
 var Character = require('../character/character.model');
 
-function FeatController() {};
+function FeatureController() {};
 
-// get Feats queries: _characterId returns: Feats
-FeatController.prototype.getFeats = function(req, res, next) {
+// get Features queries: _characterId returns: Features
+FeatureController.prototype.getFeatures = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
-		Feat.find({
+		Feature.find({
 			_characterId: req.params._characterId
-		}, function(error, feats) {
+		}, function(error, features) {
 			if (error) {
 				reject(error);
 			} else {
-				resolve(feats);
+				resolve(features);
 			}
 		});
-	}).then(function(feats) {
-		res.status(200).json(feats);
+	}).then(function(features) {
+		res.status(200).json(features);
 	}).catch(function(error) {
 		next(error);
 	});
 };
 
-// get a Feat queries: _characterId and _featId returns: Feat
-FeatController.prototype.getFeat = function(req, res, next) {
+// get a Feature queries: _characterId and _featureId returns: Feature
+FeatureController.prototype.getFeature = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
-		Feat.findOne({
+		Feature.findOne({
 			_characterId: req.params._characterId,
-			_id: req.params._featId
-		}, function(error, feat) {
+			_id: req.params._featureId
+		}, function(error, feature) {
 			if (error) {
 				reject(error);
 			} else {
-				resolve(feat);
+				resolve(feature);
 			}
 		});
-	}).then(function(feat) {
-		res.status(200).json(feat);
+	}).then(function(feature) {
+		res.status(200).json(feature);
 	}).catch(function(error) {
 		next(error);
 	});
 };
 
-// create Feat create: _characterId, name returns: new Feat
-FeatController.prototype.createFeat = function(req, res, next) {
+// create Feature create: _characterId, name, and key_ability returns: new Feature
+FeatureController.prototype.createFeature = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
 		Character.findOne({
 			_id: req.body._characterId,
@@ -54,38 +54,35 @@ FeatController.prototype.createFeat = function(req, res, next) {
 			if (error) {
 				reject(error);
 			} else {
-				Feat.create({
+				Feature.create({
 					_characterId: character._id,
 					name: req.body.name,
 					key_ability: req.body.key_ability
 				}, {
 					new: true
-				}, function(error, feat) {
+				}, function(error, feature) {
 					if (error) {
 						reject(error);
 					} else {
-						resolve(feat);
+						resolve(feature);
 					}
 				});
 			}
 		});
-	}).then(function(feat) {
-		res.status(200).json(feat);
+	}).then(function(feature) {
+		res.status(200).json(feature);
 	}).catch(function(error) {
 		next(error);
 	});
 };
 
-// Update Feat queries: _characterId and _featId update: name, specialties returns: new Feat 
-FeatController.prototype.updateFeat = function(req, res, next) {
+// Update Feature queries: _characterId and _featureId update: name returns: new Feature 
+FeatureController.prototype.updateFeature = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
 				var changes = {};
 		if ('body' in req) {
 			if ('name' in req.body) {
 				changes.name = req.body.name;
-			}
-			if ('specialties' in req.body) {
-				changes.specialties = req.body.specialties;
 			}
 		} else {
 			var error = new Error('missing Body');
@@ -93,45 +90,45 @@ FeatController.prototype.updateFeat = function(req, res, next) {
 			return next(error);
 		}
 
-		Feat.findOneAndUpdate({
+		Feature.findOneAndUpdate({
 			_characterId: req.body._characterId,
-			_id: req.body._featId
+			_id: req.body._featureId
 		}, {
 			$set: changes
 		}, {
 			new: true
-		}, function(error, feat) {
+		}, function(error, feature) {
 			if (error) {
 				reject(error);
 			} else {
-				resolve(feat);
+				resolve(feature);
 			}
 		});
-	}).then(function(feat) {
-		res.status(200).json(feat);
+	}).then(function(feature) {
+		res.status(200).json(feature);
 	}).catch(function(error) {
 		next(error);
 	});
 };
 
-// delete Feat queries: _characterId and _featId
-FeatController.prototype.deleteFeat = function(req, res, next) {
+// delete Feature queries: _characterId and _featureId
+FeatureController.prototype.deleteFeature = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
-		Feat.findOneAndRemove({
-			_id: req.body._featId,
+		Feature.findOneAndRemove({
+			_id: req.body._featureId,
 			_characterId: req.body._characterId
-		}, function(error, feat) {
+		}, function(error, feature) {
 			if (error) {
 				reject(error);
 			} else {
-				resolve(feat);
+				resolve(feature);
 			}
 		});
-	}).then(function(feat) {
+	}).then(function(feature) {
 		res.status(200).end();
 	}).catch(function(error) {
 		next(error);
 	});
 };
 
-module.exports = FeatController.prototype;
+module.exports = FeatureController.prototype;
