@@ -75,7 +75,7 @@ SkillController.prototype.createSkill = function(req, res, next) {
 	});
 };
 
-SkillController.prototype.deleteSkill = function(req, res, next) {
+SkillController.prototype.updateSkill = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
 				var changes = {};
 		if ('body' in req) {
@@ -119,6 +119,25 @@ SkillController.prototype.deleteSkill = function(req, res, next) {
 		});
 	}).then(function(skill) {
 		res.status(200).json(skill);
+	}).catch(function(error) {
+		next(error);
+	});
+};
+
+SkillController.prototype.deleteSkill = function(req, res, next) {
+	return new Promise(function(resolve, reject) {
+		Skill.findOneAndRemove({
+			_id: req.body._skillId,
+			_characterId: req.body._characterId
+		}, function(error, skill) {
+			if (error) {
+				reject(error);
+			} else {
+				resolve(skill);
+			}
+		});
+	}).then(function(skill) {
+		res.status(200).end();
 	}).catch(function(error) {
 		next(error);
 	});

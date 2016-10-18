@@ -3,9 +3,9 @@
 var Character = require('./character.model');
 var User = require('../user/user.model');
 
-function LoginController() {};
+function CharacterController() {};
 
-LoginController.prototype.getCharacters = function(req, res, next) {
+CharacterController.prototype.getCharacters = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
 		Character.find({_userId: req._userId}, function(error, characters) {
 			if (error) {
@@ -21,7 +21,7 @@ LoginController.prototype.getCharacters = function(req, res, next) {
 	});
 };
 
-LoginController.prototype.getCharacter = function(req, res, next) {
+CharacterController.prototype.getCharacter = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
 		Character.findOne({
 			_id: req.params.characterId, 
@@ -41,7 +41,7 @@ LoginController.prototype.getCharacter = function(req, res, next) {
 };
 
 
-LoginController.prototype.createCharacter = function(req, res, next) {
+CharacterController.prototype.createCharacter = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
 		User.findOne({
 			_id: req._userId
@@ -68,7 +68,7 @@ LoginController.prototype.createCharacter = function(req, res, next) {
 	});
 };
 
-LoginController.prototype.deleteCharacter = function(req, res, next) {
+CharacterController.prototype.deleteCharacter = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
 		Character.findOneAndRemove({
 			_id: req.body._characterId,
@@ -87,7 +87,7 @@ LoginController.prototype.deleteCharacter = function(req, res, next) {
 	});
 };
 
-LoginController.prototype.updateCharacter = function(req, res, next) {
+CharacterController.prototype.updateCharacter = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
 
 		var changes = {};
@@ -311,4 +311,4 @@ LoginController.prototype.updateCharacter = function(req, res, next) {
 	});
 };
 
-module.exports = LoginController.prototype;
+module.exports = CharacterController.prototype;

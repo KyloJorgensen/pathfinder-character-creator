@@ -7,6 +7,7 @@ var SECRET = require('../../server/config/variables.express.js').SECRET;
 var cookie = require('cookie');
 var btoa = require('btoa');
 var User = require('../../server/api/user/user.model');
+var Skill = require('../../server/api/skill/skill.model');
 
 var should = chai.should();
 var app = server.app;
@@ -229,7 +230,6 @@ module.exports = function () {
                     .send(data)
                     .end(function (error, res) {
                         if (error) {return done(error)}
-                        console.log(res.body);
                         res.should.have.status(200);
                         res.body._id.should.equal(skillId);
                         res.body._characterId.should.equal(characterId);
@@ -240,6 +240,59 @@ module.exports = function () {
                         res.body.train_only.should.equal(data.train_only);
                         res.body.rank.should.equal(data.rank);
                         done();
+                    });
+                }).catch(function(error) {
+                    done(error);
+                });
+            });
+        });
+
+        it('should delete skill on delete', function(done) {
+            var agent = chai.request.agent(app);
+            agent.post('/login')
+            .send({
+                username: username,
+                password: username
+            })
+            .end(function(error, res) {
+                if (error) {return done(error)}
+                return new Promise(function(resolve, reject) {
+                    User.findOne({
+                        username: username
+                    }, function(error, user) {
+                        if (error) {
+                            reject(error);
+                        } else {
+                            resolve(user);
+                        }
+                    });
+                }).then(function(user) {
+                    res.should.have.status(200);
+                    res.request.cookies.should.equal(cookie.serialize('UserKey', btoa(SECRET + ':' + user._id)));
+                    agent.delete('/skill')
+                    .send({
+                        _skillId: skillId,
+                        _characterId: characterId
+                    })
+                    .end(function (error, res) {
+                        if (error) {return done(error)}
+                        res.should.have.status(200);
+                        Skill.findOne({
+                            _id: skillId,
+                            _characterId: characterId
+                        }, function(error, skill) {
+                            if (error) {
+                                done(error);
+                            } else {
+                                console.log(skill);
+                                if (skill == null) {
+                                    done();
+                                } else {
+                                    var error = new Error("Skill didn't delete");
+                                    done(error);
+                                }
+                            }
+                        });                        
                     });
                 }).catch(function(error) {
                     done(error);
