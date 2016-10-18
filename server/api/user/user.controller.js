@@ -1,7 +1,7 @@
 'use strict';
 
 var User = require('./user.model'),
-	bcrypt = require('bcrypt'),
+	bcrypt = require('bcryptjs'),
 	btoa = require('btoa'),
 	cookie = require('cookie'),
     SECRET = require('../../config/variables.express').SECRET;

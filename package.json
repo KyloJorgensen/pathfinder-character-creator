@@ -52,6 +52,7 @@
   "homepage": "https://github.com/KyloJorgensen/pathfinder-character-creator#readme",
   "dependencies": {
     "bcrypt": "^0.8.7",
+    "bcryptjs": "^2.3.0",
     "body-parser": "^1.15.2",
     "btoa": "^1.1.2",
     "cookie": "^0.3.1",
