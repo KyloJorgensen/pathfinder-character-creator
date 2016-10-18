@@ -5,11 +5,11 @@ var Character = require('../character/character.model');
 
 function SkillController() {};
 
-// get skills from params characterId return characters skills
+// get skills queries: _characterId returns: Skills
 SkillController.prototype.getSkills = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
 		Skill.find({
-			_characterId: req.params.characterId
+			_characterId: req.params._characterId
 		}, function(error, skills) {
 			if (error) {
 				reject(error);
@@ -24,11 +24,12 @@ SkillController.prototype.getSkills = function(req, res, next) {
 	});
 };
 
+// get a skill queries: _characterId and _skillId returns: Skill
 SkillController.prototype.getSkill = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
 		Skill.findOne({
-			_characterId: req.params.characterId,
-			_id: req.params.skillId
+			_characterId: req.params._characterId,
+			_id: req.params._skillId
 		}, function(error, skill) {
 			if (error) {
 				reject(error);
@@ -43,7 +44,7 @@ SkillController.prototype.getSkill = function(req, res, next) {
 	});
 };
 
-// create skill from name and key_ability returns new skill
+// create skill create: _characterId, name, and key_ability returns: new skill
 SkillController.prototype.createSkill = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
 		Character.findOne({
@@ -75,12 +76,16 @@ SkillController.prototype.createSkill = function(req, res, next) {
 	});
 };
 
+// Update Skill queries: _characterId and _skillId update: name, key_ability, misc_bonus, trained, train_only, and/or rank returns: new Skill 
 SkillController.prototype.updateSkill = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
 				var changes = {};
 		if ('body' in req) {
 			if ('name' in req.body) {
 				changes.name = req.body.name;
+			}
+			if ('specialties' in req.body) {
+				changes.specialties = req.body.specialties;
 			}
             if('key_ability' in req.body) {
             	changes.key_ability = req.body.key_ability;
@@ -124,6 +129,7 @@ SkillController.prototype.updateSkill = function(req, res, next) {
 	});
 };
 
+// delete skill queries: _characterId and _skillId
 SkillController.prototype.deleteSkill = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
 		Skill.findOneAndRemove({

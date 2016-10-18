@@ -3,7 +3,7 @@
 var mongoose = require('mongoose');
 var Character = require('../character/character.model');
 
-var characterSchema = mongoose.Schema({
+var skillSchema = mongoose.Schema({
 	_characterId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Character',
@@ -41,4 +41,4 @@ var characterSchema = mongoose.Schema({
 
 });
 
-module.exports = mongoose.model('Skill', characterSchema);
+module.exports = mongoose.model('Skill', skillSchema);
