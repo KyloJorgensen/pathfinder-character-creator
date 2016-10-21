@@ -1,5 +1,7 @@
 'use strict';
 
+var cookie = require('cookie');
+
 module.exports = function(app) {
 	app.use(function(error, req, res, next) {
 		if (error) {
@@ -14,14 +16,26 @@ module.exports = function(app) {
 		}
 
 		if (error.name == 'AuthenticationError') {
-			return res.status(401).end();
+			return res.status(401).json(error.message);
 		}
 
 		if (error.name == 'MongoError') {
 			if (error.code == 11000) {
-				console.log(error);
 				return res.status(400).json(error.message);
 			}			
+		}
+
+		if (error.name == 'LoginError') {
+			res.setHeader('Set-Cookie', cookie.serialize('UserKey', null, {
+	      		httpOnly: false,
+	      		maxAge: 60 * 60 * 24 * 7 // 1 week 
+	    	}));
+			return res.status(401).end();
+		}
+
+		if (error.name == 'ValidationError') {
+			console.log(error.errors.name.path);
+			return res.status(240).json(error);
 		}
 
 		res.status(500);

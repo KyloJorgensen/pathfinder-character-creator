@@ -11,6 +11,7 @@ var mainRouter = require('../api/main/main.router'),
 	gearRouter = require('../api/gear/gear.router'),
 	acitemRouter = require('../api/acitem/acitem.router'),
 	spellRouter = require('../api/spell/spell.router'),
+	weaponRouter = require('../api/weapon/weapon.router'),
 	authentication = require('../middleware/authentication');
 
 module.exports = function(app) {
@@ -25,4 +26,5 @@ module.exports = function(app) {
     	.use('/gear', authentication, gearRouter)
     	.use('/acitem', authentication, acitemRouter)
     	.use('/spell', authentication, spellRouter)
+    	.use('/weapon', authentication, weaponRouter)
 };

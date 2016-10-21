@@ -12,7 +12,6 @@ function LoginController() {};
 LoginController.prototype.postLogin = function(req, res, next) {
 	var username = req.body.username;
 	var password = req.body.password;
-
 	return new Promise(function(resolve, reject) {
 		User.findOne({username: username}, function(error, user) {
 			if (error) {
@@ -22,6 +21,11 @@ LoginController.prototype.postLogin = function(req, res, next) {
 			}
 		})
 	}).then(function(user) {
+		if (user == null) {
+			var error = new Error('Invaild Username.');
+			error.name = 'LoginError';
+			return next(error);
+		}
 		return new Promise(function(resolve, reject) { 
 			user.validatePassword(password, function(error, isVaild) {
 				if (error) {
@@ -37,16 +41,14 @@ LoginController.prototype.postLogin = function(req, res, next) {
 		}).then(function(_id) {
 			if (_id) {
 				res.setHeader('Set-Cookie', cookie.serialize('UserKey', btoa(SECRET + ':' + _id), {
-		      		httpOnly: true,
+		      		httpOnly: false,
 		      		maxAge: 60 * 60 * 24 * 7 // 1 week 
 		    	}));
-				res.redirect('/');
+				res.status(200).json('');
 			} else {
-				res.setHeader('Set-Cookie', cookie.serialize('UserKey', null, {
-		      		httpOnly: true,
-		      		maxAge: 60 * 60 * 24 * 7 // 1 week 
-		    	}));
-				res.redirect('/#/login');
+				var error = new Error('Invaild Password.');
+				error.name = 'LoginError';
+				return next(error);
 			}
 		}).catch(function(error) {
 			next(error);

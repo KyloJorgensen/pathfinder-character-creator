@@ -17,11 +17,7 @@ var userSchema = mongoose.Schema({
     name: {
         type: String,
         required: true
-    },
-    characters: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Character'
-    }]
+    }
 });
 
 userSchema.methods.validatePassword = function(password, callback) {

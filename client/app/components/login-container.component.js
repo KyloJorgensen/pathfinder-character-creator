@@ -4,7 +4,15 @@ var React = require('react'),
     connect = require('react-redux').connect;
 
 
-var App = function(props) {
+var LoginContainer = function(props) {
+    if ('cookie' in document) {
+        var userKey = document.cookie.split('=');
+        if (userKey[0] == 'UserKey') {
+            if (userKey[1] != 'null') {
+                props.history.replace('/user');
+            } 
+        }
+    }
     return (
         <div className="login-page">
             <div className="login-page-body">
@@ -16,9 +24,10 @@ var App = function(props) {
 
 var mapStateToProps = function(state, props) {
     return {
+        name: state.user.name
     };
 };
 
-var Container = connect(mapStateToProps)(App);
+var Container = connect(mapStateToProps)(LoginContainer);
 
 module.exports = Container;

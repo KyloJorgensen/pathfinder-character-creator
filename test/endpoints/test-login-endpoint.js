@@ -35,9 +35,6 @@ module.exports = function() {
                     });
                 }).then(function(user) {
                     res.should.have.status(200);
-                    res.request.should.have.property('cookies');
-                    res.request.cookies.should.be.a('string');
-                    res.request.cookies.should.equal(cookie.serialize('UserKey', btoa(SECRET + ':' + user._id)));
                     done();
                 }).catch(function(error) {
                     done(error);

@@ -50,11 +50,15 @@
 	    ReactDOM = __webpack_require__(34),
 	    Provider = __webpack_require__(172).Provider,
 	    store = __webpack_require__(200),
-	    App = __webpack_require__(202),
-	    MainPage = __webpack_require__(203),
-	    Login = __webpack_require__(204),
-	    LoginContainer = __webpack_require__(205),
-	    router = __webpack_require__(206),
+	    App = __webpack_require__(212),
+	    MainPage = __webpack_require__(213),
+	    Login = __webpack_require__(278),
+	    LoginContainer = __webpack_require__(279),
+	    SignupContainer = __webpack_require__(280),
+	    Signup = __webpack_require__(281),
+	    User = __webpack_require__(282),
+	    Character = __webpack_require__(285),
+	    router = __webpack_require__(215),
 	    Router = router.Router,
 	    Route = router.Route,
 	    hashHistory = router.hashHistory,
@@ -69,7 +73,15 @@
 	        React.createElement(
 	            Route,
 	            { path: '/', component: App },
-	            React.createElement(IndexRoute, { component: MainPage })
+	            React.createElement(IndexRoute, { component: MainPage }),
+	            React.createElement(Route, { path: '/user', component: User }),
+	            React.createElement(Route, { path: '/character', component: Character }),
+	            React.createElement(Route, { path: '/character/:_characterId', component: Character })
+	        ),
+	        React.createElement(
+	            Route,
+	            { path: '/signup', component: SignupContainer },
+	            React.createElement(IndexRoute, { component: Signup })
 	        ),
 	        React.createElement(
 	            Route,
@@ -23200,12 +23212,21 @@
 	var createStore = redux.createStore;
 	var applyMiddleware = redux.applyMiddleware;
 	var thunk = __webpack_require__(201).default;
+	var userReducer = __webpack_require__(202);
+	var characterReducer = __webpack_require__(206);
+	var featReducer = __webpack_require__(208);
+	var acitemReducer = __webpack_require__(210);
 	
 	var initialState = {};
 	
 	var reducers = function reducers(state, action) {
 	    state = state || initialState;
-	    return {};
+	    return {
+	        user: userReducer(state.user, action),
+	        character: characterReducer(state.character, action),
+	        feat: featReducer(state.feat, action),
+	        acitem: acitemReducer(state.acitem, action)
+	    };
 	};
 	
 	var store = createStore(reducers, applyMiddleware(thunk));
@@ -23245,28 +23266,38 @@
 
 	'use strict';
 	
-	var React = __webpack_require__(1),
-	    connect = __webpack_require__(172).connect;
+	var actions = __webpack_require__(203);
 	
-	var App = function App(props) {
-	    return React.createElement(
-	        'div',
-	        { className: 'pathfinder-character-creator' },
-	        React.createElement(
-	            'div',
-	            { className: 'pathfinder-character-creator-body' },
-	            props.children
-	        )
-	    );
+	var userInitialState = {
+	    loginFailed: false,
+	    signupFailed: false,
+	    name: null
 	};
 	
-	var mapStateToProps = function mapStateToProps(state, props) {
-	    return {};
+	var userReducer = function userReducer(state, action) {
+	    state = state || userInitialState;
+	    if (action.type === actions.GET_USER_NAME_SUCCESS) {
+	        state.name = action.name;
+	    }
+	    if (action.type === actions.GET_USER_NAME_ERROR) {
+	        console.log(action.error);
+	    }
+	    if (action.type === actions.LOGIN_SUCCESS) {
+	        state.loginFailed = false;
+	    }
+	    if (action.type === actions.LOGIN_ERROR) {
+	        state.loginFailed = true;
+	    }
+	    if (action.type === actions.SIGNUP_SUCCESS) {
+	        state.signupFailed = false;
+	    }
+	    if (action.type === actions.SIGNUP_ERROR) {
+	        state.signupFailed = true;
+	    }
+	    return state;
 	};
 	
-	var Container = connect(mapStateToProps)(App);
-	
-	module.exports = Container;
+	module.exports = userReducer;
 
 /***/ },
 /* 203 */
@@ -23274,141 +23305,647 @@
 
 	'use strict';
 	
-	var React = __webpack_require__(1),
-	    connect = __webpack_require__(172).connect;
+	var fetch = __webpack_require__(204);
+	var redirect = false;
 	
-	var mainPage = React.createClass({
-		displayName: 'mainPage',
-	
-		render: function render() {
-			return React.createElement(
-				'div',
-				{ className: 'main-page' },
-				React.createElement(
-					'h1',
-					null,
-					'Hello, Welcome to Pathfinder Character Creator.'
-				),
-				React.createElement(
-					'form',
-					{ action: '/logout', method: 'get' },
-					React.createElement(
-						'div',
-						null,
-						React.createElement('input', { type: 'submit', value: 'LogOut' })
-					)
-				),
-				React.createElement(
-					'form',
-					{ action: '/#/login', method: 'get' },
-					React.createElement(
-						'div',
-						null,
-						React.createElement('input', { type: 'submit', value: 'login' })
-					)
-				)
-			);
-		}
-	});
-	
-	var mapStateToProps = function mapStateToProps(state, props) {
-		return {};
+	var getUserName = function getUserName() {
+	    if (!'cookie' in document) {
+	        var error = new Error('cookie is missing');
+	        return {
+	            type: GET_USER_NAME_ERROR,
+	            error: error
+	        };
+	    }
+	    var userKey = document.cookie.split('=');
+	    if (userKey[0] != 'UserKey') {
+	        var error = new Error('UserKey cookie is missing');
+	        return {
+	            type: GET_USER_NAME_ERROR,
+	            error: error
+	        };
+	    }
+	    if (userKey[1] == 'null') {
+	        var error = new Error('UserKey cookie is null');
+	        return {
+	            type: GET_USER_NAME_ERROR,
+	            error: error
+	        };
+	    }
+	    return function (dispatch) {
+	        var url = '/user';
+	        return fetch(url, {
+	            method: 'get',
+	            headers: {
+	                'Content-Type': 'application/json',
+	                'Accept': 'application/json',
+	                'Authentication': document.cookie
+	            }
+	        }).then(function (response) {
+	            if (response.status < 200 || response.status >= 300) {
+	                var error = new Error(response.statusText);
+	                error.response = response;
+	                throw error;
+	            }
+	            return response;
+	        }).then(function (response) {
+	            return response.json();
+	        }).then(function (data) {
+	            return dispatch(getUserNameSuccess(data));
+	        }).catch(function (error) {
+	            return dispatch(getUserNameError(error));
+	        });
+	    };
 	};
 	
-	var Container = connect(mapStateToProps)(mainPage);
+	var GET_USER_NAME_SUCCESS = 'GET_USER_NAME_SUCCESS';
+	var getUserNameSuccess = function getUserNameSuccess(data) {
+	    redirect = false;
+	    return {
+	        type: GET_USER_NAME_SUCCESS,
+	        name: data
+	    };
+	};
 	
-	module.exports = Container;
+	var GET_USER_NAME_ERROR = 'GET_USER_NAME_ERROR';
+	var getUserNameError = function getUserNameError(error) {
+	    redirect = false;
+	    return {
+	        type: GET_USER_NAME_ERROR,
+	        error: error
+	    };
+	};
+	
+	var login = function login(username, password, that) {
+	    var payload = {
+	        username: username,
+	        password: password
+	    };
+	    return function (dispatch) {
+	        redirect = that.props.history;
+	        var url = '/login';
+	        return fetch(url, {
+	            method: 'POST',
+	            credentials: 'same-origin',
+	            headers: {
+	                'Content-Type': 'application/json',
+	                'Accept': 'application/json'
+	            },
+	            body: JSON.stringify(payload)
+	        }).then(function (response) {
+	            if (response.status < 200 || response.status >= 300) {
+	                var error = new Error(response.statusText);
+	                error.response = response;
+	                throw error;
+	            }
+	            return response;
+	        }).then(function (response) {
+	            return response.json();
+	        }).then(function (data) {
+	            return dispatch(loginSuccess(data));
+	        }).catch(function (error) {
+	            return dispatch(loginError(error));
+	        });
+	    };
+	};
+	
+	var LOGIN_SUCCESS = 'LOGIN_SUCCESS';
+	var loginSuccess = function loginSuccess(data) {
+	    redirect.replace('/user');
+	    redirect = false;
+	    return {
+	        type: LOGIN_SUCCESS,
+	        data: data
+	    };
+	};
+	
+	var LOGIN_ERROR = 'LOGIN_ERROR';
+	var loginError = function loginError(error) {
+	    redirect = false;
+	    return {
+	        type: LOGIN_ERROR,
+	        error: error
+	    };
+	};
+	
+	var signup = function signup(name, username, password, that) {
+	    var payload = {
+	        username: username,
+	        password: password,
+	        name: name
+	    };
+	    return function (dispatch) {
+	        redirect = that.props.history;
+	        var url = '/user';
+	        return fetch(url, {
+	            method: 'POST',
+	            credentials: 'same-origin',
+	            headers: {
+	                'Content-Type': 'application/json',
+	                'Accept': 'application/json'
+	            },
+	            body: JSON.stringify(payload)
+	        }).then(function (response) {
+	            if (response.status < 200 || response.status >= 300) {
+	                var error = new Error(response.statusText);
+	                error.response = response;
+	                throw error;
+	            }
+	            return response;
+	        }).then(function (response) {
+	            return response.json();
+	        }).then(function (data) {
+	            return dispatch(signupSuccess(data));
+	        }).catch(function (error) {
+	            return dispatch(signupError(error));
+	        });
+	    };
+	};
+	
+	var SIGNUP_SUCCESS = 'SIGNUP_SUCCESS';
+	var signupSuccess = function signupSuccess(data) {
+	    redirect.replace('/user');
+	    redirect = false;
+	    return {
+	        type: SIGNUP_SUCCESS,
+	        data: data
+	    };
+	};
+	
+	var SIGNUP_ERROR = 'SIGNUP_ERROR';
+	var signupError = function signupError(error) {
+	    redirect = false;
+	    return {
+	        type: SIGNUP_ERROR,
+	        error: error
+	    };
+	};
+	
+	exports.getUserName = getUserName;
+	exports.GET_USER_NAME_SUCCESS = GET_USER_NAME_SUCCESS;
+	exports.getUserNameSuccess = getUserNameSuccess;
+	exports.GET_USER_NAME_ERROR = GET_USER_NAME_ERROR;
+	exports.getUserNameError = getUserNameError;
+	exports.login = login;
+	exports.LOGIN_SUCCESS = LOGIN_SUCCESS;
+	exports.loginSuccess = loginSuccess;
+	exports.LOGIN_ERROR = LOGIN_ERROR;
+	exports.loginError = loginError;
+	exports.signup = signup;
+	exports.SIGNUP_SUCCESS = SIGNUP_SUCCESS;
+	exports.signupSuccess = signupSuccess;
+	exports.SIGNUP_ERROR = SIGNUP_ERROR;
+	exports.signupError = signupError;
 
 /***/ },
 /* 204 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
-	
-	var React = __webpack_require__(1),
-	    connect = __webpack_require__(172).connect;
-	
-	var mainPage = React.createClass({
-		displayName: 'mainPage',
-	
-		render: function render() {
-			return React.createElement(
-				'div',
-				{ className: 'login' },
-				React.createElement(
-					'h1',
-					null,
-					'Login'
-				),
-				React.createElement(
-					'form',
-					{ action: '/login', method: 'post' },
-					React.createElement(
-						'div',
-						null,
-						React.createElement(
-							'label',
-							null,
-							'Username:'
-						),
-						React.createElement('input', { type: 'text', name: 'username' })
-					),
-					React.createElement(
-						'div',
-						null,
-						React.createElement(
-							'label',
-							null,
-							'Password:'
-						),
-						React.createElement('input', { type: 'password', name: 'password' })
-					),
-					React.createElement(
-						'div',
-						null,
-						React.createElement('input', { type: 'submit', value: 'Log In' })
-					)
-				)
-			);
-		}
-	});
-	
-	var mapStateToProps = function mapStateToProps(state, props) {
-		return {};
-	};
-	
-	var Container = connect(mapStateToProps)(mainPage);
-	
-	module.exports = Container;
+	// the whatwg-fetch polyfill installs the fetch() function
+	// on the global object (window or self)
+	//
+	// Return that as the export for use in Webpack, Browserify etc.
+	__webpack_require__(205);
+	module.exports = self.fetch.bind(self);
+
 
 /***/ },
 /* 205 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
-	'use strict';
+	(function(self) {
+	  'use strict';
 	
-	var React = __webpack_require__(1),
-	    connect = __webpack_require__(172).connect;
+	  if (self.fetch) {
+	    return
+	  }
 	
-	var App = function App(props) {
-	    return React.createElement(
-	        'div',
-	        { className: 'login-page' },
-	        React.createElement(
-	            'div',
-	            { className: 'login-page-body' },
-	            props.children
-	        )
-	    );
-	};
+	  var support = {
+	    searchParams: 'URLSearchParams' in self,
+	    iterable: 'Symbol' in self && 'iterator' in Symbol,
+	    blob: 'FileReader' in self && 'Blob' in self && (function() {
+	      try {
+	        new Blob()
+	        return true
+	      } catch(e) {
+	        return false
+	      }
+	    })(),
+	    formData: 'FormData' in self,
+	    arrayBuffer: 'ArrayBuffer' in self
+	  }
 	
-	var mapStateToProps = function mapStateToProps(state, props) {
-	    return {};
-	};
+	  function normalizeName(name) {
+	    if (typeof name !== 'string') {
+	      name = String(name)
+	    }
+	    if (/[^a-z0-9\-#$%&'*+.\^_`|~]/i.test(name)) {
+	      throw new TypeError('Invalid character in header field name')
+	    }
+	    return name.toLowerCase()
+	  }
 	
-	var Container = connect(mapStateToProps)(App);
+	  function normalizeValue(value) {
+	    if (typeof value !== 'string') {
+	      value = String(value)
+	    }
+	    return value
+	  }
 	
-	module.exports = Container;
+	  // Build a destructive iterator for the value list
+	  function iteratorFor(items) {
+	    var iterator = {
+	      next: function() {
+	        var value = items.shift()
+	        return {done: value === undefined, value: value}
+	      }
+	    }
+	
+	    if (support.iterable) {
+	      iterator[Symbol.iterator] = function() {
+	        return iterator
+	      }
+	    }
+	
+	    return iterator
+	  }
+	
+	  function Headers(headers) {
+	    this.map = {}
+	
+	    if (headers instanceof Headers) {
+	      headers.forEach(function(value, name) {
+	        this.append(name, value)
+	      }, this)
+	
+	    } else if (headers) {
+	      Object.getOwnPropertyNames(headers).forEach(function(name) {
+	        this.append(name, headers[name])
+	      }, this)
+	    }
+	  }
+	
+	  Headers.prototype.append = function(name, value) {
+	    name = normalizeName(name)
+	    value = normalizeValue(value)
+	    var list = this.map[name]
+	    if (!list) {
+	      list = []
+	      this.map[name] = list
+	    }
+	    list.push(value)
+	  }
+	
+	  Headers.prototype['delete'] = function(name) {
+	    delete this.map[normalizeName(name)]
+	  }
+	
+	  Headers.prototype.get = function(name) {
+	    var values = this.map[normalizeName(name)]
+	    return values ? values[0] : null
+	  }
+	
+	  Headers.prototype.getAll = function(name) {
+	    return this.map[normalizeName(name)] || []
+	  }
+	
+	  Headers.prototype.has = function(name) {
+	    return this.map.hasOwnProperty(normalizeName(name))
+	  }
+	
+	  Headers.prototype.set = function(name, value) {
+	    this.map[normalizeName(name)] = [normalizeValue(value)]
+	  }
+	
+	  Headers.prototype.forEach = function(callback, thisArg) {
+	    Object.getOwnPropertyNames(this.map).forEach(function(name) {
+	      this.map[name].forEach(function(value) {
+	        callback.call(thisArg, value, name, this)
+	      }, this)
+	    }, this)
+	  }
+	
+	  Headers.prototype.keys = function() {
+	    var items = []
+	    this.forEach(function(value, name) { items.push(name) })
+	    return iteratorFor(items)
+	  }
+	
+	  Headers.prototype.values = function() {
+	    var items = []
+	    this.forEach(function(value) { items.push(value) })
+	    return iteratorFor(items)
+	  }
+	
+	  Headers.prototype.entries = function() {
+	    var items = []
+	    this.forEach(function(value, name) { items.push([name, value]) })
+	    return iteratorFor(items)
+	  }
+	
+	  if (support.iterable) {
+	    Headers.prototype[Symbol.iterator] = Headers.prototype.entries
+	  }
+	
+	  function consumed(body) {
+	    if (body.bodyUsed) {
+	      return Promise.reject(new TypeError('Already read'))
+	    }
+	    body.bodyUsed = true
+	  }
+	
+	  function fileReaderReady(reader) {
+	    return new Promise(function(resolve, reject) {
+	      reader.onload = function() {
+	        resolve(reader.result)
+	      }
+	      reader.onerror = function() {
+	        reject(reader.error)
+	      }
+	    })
+	  }
+	
+	  function readBlobAsArrayBuffer(blob) {
+	    var reader = new FileReader()
+	    reader.readAsArrayBuffer(blob)
+	    return fileReaderReady(reader)
+	  }
+	
+	  function readBlobAsText(blob) {
+	    var reader = new FileReader()
+	    reader.readAsText(blob)
+	    return fileReaderReady(reader)
+	  }
+	
+	  function Body() {
+	    this.bodyUsed = false
+	
+	    this._initBody = function(body) {
+	      this._bodyInit = body
+	      if (typeof body === 'string') {
+	        this._bodyText = body
+	      } else if (support.blob && Blob.prototype.isPrototypeOf(body)) {
+	        this._bodyBlob = body
+	      } else if (support.formData && FormData.prototype.isPrototypeOf(body)) {
+	        this._bodyFormData = body
+	      } else if (support.searchParams && URLSearchParams.prototype.isPrototypeOf(body)) {
+	        this._bodyText = body.toString()
+	      } else if (!body) {
+	        this._bodyText = ''
+	      } else if (support.arrayBuffer && ArrayBuffer.prototype.isPrototypeOf(body)) {
+	        // Only support ArrayBuffers for POST method.
+	        // Receiving ArrayBuffers happens via Blobs, instead.
+	      } else {
+	        throw new Error('unsupported BodyInit type')
+	      }
+	
+	      if (!this.headers.get('content-type')) {
+	        if (typeof body === 'string') {
+	          this.headers.set('content-type', 'text/plain;charset=UTF-8')
+	        } else if (this._bodyBlob && this._bodyBlob.type) {
+	          this.headers.set('content-type', this._bodyBlob.type)
+	        } else if (support.searchParams && URLSearchParams.prototype.isPrototypeOf(body)) {
+	          this.headers.set('content-type', 'application/x-www-form-urlencoded;charset=UTF-8')
+	        }
+	      }
+	    }
+	
+	    if (support.blob) {
+	      this.blob = function() {
+	        var rejected = consumed(this)
+	        if (rejected) {
+	          return rejected
+	        }
+	
+	        if (this._bodyBlob) {
+	          return Promise.resolve(this._bodyBlob)
+	        } else if (this._bodyFormData) {
+	          throw new Error('could not read FormData body as blob')
+	        } else {
+	          return Promise.resolve(new Blob([this._bodyText]))
+	        }
+	      }
+	
+	      this.arrayBuffer = function() {
+	        return this.blob().then(readBlobAsArrayBuffer)
+	      }
+	
+	      this.text = function() {
+	        var rejected = consumed(this)
+	        if (rejected) {
+	          return rejected
+	        }
+	
+	        if (this._bodyBlob) {
+	          return readBlobAsText(this._bodyBlob)
+	        } else if (this._bodyFormData) {
+	          throw new Error('could not read FormData body as text')
+	        } else {
+	          return Promise.resolve(this._bodyText)
+	        }
+	      }
+	    } else {
+	      this.text = function() {
+	        var rejected = consumed(this)
+	        return rejected ? rejected : Promise.resolve(this._bodyText)
+	      }
+	    }
+	
+	    if (support.formData) {
+	      this.formData = function() {
+	        return this.text().then(decode)
+	      }
+	    }
+	
+	    this.json = function() {
+	      return this.text().then(JSON.parse)
+	    }
+	
+	    return this
+	  }
+	
+	  // HTTP methods whose capitalization should be normalized
+	  var methods = ['DELETE', 'GET', 'HEAD', 'OPTIONS', 'POST', 'PUT']
+	
+	  function normalizeMethod(method) {
+	    var upcased = method.toUpperCase()
+	    return (methods.indexOf(upcased) > -1) ? upcased : method
+	  }
+	
+	  function Request(input, options) {
+	    options = options || {}
+	    var body = options.body
+	    if (Request.prototype.isPrototypeOf(input)) {
+	      if (input.bodyUsed) {
+	        throw new TypeError('Already read')
+	      }
+	      this.url = input.url
+	      this.credentials = input.credentials
+	      if (!options.headers) {
+	        this.headers = new Headers(input.headers)
+	      }
+	      this.method = input.method
+	      this.mode = input.mode
+	      if (!body) {
+	        body = input._bodyInit
+	        input.bodyUsed = true
+	      }
+	    } else {
+	      this.url = input
+	    }
+	
+	    this.credentials = options.credentials || this.credentials || 'omit'
+	    if (options.headers || !this.headers) {
+	      this.headers = new Headers(options.headers)
+	    }
+	    this.method = normalizeMethod(options.method || this.method || 'GET')
+	    this.mode = options.mode || this.mode || null
+	    this.referrer = null
+	
+	    if ((this.method === 'GET' || this.method === 'HEAD') && body) {
+	      throw new TypeError('Body not allowed for GET or HEAD requests')
+	    }
+	    this._initBody(body)
+	  }
+	
+	  Request.prototype.clone = function() {
+	    return new Request(this)
+	  }
+	
+	  function decode(body) {
+	    var form = new FormData()
+	    body.trim().split('&').forEach(function(bytes) {
+	      if (bytes) {
+	        var split = bytes.split('=')
+	        var name = split.shift().replace(/\+/g, ' ')
+	        var value = split.join('=').replace(/\+/g, ' ')
+	        form.append(decodeURIComponent(name), decodeURIComponent(value))
+	      }
+	    })
+	    return form
+	  }
+	
+	  function headers(xhr) {
+	    var head = new Headers()
+	    var pairs = (xhr.getAllResponseHeaders() || '').trim().split('\n')
+	    pairs.forEach(function(header) {
+	      var split = header.trim().split(':')
+	      var key = split.shift().trim()
+	      var value = split.join(':').trim()
+	      head.append(key, value)
+	    })
+	    return head
+	  }
+	
+	  Body.call(Request.prototype)
+	
+	  function Response(bodyInit, options) {
+	    if (!options) {
+	      options = {}
+	    }
+	
+	    this.type = 'default'
+	    this.status = options.status
+	    this.ok = this.status >= 200 && this.status < 300
+	    this.statusText = options.statusText
+	    this.headers = options.headers instanceof Headers ? options.headers : new Headers(options.headers)
+	    this.url = options.url || ''
+	    this._initBody(bodyInit)
+	  }
+	
+	  Body.call(Response.prototype)
+	
+	  Response.prototype.clone = function() {
+	    return new Response(this._bodyInit, {
+	      status: this.status,
+	      statusText: this.statusText,
+	      headers: new Headers(this.headers),
+	      url: this.url
+	    })
+	  }
+	
+	  Response.error = function() {
+	    var response = new Response(null, {status: 0, statusText: ''})
+	    response.type = 'error'
+	    return response
+	  }
+	
+	  var redirectStatuses = [301, 302, 303, 307, 308]
+	
+	  Response.redirect = function(url, status) {
+	    if (redirectStatuses.indexOf(status) === -1) {
+	      throw new RangeError('Invalid status code')
+	    }
+	
+	    return new Response(null, {status: status, headers: {location: url}})
+	  }
+	
+	  self.Headers = Headers
+	  self.Request = Request
+	  self.Response = Response
+	
+	  self.fetch = function(input, init) {
+	    return new Promise(function(resolve, reject) {
+	      var request
+	      if (Request.prototype.isPrototypeOf(input) && !init) {
+	        request = input
+	      } else {
+	        request = new Request(input, init)
+	      }
+	
+	      var xhr = new XMLHttpRequest()
+	
+	      function responseURL() {
+	        if ('responseURL' in xhr) {
+	          return xhr.responseURL
+	        }
+	
+	        // Avoid security warnings on getResponseHeader when not allowed by CORS
+	        if (/^X-Request-URL:/m.test(xhr.getAllResponseHeaders())) {
+	          return xhr.getResponseHeader('X-Request-URL')
+	        }
+	
+	        return
+	      }
+	
+	      xhr.onload = function() {
+	        var options = {
+	          status: xhr.status,
+	          statusText: xhr.statusText,
+	          headers: headers(xhr),
+	          url: responseURL()
+	        }
+	        var body = 'response' in xhr ? xhr.response : xhr.responseText
+	        resolve(new Response(body, options))
+	      }
+	
+	      xhr.onerror = function() {
+	        reject(new TypeError('Network request failed'))
+	      }
+	
+	      xhr.ontimeout = function() {
+	        reject(new TypeError('Network request failed'))
+	      }
+	
+	      xhr.open(request.method, request.url, true)
+	
+	      if (request.credentials === 'include') {
+	        xhr.withCredentials = true
+	      }
+	
+	      if ('responseType' in xhr && support.blob) {
+	        xhr.responseType = 'blob'
+	      }
+	
+	      request.headers.forEach(function(value, name) {
+	        xhr.setRequestHeader(name, value)
+	      })
+	
+	      xhr.send(typeof request._bodyInit === 'undefined' ? null : request._bodyInit)
+	    })
+	  }
+	  self.fetch.polyfill = true
+	})(typeof self !== 'undefined' ? self : this);
+
 
 /***/ },
 /* 206 */
@@ -23416,10 +23953,1334 @@
 
 	'use strict';
 	
+	var actions = __webpack_require__(207);
+	
+	var characterInitialState = {
+	    loginFailed: false,
+	    signupFailed: false,
+	    listOfCharacters: [],
+	    character: {}
+	};
+	
+	var characterReducer = function characterReducer(state, action) {
+	    state = state || characterInitialState;
+	    if (action.type === actions.GET_LIST_OF_CHARACTERS_SUCCESS) {
+	        state.listOfCharacters = action.listOfCharacters;
+	    }
+	    if (action.type === actions.GET_LIST_OF_CHARACTERS_ERROR) {
+	        state.listOfCharacters = [];
+	    }
+	    if (action.type === actions.GET_CHARACTER_SUCCESS) {
+	        state.character = action.character;
+	    }
+	    if (action.type === actions.GET_CHARACTER_ERROR) {
+	        state.character = {};
+	    }
+	    if (action.type === actions.CREATE_CHARACTER_SUCCESS) {
+	        state.character = action.character;
+	    }
+	    if (action.type === actions.CREATE_CHARACTER_ERROR) {
+	        console.log(action.error);
+	        state.character = {};
+	    }
+	    if (action.type === actions.DELETE_CHARACTER_SUCCESS) {
+	        state.character = {};
+	    }
+	    if (action.type === actions.DELETE_CHARACTER_ERROR) {
+	        console.log(action.error);
+	    }
+	    if (action.type === actions.UPDATE_CHARACTER_SUCCESS) {
+	        state.character = action.character;
+	    }
+	    if (action.type === actions.UPDATE_CHARACTER_ERROR) {
+	        console.log(action.error);
+	    }
+	    if (action.type === actions.GET_FEATS_SUCCESS) {
+	        state.feats = action.feats;
+	    }
+	    if (action.type === actions.GET_FEATS_ERROR) {
+	        state.feats = false;
+	    }
+	    if (action.type === actions.CREATE_FEAT_SUCCESS) {
+	        console.log('there');
+	        state.feats = false;
+	    }
+	    if (action.type === actions.CREATE_FEAT_ERROR) {
+	        console.log(action.error);
+	    }
+	    return state;
+	};
+	
+	module.exports = characterReducer;
+
+/***/ },
+/* 207 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var fetch = __webpack_require__(204);
+	var redirect = false;
+	
+	var getListOfCharacters = function getListOfCharacters() {
+	    if (!'cookie' in document) {
+	        var error = new Error('cookie is missing');
+	        return {
+	            type: GET_LIST_OF_CHARACTERS_ERROR,
+	            error: error
+	        };
+	    }
+	    var userKey = document.cookie.split('=');
+	    if (userKey[0] != 'UserKey') {
+	        var error = new Error('UserKey cookie is missing');
+	        return {
+	            type: GET_LIST_OF_CHARACTERS_ERROR,
+	            error: error
+	        };
+	    }
+	    if (userKey[1] == 'null') {
+	        var error = new Error('UserKey cookie is null');
+	        return {
+	            type: GET_LIST_OF_CHARACTERS_ERROR,
+	            error: error
+	        };
+	    }
+	    return function (dispatch) {
+	        var url = '/character';
+	        return fetch(url, {
+	            method: 'get',
+	            headers: {
+	                'Content-Type': 'application/json',
+	                'Accept': 'application/json',
+	                'Authentication': document.cookie
+	            }
+	        }).then(function (response) {
+	            if (response.status < 200 || response.status >= 300) {
+	                var error = new Error(response.statusText);
+	                error.response = response;
+	                throw error;
+	            }
+	            return response;
+	        }).then(function (response) {
+	            return response.json();
+	        }).then(function (data) {
+	            return dispatch(getListOfCharactersSuccess(data));
+	        }).catch(function (error) {
+	            return dispatch(getListOfCharactersError(error));
+	        });
+	    };
+	};
+	
+	var GET_LIST_OF_CHARACTERS_SUCCESS = 'GET_LIST_OF_CHARACTERS_SUCCESS';
+	var getListOfCharactersSuccess = function getListOfCharactersSuccess(data) {
+	    return {
+	        type: GET_LIST_OF_CHARACTERS_SUCCESS,
+	        listOfCharacters: data
+	    };
+	};
+	
+	var GET_LIST_OF_CHARACTERS_ERROR = 'GET_LIST_OF_CHARACTERS_ERROR';
+	var getListOfCharactersError = function getListOfCharactersError(error) {
+	    return {
+	        type: GET_LIST_OF_CHARACTERS_ERROR,
+	        error: error
+	    };
+	};
+	
+	var getCharacter = function getCharacter(_id) {
+	    if (!'cookie' in document) {
+	        var error = new Error('cookie is missing');
+	        return {
+	            type: GET_CHARACTER_ERROR,
+	            error: error
+	        };
+	    }
+	    var userKey = document.cookie.split('=');
+	    if (userKey[0] != 'UserKey') {
+	        var error = new Error('UserKey cookie is missing');
+	        return {
+	            type: GET_CHARACTER_ERROR,
+	            error: error
+	        };
+	    }
+	    if (userKey[1] == 'null') {
+	        var error = new Error('UserKey cookie is null');
+	        return {
+	            type: GET_CHARACTER_ERROR,
+	            error: error
+	        };
+	    }
+	    return function (dispatch) {
+	        var url = '/character/' + _id;
+	        return fetch(url, {
+	            method: 'get',
+	            headers: {
+	                'Content-Type': 'application/json',
+	                'Accept': 'application/json',
+	                'Authentication': document.cookie
+	            }
+	        }).then(function (response) {
+	            if (response.status < 200 || response.status >= 300) {
+	                var error = new Error(response.statusText);
+	                error.response = response;
+	                throw error;
+	            }
+	            return response;
+	        }).then(function (response) {
+	            return response.json();
+	        }).then(function (data) {
+	            return dispatch(getCharacterSuccess(data));
+	        }).catch(function (error) {
+	            return dispatch(getCharacterError(error));
+	        });
+	    };
+	};
+	
+	var GET_CHARACTER_SUCCESS = 'GET_CHARACTER_SUCCESS';
+	var getCharacterSuccess = function getCharacterSuccess(data) {
+	    return {
+	        type: GET_CHARACTER_SUCCESS,
+	        character: data
+	    };
+	};
+	
+	var GET_CHARACTER_ERROR = 'GET_CHARACTER_ERROR';
+	var getCharacterError = function getCharacterError(error) {
+	    return {
+	        type: GET_CHARACTER_ERROR,
+	        error: error
+	    };
+	};
+	
+	var createCharacter = function createCharacter(name, link) {
+	    redirect = link;
+	    if (!'cookie' in document) {
+	        var error = new Error('cookie is missing');
+	        return {
+	            type: CREATE_CHARACTER_ERROR,
+	            error: error
+	        };
+	    }
+	    var userKey = document.cookie.split('=');
+	    if (userKey[0] != 'UserKey') {
+	        var error = new Error('UserKey cookie is missing');
+	        return {
+	            type: CREATE_CHARACTER_ERROR,
+	            error: error
+	        };
+	    }
+	    if (userKey[1] == 'null') {
+	        var error = new Error('UserKey cookie is null');
+	        return {
+	            type: CREATE_CHARACTER_ERROR,
+	            error: error
+	        };
+	    }
+	
+	    return function (dispatch) {
+	        var url = '/character';
+	        return fetch(url, {
+	            method: 'post',
+	            headers: {
+	                'Content-Type': 'application/json',
+	                'Accept': 'application/json',
+	                'Authentication': document.cookie
+	            },
+	            body: JSON.stringify({ name: name })
+	        }).then(function (response) {
+	            if (response.status < 200 || response.status >= 300) {
+	                var error = new Error(response.statusText);
+	                error.response = response;
+	                throw error;
+	            }
+	            return response;
+	        }).then(function (response) {
+	            return response.json();
+	        }).then(function (data) {
+	            return dispatch(createCharacterSuccess(data));
+	        }).catch(function (error) {
+	            return dispatch(createCharacterError(error));
+	        });
+	    };
+	};
+	
+	var CREATE_CHARACTER_SUCCESS = 'CREATE_CHARACTER_SUCCESS';
+	var createCharacterSuccess = function createCharacterSuccess(data) {
+	    redirect.replace('/character/' + data._id);
+	    redirect = false;
+	    return {
+	        type: CREATE_CHARACTER_SUCCESS,
+	        character: data
+	    };
+	};
+	
+	var CREATE_CHARACTER_ERROR = 'CREATE_CHARACTER_ERROR';
+	var createCharacterError = function createCharacterError(error) {
+	    redirect = false;
+	    return {
+	        type: CREATE_CHARACTER_ERROR,
+	        error: error
+	    };
+	};
+	
+	var deleteCharacter = function deleteCharacter(_characterId, link) {
+	    redirect = link;
+	    if (!'cookie' in document) {
+	        var error = new Error('cookie is missing');
+	        return {
+	            type: DELETE_CHARACTER_ERROR,
+	            error: error
+	        };
+	    }
+	    var userKey = document.cookie.split('=');
+	    if (userKey[0] != 'UserKey') {
+	        var error = new Error('UserKey cookie is missing');
+	        return {
+	            type: DELETE_CHARACTER_ERROR,
+	            error: error
+	        };
+	    }
+	    if (userKey[1] == 'null') {
+	        var error = new Error('UserKey cookie is null');
+	        return {
+	            type: DELETE_CHARACTER_ERROR,
+	            error: error
+	        };
+	    }
+	
+	    return function (dispatch) {
+	        var url = '/character';
+	        return fetch(url, {
+	            method: 'delete',
+	            headers: {
+	                'Content-Type': 'application/json',
+	                'Accept': 'application/json',
+	                'Authentication': document.cookie
+	            },
+	            body: JSON.stringify({ _characterId: _characterId })
+	        }).then(function (response) {
+	            if (response.status < 200 || response.status >= 300) {
+	                var error = new Error(response.statusText);
+	                error.response = response;
+	                throw error;
+	            }
+	            return response;
+	        }).then(function () {
+	            return dispatch(deleteCharacterSuccess());
+	        }).catch(function (error) {
+	            return dispatch(deleteCharacterError(error));
+	        });
+	    };
+	};
+	
+	var DELETE_CHARACTER_SUCCESS = 'DELETE_CHARACTER_SUCCESS';
+	var deleteCharacterSuccess = function deleteCharacterSuccess(data) {
+	    redirect.replace('/user');
+	    redirect = false;
+	    return {
+	        type: DELETE_CHARACTER_SUCCESS
+	    };
+	};
+	
+	var DELETE_CHARACTER_ERROR = 'DELETE_CHARACTER_ERROR';
+	var deleteCharacterError = function deleteCharacterError(error) {
+	    redirect = false;
+	    return {
+	        type: DELETE_CHARACTER_ERROR,
+	        error: error
+	    };
+	};
+	
+	var updateCharacter = function updateCharacter(_new, _old) {
+	    if (!'cookie' in document) {
+	        var error = new Error('cookie is missing');
+	        return {
+	            type: UPDATE_CHARACTER_ERROR,
+	            error: error
+	        };
+	    }
+	    var userKey = document.cookie.split('=');
+	    if (userKey[0] != 'UserKey') {
+	        var error = new Error('UserKey cookie is missing');
+	        return {
+	            type: UPDATE_CHARACTER_ERROR,
+	            error: error
+	        };
+	    }
+	    if (userKey[1] == 'null') {
+	        var error = new Error('UserKey cookie is null');
+	        return {
+	            type: UPDATE_CHARACTER_ERROR,
+	            error: error
+	        };
+	    }
+	    var data = { _id: _new._id };
+	
+	    var _newKeys = Object.keys(_new);
+	    for (var i = 0; i < _newKeys.length; i++) {
+	        if (_new[_newKeys[i]] != _old[_newKeys[i]]) {
+	            data[_newKeys[i]] = _new[_newKeys[i]];
+	        }
+	    }
+	
+	    return function (dispatch) {
+	        var url = '/character';
+	        return fetch(url, {
+	            method: 'put',
+	            headers: {
+	                'Content-Type': 'application/json',
+	                'Accept': 'application/json',
+	                'Authentication': document.cookie
+	            },
+	            body: JSON.stringify(data)
+	        }).then(function (response) {
+	            if (response.status < 200 || response.status >= 300) {
+	                var error = new Error(response.statusText);
+	                error.response = response;
+	                throw error;
+	            }
+	            return response;
+	        }).then(function (response) {
+	            return response.json();
+	        }).then(function (data) {
+	            return dispatch(updateCharacterSuccess(data));
+	        }).catch(function (error) {
+	            return dispatch(updateCharacterError(error));
+	        });
+	    };
+	};
+	
+	var UPDATE_CHARACTER_SUCCESS = 'UPDATE_CHARACTER_SUCCESS';
+	var updateCharacterSuccess = function updateCharacterSuccess(data) {
+	    return {
+	        type: UPDATE_CHARACTER_SUCCESS,
+	        character: data
+	    };
+	};
+	
+	var UPDATE_CHARACTER_ERROR = 'UPDATE_CHARACTER_ERROR';
+	var updateCharacterError = function updateCharacterError(error) {
+	    return {
+	        type: UPDATE_CHARACTER_ERROR,
+	        error: error
+	    };
+	};
+	
+	exports.getListOfCharacters = getListOfCharacters;
+	exports.GET_LIST_OF_CHARACTERS_SUCCESS = GET_LIST_OF_CHARACTERS_SUCCESS;
+	exports.getListOfCharactersSuccess = getListOfCharactersSuccess;
+	exports.GET_LIST_OF_CHARACTERS_ERROR = GET_LIST_OF_CHARACTERS_ERROR;
+	exports.getListOfCharactersError = getListOfCharactersError;
+	exports.getCharacter = getCharacter;
+	exports.GET_CHARACTER_SUCCESS = GET_CHARACTER_SUCCESS;
+	exports.getCharacterSuccess = getCharacterSuccess;
+	exports.GET_CHARACTER_ERROR = GET_CHARACTER_ERROR;
+	exports.getCharacterError = getCharacterError;
+	exports.createCharacter = createCharacter;
+	exports.CREATE_CHARACTER_SUCCESS = CREATE_CHARACTER_SUCCESS;
+	exports.createCharacterSuccess = createCharacterSuccess;
+	exports.CREATE_CHARACTER_ERROR = CREATE_CHARACTER_ERROR;
+	exports.createCharacterError = createCharacterError;
+	exports.deleteCharacter = deleteCharacter;
+	exports.DELETE_CHARACTER_SUCCESS = DELETE_CHARACTER_SUCCESS;
+	exports.deleteCharacterSuccess = deleteCharacterSuccess;
+	exports.DELETE_CHARACTER_ERROR = DELETE_CHARACTER_ERROR;
+	exports.deleteCharacterError = deleteCharacterError;
+	exports.updateCharacter = updateCharacter;
+	exports.UPDATE_CHARACTER_SUCCESS = UPDATE_CHARACTER_SUCCESS;
+	exports.updateCharacterSuccess = updateCharacterSuccess;
+	exports.UPDATE_CHARACTER_ERROR = UPDATE_CHARACTER_ERROR;
+	exports.updateCharacterError = updateCharacterError;
+
+/***/ },
+/* 208 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var actions = __webpack_require__(209);
+	
+	var featInitialState = {
+	    feats: [],
+	    updated: false
+	};
+	
+	var featReducer = function featReducer(state, action) {
+	    state = state || featInitialState;
+	    if (action.type === actions.GET_FEATS_SUCCESS) {
+	        state.feats = action.feats;
+	        state.updated = false;
+	    }
+	    if (action.type === actions.GET_FEATS_ERROR) {
+	        state.feats = [];
+	        state.updated = false;
+	    }
+	    if (action.type === actions.CREATE_FEAT_SUCCESS) {
+	        state.feats = [];
+	        state.updated = true;
+	    }
+	    if (action.type === actions.CREATE_FEAT_ERROR) {
+	        console.log(action.error);
+	    }
+	    if (action.type === actions.DELETE_FEAT_SUCCESS) {
+	        state.feats = [];
+	        console.log('delete');
+	        state.updated = true;
+	    }
+	    if (action.type === actions.DELETE_FEAT_ERROR) {
+	        console.log(action.error);
+	    }
+	    if (action.type === actions.UPDATE_FEAT_SUCCESS) {
+	        state.feats = [];
+	        state.updated = true;
+	    }
+	    if (action.type === actions.UPDATE_FEAT_ERROR) {
+	        console.log(action.error);
+	    }
+	    return state;
+	};
+	
+	module.exports = featReducer;
+
+/***/ },
+/* 209 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var fetch = __webpack_require__(204);
+	
+	var getFeats = function getFeats(_characterId) {
+	    if (!'cookie' in document) {
+	        var error = new Error('cookie is missing');
+	        return {
+	            type: GET_FEATS_ERROR,
+	            error: error
+	        };
+	    }
+	    var userKey = document.cookie.split('=');
+	    if (userKey[0] != 'UserKey') {
+	        var error = new Error('UserKey cookie is missing');
+	        return {
+	            type: GET_FEATS_ERROR,
+	            error: error
+	        };
+	    }
+	    if (userKey[1] == 'null') {
+	        var error = new Error('UserKey cookie is null');
+	        return {
+	            type: GET_FEATS_ERROR,
+	            error: error
+	        };
+	    }
+	    return function (dispatch) {
+	        var url = '/feat/' + _characterId;
+	        return fetch(url, {
+	            method: 'get',
+	            headers: {
+	                'Content-Type': 'application/json',
+	                'Accept': 'application/json',
+	                'Authentication': document.cookie
+	            }
+	        }).then(function (response) {
+	            if (response.status < 200 || response.status >= 300) {
+	                var error = new Error(response.statusText);
+	                error.response = response;
+	                throw error;
+	            }
+	            return response;
+	        }).then(function (response) {
+	            return response.json();
+	        }).then(function (data) {
+	            return dispatch(getFeatsSuccess(data));
+	        }).catch(function (error) {
+	            return dispatch(getFeatsError(error));
+	        });
+	    };
+	};
+	
+	var GET_FEATS_SUCCESS = 'GET_FEATS_SUCCESS';
+	var getFeatsSuccess = function getFeatsSuccess(data) {
+	    return {
+	        type: GET_FEATS_SUCCESS,
+	        feats: data
+	    };
+	};
+	
+	var GET_FEATS_ERROR = 'GET_FEATS_ERROR';
+	var getFeatsError = function getFeatsError(error) {
+	    return {
+	        type: GET_FEATS_ERROR,
+	        error: error
+	    };
+	};
+	
+	var createFeat = function createFeat(_characterId, name) {
+	    if (!'cookie' in document) {
+	        var error = new Error('cookie is missing');
+	        return {
+	            type: CREATE_FEAT_ERROR,
+	            error: error
+	        };
+	    }
+	    var userKey = document.cookie.split('=');
+	    if (userKey[0] != 'UserKey') {
+	        var error = new Error('UserKey cookie is missing');
+	        return {
+	            type: CREATE_FEAT_ERROR,
+	            error: error
+	        };
+	    }
+	    if (userKey[1] == 'null') {
+	        var error = new Error('UserKey cookie is null');
+	        return {
+	            type: CREATE_FEAT_ERROR,
+	            error: error
+	        };
+	    }
+	    var data = {};
+	    data.name = name;
+	    data._characterId = _characterId;
+	    return function (dispatch) {
+	        var url = '/feat';
+	        return fetch(url, {
+	            method: 'post',
+	            headers: {
+	                'Content-Type': 'application/json',
+	                'Accept': 'application/json',
+	                'Authentication': document.cookie
+	            },
+	            body: JSON.stringify(data)
+	        }).then(function (response) {
+	            if (response.status < 200 || response.status >= 300) {
+	                var error = new Error(response.statusText);
+	                error.response = response;
+	                throw error;
+	            }
+	            return response;
+	        }).then(function (response) {
+	            return response.json();
+	        }).then(function (data) {
+	            return dispatch(createFeatSuccess());
+	        }).catch(function (error) {
+	            return dispatch(createFeatError(error));
+	        });
+	    };
+	};
+	
+	var CREATE_FEAT_SUCCESS = 'CREATE_FEAT_SUCCESS';
+	var createFeatSuccess = function createFeatSuccess() {
+	    return {
+	        type: CREATE_FEAT_SUCCESS
+	    };
+	};
+	
+	var CREATE_FEAT_ERROR = 'CREATE_FEAT_ERROR';
+	var createFeatError = function createFeatError(error) {
+	    return {
+	        type: CREATE_FEAT_ERROR,
+	        error: error
+	    };
+	};
+	
+	var deleteFeat = function deleteFeat(_id, _characterId) {
+	    console.log('delete');
+	    if (!'cookie' in document) {
+	        var error = new Error('cookie is missing');
+	        return {
+	            type: DELETE_FEAT_ERROR,
+	            error: error
+	        };
+	    }
+	    var userKey = document.cookie.split('=');
+	    if (userKey[0] != 'UserKey') {
+	        var error = new Error('UserKey cookie is missing');
+	        return {
+	            type: DELETE_FEAT_ERROR,
+	            error: error
+	        };
+	    }
+	    if (userKey[1] == 'null') {
+	        var error = new Error('UserKey cookie is null');
+	        return {
+	            type: DELETE_FEAT_ERROR,
+	            error: error
+	        };
+	    }
+	
+	    var data = {
+	        _id: _id,
+	        _characterId: _characterId
+	    };
+	    return function (dispatch) {
+	        var url = '/feat';
+	        return fetch(url, {
+	            method: 'delete',
+	            headers: {
+	                'Content-Type': 'application/json',
+	                'Accept': 'application/json',
+	                'Authentication': document.cookie
+	            },
+	            body: JSON.stringify(data)
+	        }).then(function (response) {
+	            if (response.status < 200 || response.status >= 300) {
+	                var error = new Error(response.statusText);
+	                error.response = response;
+	                throw error;
+	            }
+	            return response;
+	        }).then(function () {
+	            return dispatch(deleteFeatSuccess());
+	        }).catch(function (error) {
+	            return dispatch(deleteFeatError(error));
+	        });
+	    };
+	};
+	
+	var DELETE_FEAT_SUCCESS = 'DELETE_FEAT_SUCCESS';
+	var deleteFeatSuccess = function deleteFeatSuccess(data) {
+	    return {
+	        type: DELETE_FEAT_SUCCESS
+	    };
+	};
+	
+	var DELETE_FEAT_ERROR = 'DELETE_FEAT_ERROR';
+	var deleteFeatError = function deleteFeatError(error) {
+	    redirect = false;
+	    return {
+	        type: DELETE_FEAT_ERROR,
+	        error: error
+	    };
+	};
+	
+	var updateFeat = function updateFeat(_new, _old) {
+	    if (!'cookie' in document) {
+	        var error = new Error('cookie is missing');
+	        return {
+	            type: UPDATE_FEAT_ERROR,
+	            error: error
+	        };
+	    }
+	    var userKey = document.cookie.split('=');
+	    if (userKey[0] != 'UserKey') {
+	        var error = new Error('UserKey cookie is missing');
+	        return {
+	            type: UPDATE_FEAT_ERROR,
+	            error: error
+	        };
+	    }
+	    if (userKey[1] == 'null') {
+	        var error = new Error('UserKey cookie is null');
+	        return {
+	            type: UPDATE_FEAT_ERROR,
+	            error: error
+	        };
+	    }
+	    var data = {
+	        _id: _new._id,
+	        _characterId: _new._characterId
+	    };
+	
+	    var _newKeys = Object.keys(_new);
+	    for (var i = 0; i < _newKeys.length; i++) {
+	        if (_new[_newKeys[i]] != _old[_newKeys[i]]) {
+	            data[_newKeys[i]] = _new[_newKeys[i]];
+	        }
+	    }
+	
+	    return function (dispatch) {
+	        var url = '/feat';
+	        return fetch(url, {
+	            method: 'put',
+	            headers: {
+	                'Content-Type': 'application/json',
+	                'Accept': 'application/json',
+	                'Authentication': document.cookie
+	            },
+	            body: JSON.stringify(data)
+	        }).then(function (response) {
+	            if (response.status < 200 || response.status >= 300) {
+	                var error = new Error(response.statusText);
+	                error.response = response;
+	                throw error;
+	            }
+	            return response;
+	        }).then(function (response) {
+	            return response.json();
+	        }).then(function (data) {
+	            return dispatch(updateFeatSuccess(data));
+	        }).catch(function (error) {
+	            return dispatch(updateFeatError(error));
+	        });
+	    };
+	};
+	
+	var UPDATE_FEAT_SUCCESS = 'UPDATE_FEAT_SUCCESS';
+	var updateFeatSuccess = function updateFeatSuccess(data) {
+	    return {
+	        type: UPDATE_FEAT_SUCCESS
+	    };
+	};
+	
+	var UPDATE_FEAT_ERROR = 'UPDATE_FEAT_ERROR';
+	var updateFeatError = function updateFeatError(error) {
+	    return {
+	        type: UPDATE_FEAT_ERROR,
+	        error: error
+	    };
+	};
+	
+	exports.getFeats = getFeats;
+	exports.GET_FEATS_SUCCESS = GET_FEATS_SUCCESS;
+	exports.getFeatsSuccess = getFeatsSuccess;
+	exports.GET_FEATS_ERROR = GET_FEATS_ERROR;
+	exports.getFeatsError = getFeatsError;
+	exports.createFeat = createFeat;
+	exports.CREATE_FEAT_SUCCESS = CREATE_FEAT_SUCCESS;
+	exports.createFeatSuccess = createFeatSuccess;
+	exports.CREATE_FEAT_ERROR = CREATE_FEAT_ERROR;
+	exports.createFeatError = createFeatError;
+	exports.deleteFeat = deleteFeat;
+	exports.DELETE_FEAT_SUCCESS = DELETE_FEAT_SUCCESS;
+	exports.deleteFeatSuccess = deleteFeatSuccess;
+	exports.DELETE_FEAT_ERROR = DELETE_FEAT_ERROR;
+	exports.deleteFeatError = deleteFeatError;
+	exports.updateFeat = updateFeat;
+	exports.UPDATE_FEAT_SUCCESS = UPDATE_FEAT_SUCCESS;
+	exports.updateFeatSuccess = updateFeatSuccess;
+	exports.UPDATE_FEAT_ERROR = UPDATE_FEAT_ERROR;
+	exports.updateFeatError = updateFeatError;
+
+/***/ },
+/* 210 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var actions = __webpack_require__(211);
+	
+	var acitemInitialState = {
+	    acitems: [],
+	    updated: false
+	};
+	
+	var acitemReducer = function acitemReducer(state, action) {
+	    state = state || acitemInitialState;
+	    if (action.type === actions.GET_ACITEMS_SUCCESS) {
+	        state.acitems = action.acitems;
+	        state.updated = false;
+	    }
+	    if (action.type === actions.GET_ACITEMS_ERROR) {
+	        state.acitems = [];
+	        state.updated = false;
+	    }
+	    if (action.type === actions.CREATE_ACITEM_SUCCESS) {
+	        state.acitems = [];
+	        state.updated = true;
+	    }
+	    if (action.type === actions.CREATE_ACITEM_ERROR) {
+	        console.log(action.error);
+	    }
+	    if (action.type === actions.DELETE_ACITEM_SUCCESS) {
+	        state.acitems = [];
+	        console.log('delete');
+	        state.updated = true;
+	    }
+	    if (action.type === actions.DELETE_ACITEM_ERROR) {
+	        console.log(action.error);
+	    }
+	    if (action.type === actions.UPDATE_ACITEM_SUCCESS) {
+	        state.acitems = [];
+	        state.updated = true;
+	    }
+	    if (action.type === actions.UPDATE_ACITEM_ERROR) {
+	        console.log(action.error);
+	    }
+	    return state;
+	};
+	
+	module.exports = acitemReducer;
+
+/***/ },
+/* 211 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var fetch = __webpack_require__(204);
+	
+	var getAcitems = function getAcitems(_characterId) {
+	    if (!'cookie' in document) {
+	        var error = new Error('cookie is missing');
+	        return {
+	            type: GET_ACITEMS_ERROR,
+	            error: error
+	        };
+	    }
+	    var userKey = document.cookie.split('=');
+	    if (userKey[0] != 'UserKey') {
+	        var error = new Error('UserKey cookie is missing');
+	        return {
+	            type: GET_ACITEMS_ERROR,
+	            error: error
+	        };
+	    }
+	    if (userKey[1] == 'null') {
+	        var error = new Error('UserKey cookie is null');
+	        return {
+	            type: GET_ACITEMS_ERROR,
+	            error: error
+	        };
+	    }
+	    return function (dispatch) {
+	        var url = '/acitem/' + _characterId;
+	        return fetch(url, {
+	            method: 'get',
+	            headers: {
+	                'Content-Type': 'application/json',
+	                'Accept': 'application/json',
+	                'Authentication': document.cookie
+	            }
+	        }).then(function (response) {
+	            if (response.status < 200 || response.status >= 300) {
+	                var error = new Error(response.statusText);
+	                error.response = response;
+	                throw error;
+	            }
+	            return response;
+	        }).then(function (response) {
+	            return response.json();
+	        }).then(function (data) {
+	            return dispatch(getAcitemsSuccess(data));
+	        }).catch(function (error) {
+	            return dispatch(getAcitemsError(error));
+	        });
+	    };
+	};
+	
+	var GET_ACITEMS_SUCCESS = 'GET_ACITEMS_SUCCESS';
+	var getAcitemsSuccess = function getAcitemsSuccess(data) {
+	    return {
+	        type: GET_ACITEMS_SUCCESS,
+	        feats: data
+	    };
+	};
+	
+	var GET_ACITEMS_ERROR = 'GET_ACITEMS_ERROR';
+	var getAcitemsError = function getAcitemsError(error) {
+	    return {
+	        type: GET_ACITEMS_ERROR,
+	        error: error
+	    };
+	};
+	
+	var createAcitem = function createAcitem(_characterId, name) {
+	    if (!'cookie' in document) {
+	        var error = new Error('cookie is missing');
+	        return {
+	            type: CREATE_ACITEM_ERROR,
+	            error: error
+	        };
+	    }
+	    var userKey = document.cookie.split('=');
+	    if (userKey[0] != 'UserKey') {
+	        var error = new Error('UserKey cookie is missing');
+	        return {
+	            type: CREATE_ACITEM_ERROR,
+	            error: error
+	        };
+	    }
+	    if (userKey[1] == 'null') {
+	        var error = new Error('UserKey cookie is null');
+	        return {
+	            type: CREATE_ACITEM_ERROR,
+	            error: error
+	        };
+	    }
+	    var data = {};
+	    data.name = name;
+	    data._characterId = _characterId;
+	    return function (dispatch) {
+	        var url = '/acitem';
+	        return fetch(url, {
+	            method: 'post',
+	            headers: {
+	                'Content-Type': 'application/json',
+	                'Accept': 'application/json',
+	                'Authentication': document.cookie
+	            },
+	            body: JSON.stringify(data)
+	        }).then(function (response) {
+	            if (response.status < 200 || response.status >= 300) {
+	                var error = new Error(response.statusText);
+	                error.response = response;
+	                throw error;
+	            }
+	            return response;
+	        }).then(function (response) {
+	            return response.json();
+	        }).then(function (data) {
+	            return dispatch(createAcitemSuccess());
+	        }).catch(function (error) {
+	            return dispatch(createAcitemError(error));
+	        });
+	    };
+	};
+	
+	var CREATE_ACITEM_SUCCESS = 'CREATE_ACITEM_SUCCESS';
+	var createAcitemSuccess = function createAcitemSuccess() {
+	    return {
+	        type: CREATE_ACITEM_SUCCESS
+	    };
+	};
+	
+	var CREATE_ACITEM_ERROR = 'CREATE_ACITEM_ERROR';
+	var createAcitemError = function createAcitemError(error) {
+	    return {
+	        type: CREATE_ACITEM_ERROR,
+	        error: error
+	    };
+	};
+	
+	var deleteAcitem = function deleteAcitem(_id, _characterId) {
+	    console.log('delete');
+	    if (!'cookie' in document) {
+	        var error = new Error('cookie is missing');
+	        return {
+	            type: DELETE_ACITEM_ERROR,
+	            error: error
+	        };
+	    }
+	    var userKey = document.cookie.split('=');
+	    if (userKey[0] != 'UserKey') {
+	        var error = new Error('UserKey cookie is missing');
+	        return {
+	            type: DELETE_ACITEM_ERROR,
+	            error: error
+	        };
+	    }
+	    if (userKey[1] == 'null') {
+	        var error = new Error('UserKey cookie is null');
+	        return {
+	            type: DELETE_ACITEM_ERROR,
+	            error: error
+	        };
+	    }
+	
+	    var data = {
+	        _id: _id,
+	        _characterId: _characterId
+	    };
+	    return function (dispatch) {
+	        var url = '/acitem';
+	        return fetch(url, {
+	            method: 'delete',
+	            headers: {
+	                'Content-Type': 'application/json',
+	                'Accept': 'application/json',
+	                'Authentication': document.cookie
+	            },
+	            body: JSON.stringify(data)
+	        }).then(function (response) {
+	            if (response.status < 200 || response.status >= 300) {
+	                var error = new Error(response.statusText);
+	                error.response = response;
+	                throw error;
+	            }
+	            return response;
+	        }).then(function () {
+	            return dispatch(deleteAcitemSuccess());
+	        }).catch(function (error) {
+	            return dispatch(deleteAcitemError(error));
+	        });
+	    };
+	};
+	
+	var DELETE_ACITEM_SUCCESS = 'DELETE_ACITEM_SUCCESS';
+	var deleteAcitemSuccess = function deleteAcitemSuccess(data) {
+	    return {
+	        type: DELETE_ACITEM_SUCCESS
+	    };
+	};
+	
+	var DELETE_ACITEM_ERROR = 'DELETE_ACITEM_ERROR';
+	var deleteAcitemError = function deleteAcitemError(error) {
+	    redirect = false;
+	    return {
+	        type: DELETE_ACITEM_ERROR,
+	        error: error
+	    };
+	};
+	
+	var updateAcitem = function updateAcitem(_new, _old) {
+	    if (!'cookie' in document) {
+	        var error = new Error('cookie is missing');
+	        return {
+	            type: UPDATE_ACITEM_ERROR,
+	            error: error
+	        };
+	    }
+	    var userKey = document.cookie.split('=');
+	    if (userKey[0] != 'UserKey') {
+	        var error = new Error('UserKey cookie is missing');
+	        return {
+	            type: UPDATE_ACITEM_ERROR,
+	            error: error
+	        };
+	    }
+	    if (userKey[1] == 'null') {
+	        var error = new Error('UserKey cookie is null');
+	        return {
+	            type: UPDATE_ACITEM_ERROR,
+	            error: error
+	        };
+	    }
+	    var data = {
+	        _id: _new._id,
+	        _characterId: _new._characterId
+	    };
+	
+	    var _newKeys = Object.keys(_new);
+	    for (var i = 0; i < _newKeys.length; i++) {
+	        if (_new[_newKeys[i]] != _old[_newKeys[i]]) {
+	            data[_newKeys[i]] = _new[_newKeys[i]];
+	        }
+	    }
+	
+	    return function (dispatch) {
+	        var url = '/acitem';
+	        return fetch(url, {
+	            method: 'put',
+	            headers: {
+	                'Content-Type': 'application/json',
+	                'Accept': 'application/json',
+	                'Authentication': document.cookie
+	            },
+	            body: JSON.stringify(data)
+	        }).then(function (response) {
+	            if (response.status < 200 || response.status >= 300) {
+	                var error = new Error(response.statusText);
+	                error.response = response;
+	                throw error;
+	            }
+	            return response;
+	        }).then(function (response) {
+	            return response.json();
+	        }).then(function (data) {
+	            return dispatch(updateAcitemSuccess(data));
+	        }).catch(function (error) {
+	            return dispatch(updateAcitemError(error));
+	        });
+	    };
+	};
+	
+	var UPDATE_ACITEM_SUCCESS = 'UPDATE_ACITEM_SUCCESS';
+	var updateAcitemSuccess = function updateAcitemSuccess(data) {
+	    return {
+	        type: UPDATE_ACITEM_SUCCESS
+	    };
+	};
+	
+	var UPDATE_ACITEM_ERROR = 'UPDATE_ACITEM_ERROR';
+	var updateAcitemError = function updateAcitemError(error) {
+	    return {
+	        type: UPDATE_ACITEM_ERROR,
+	        error: error
+	    };
+	};
+	
+	exports.getAcitems = getAcitems;
+	exports.GET_ACITEMS_SUCCESS = GET_ACITEMS_SUCCESS;
+	exports.getAcitemsSuccess = getAcitemsSuccess;
+	exports.GET_ACITEMS_ERROR = GET_ACITEMS_ERROR;
+	exports.getAcitemsError = getAcitemsError;
+	exports.createAcitem = createAcitem;
+	exports.CREATE_ACITEM_SUCCESS = CREATE_ACITEM_SUCCESS;
+	exports.createAcitemSuccess = createAcitemSuccess;
+	exports.CREATE_ACITEM_ERROR = CREATE_ACITEM_ERROR;
+	exports.createAcitemError = createAcitemError;
+	exports.deleteAcitem = deleteAcitem;
+	exports.DELETE_ACITEM_SUCCESS = DELETE_ACITEM_SUCCESS;
+	exports.deleteAcitemSuccess = deleteAcitemSuccess;
+	exports.DELETE_ACITEM_ERROR = DELETE_ACITEM_ERROR;
+	exports.deleteAcitemError = deleteAcitemError;
+	exports.updateAcitem = updateAcitem;
+	exports.UPDATE_ACITEM_SUCCESS = UPDATE_ACITEM_SUCCESS;
+	exports.updateAcitemSuccess = updateAcitemSuccess;
+	exports.UPDATE_ACITEM_ERROR = UPDATE_ACITEM_ERROR;
+	exports.updateAcitemError = updateAcitemError;
+
+/***/ },
+/* 212 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(1),
+	    connect = __webpack_require__(172).connect,
+	    userActions = __webpack_require__(203),
+	    characterActions = __webpack_require__(207);
+	
+	var App = React.createClass({
+	    displayName: 'App',
+	
+	    render: function render() {
+	        this.props.dispatch(userActions.getUserName());
+	        return React.createElement(
+	            'div',
+	            { className: 'pathfinder-character-creator' },
+	            React.createElement(
+	                'div',
+	                { className: 'pathfinder-character-creator-body' },
+	                this.props.children
+	            )
+	        );
+	    }
+	});
+	
+	var mapStateToProps = function mapStateToProps(state, props) {
+	    return {
+	        name: state.user.name
+	    };
+	};
+	
+	var Container = connect(mapStateToProps)(App);
+	
+	module.exports = Container;
+
+/***/ },
+/* 213 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(1),
+	    connect = __webpack_require__(172).connect,
+	    Nav = __webpack_require__(214);
+	
+	var mainPage = React.createClass({
+		displayName: 'mainPage',
+	
+		render: function render() {
+			if (!'cookie' in document) {
+				var userKey = document.cookie.split('=');
+				if (userKey[0] == 'UserKey') {
+					if (userKey[1] != 'null') {
+						props.history.replace('/user');
+					}
+				}
+			}
+	
+			return React.createElement(
+				'div',
+				{ className: 'main-page' },
+				React.createElement(Nav, null),
+				React.createElement(
+					'h1',
+					null,
+					'Welcome to Pathfinder Character Creator.'
+				),
+				React.createElement(
+					'p',
+					null,
+					'Pathfinder Character Creator is a place to make, edit, and save your characters for pathfinder.'
+				)
+			);
+		}
+	});
+	
+	var mapStateToProps = function mapStateToProps(state, props) {
+		return {
+			name: state.user.name
+		};
+	};
+	
+	var Container = connect(mapStateToProps)(mainPage);
+	
+	module.exports = Container;
+
+/***/ },
+/* 214 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(1),
+	    connect = __webpack_require__(172).connect,
+	    Link = __webpack_require__(215).Link;
+	
+	var mainPage = React.createClass({
+		displayName: 'mainPage',
+	
+		render: function render() {
+			if (this.props.name) {
+				return React.createElement(
+					'nav',
+					{ className: 'nav-bar' },
+					React.createElement(
+						'h1',
+						null,
+						'Pathfinder Character Creator'
+					),
+					React.createElement(
+						'p',
+						null,
+						this.props.name
+					),
+					React.createElement(
+						Link,
+						{ to: '/user' },
+						'CHARACTERS'
+					),
+					React.createElement(
+						'form',
+						{ action: '/logout', method: 'get' },
+						React.createElement('input', { type: 'submit', value: 'LogOut' })
+					)
+				);
+			}
+			return React.createElement(
+				'nav',
+				{ className: 'nav-bar' },
+				React.createElement(
+					'h1',
+					null,
+					'Pathfinder Character Creator'
+				),
+				React.createElement(
+					Link,
+					{ to: '/login' },
+					'LOGIN'
+				),
+				React.createElement(
+					Link,
+					{ to: '/signup' },
+					'SIGNUP'
+				)
+			);
+		}
+	});
+	
+	var mapStateToProps = function mapStateToProps(state, props) {
+		return {
+			name: state.user.name
+		};
+	};
+	
+	var Container = connect(mapStateToProps)(mainPage);
+	
+	module.exports = Container;
+
+/***/ },
+/* 215 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
 	exports.__esModule = true;
 	exports.createMemoryHistory = exports.hashHistory = exports.browserHistory = exports.applyRouterMiddleware = exports.formatPattern = exports.useRouterHistory = exports.match = exports.routerShape = exports.locationShape = exports.PropTypes = exports.RoutingContext = exports.RouterContext = exports.createRoutes = exports.useRoutes = exports.RouteContext = exports.Lifecycle = exports.History = exports.Route = exports.Redirect = exports.IndexRoute = exports.IndexRedirect = exports.withRouter = exports.IndexLink = exports.Link = exports.Router = undefined;
 	
-	var _RouteUtils = __webpack_require__(207);
+	var _RouteUtils = __webpack_require__(216);
 	
 	Object.defineProperty(exports, 'createRoutes', {
 	  enumerable: true,
@@ -23428,7 +25289,7 @@
 	  }
 	});
 	
-	var _PropTypes2 = __webpack_require__(208);
+	var _PropTypes2 = __webpack_require__(217);
 	
 	Object.defineProperty(exports, 'locationShape', {
 	  enumerable: true,
@@ -23443,7 +25304,7 @@
 	  }
 	});
 	
-	var _PatternUtils = __webpack_require__(213);
+	var _PatternUtils = __webpack_require__(222);
 	
 	Object.defineProperty(exports, 'formatPattern', {
 	  enumerable: true,
@@ -23452,85 +25313,85 @@
 	  }
 	});
 	
-	var _Router2 = __webpack_require__(215);
+	var _Router2 = __webpack_require__(224);
 	
 	var _Router3 = _interopRequireDefault(_Router2);
 	
-	var _Link2 = __webpack_require__(246);
+	var _Link2 = __webpack_require__(255);
 	
 	var _Link3 = _interopRequireDefault(_Link2);
 	
-	var _IndexLink2 = __webpack_require__(247);
+	var _IndexLink2 = __webpack_require__(256);
 	
 	var _IndexLink3 = _interopRequireDefault(_IndexLink2);
 	
-	var _withRouter2 = __webpack_require__(248);
+	var _withRouter2 = __webpack_require__(257);
 	
 	var _withRouter3 = _interopRequireDefault(_withRouter2);
 	
-	var _IndexRedirect2 = __webpack_require__(250);
+	var _IndexRedirect2 = __webpack_require__(259);
 	
 	var _IndexRedirect3 = _interopRequireDefault(_IndexRedirect2);
 	
-	var _IndexRoute2 = __webpack_require__(252);
+	var _IndexRoute2 = __webpack_require__(261);
 	
 	var _IndexRoute3 = _interopRequireDefault(_IndexRoute2);
 	
-	var _Redirect2 = __webpack_require__(251);
+	var _Redirect2 = __webpack_require__(260);
 	
 	var _Redirect3 = _interopRequireDefault(_Redirect2);
 	
-	var _Route2 = __webpack_require__(253);
+	var _Route2 = __webpack_require__(262);
 	
 	var _Route3 = _interopRequireDefault(_Route2);
 	
-	var _History2 = __webpack_require__(254);
+	var _History2 = __webpack_require__(263);
 	
 	var _History3 = _interopRequireDefault(_History2);
 	
-	var _Lifecycle2 = __webpack_require__(255);
+	var _Lifecycle2 = __webpack_require__(264);
 	
 	var _Lifecycle3 = _interopRequireDefault(_Lifecycle2);
 	
-	var _RouteContext2 = __webpack_require__(256);
+	var _RouteContext2 = __webpack_require__(265);
 	
 	var _RouteContext3 = _interopRequireDefault(_RouteContext2);
 	
-	var _useRoutes2 = __webpack_require__(257);
+	var _useRoutes2 = __webpack_require__(266);
 	
 	var _useRoutes3 = _interopRequireDefault(_useRoutes2);
 	
-	var _RouterContext2 = __webpack_require__(243);
+	var _RouterContext2 = __webpack_require__(252);
 	
 	var _RouterContext3 = _interopRequireDefault(_RouterContext2);
 	
-	var _RoutingContext2 = __webpack_require__(258);
+	var _RoutingContext2 = __webpack_require__(267);
 	
 	var _RoutingContext3 = _interopRequireDefault(_RoutingContext2);
 	
 	var _PropTypes3 = _interopRequireDefault(_PropTypes2);
 	
-	var _match2 = __webpack_require__(259);
+	var _match2 = __webpack_require__(268);
 	
 	var _match3 = _interopRequireDefault(_match2);
 	
-	var _useRouterHistory2 = __webpack_require__(263);
+	var _useRouterHistory2 = __webpack_require__(272);
 	
 	var _useRouterHistory3 = _interopRequireDefault(_useRouterHistory2);
 	
-	var _applyRouterMiddleware2 = __webpack_require__(264);
+	var _applyRouterMiddleware2 = __webpack_require__(273);
 	
 	var _applyRouterMiddleware3 = _interopRequireDefault(_applyRouterMiddleware2);
 	
-	var _browserHistory2 = __webpack_require__(265);
+	var _browserHistory2 = __webpack_require__(274);
 	
 	var _browserHistory3 = _interopRequireDefault(_browserHistory2);
 	
-	var _hashHistory2 = __webpack_require__(268);
+	var _hashHistory2 = __webpack_require__(277);
 	
 	var _hashHistory3 = _interopRequireDefault(_hashHistory2);
 	
-	var _createMemoryHistory2 = __webpack_require__(260);
+	var _createMemoryHistory2 = __webpack_require__(269);
 	
 	var _createMemoryHistory3 = _interopRequireDefault(_createMemoryHistory2);
 	
@@ -23572,7 +25433,7 @@
 	exports.createMemoryHistory = _createMemoryHistory3.default;
 
 /***/ },
-/* 207 */
+/* 216 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23670,7 +25531,7 @@
 	}
 
 /***/ },
-/* 208 */
+/* 217 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -23680,15 +25541,15 @@
 	
 	var _react = __webpack_require__(1);
 	
-	var _deprecateObjectProperties = __webpack_require__(209);
+	var _deprecateObjectProperties = __webpack_require__(218);
 	
 	var _deprecateObjectProperties2 = _interopRequireDefault(_deprecateObjectProperties);
 	
-	var _InternalPropTypes = __webpack_require__(212);
+	var _InternalPropTypes = __webpack_require__(221);
 	
 	var InternalPropTypes = _interopRequireWildcard(_InternalPropTypes);
 	
-	var _routerWarning = __webpack_require__(210);
+	var _routerWarning = __webpack_require__(219);
 	
 	var _routerWarning2 = _interopRequireDefault(_routerWarning);
 	
@@ -23777,7 +25638,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 209 */
+/* 218 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -23785,7 +25646,7 @@
 	exports.__esModule = true;
 	exports.canUseMembrane = undefined;
 	
-	var _routerWarning = __webpack_require__(210);
+	var _routerWarning = __webpack_require__(219);
 	
 	var _routerWarning2 = _interopRequireDefault(_routerWarning);
 	
@@ -23858,7 +25719,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 210 */
+/* 219 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23867,7 +25728,7 @@
 	exports.default = routerWarning;
 	exports._resetWarned = _resetWarned;
 	
-	var _warning = __webpack_require__(211);
+	var _warning = __webpack_require__(220);
 	
 	var _warning2 = _interopRequireDefault(_warning);
 	
@@ -23899,7 +25760,7 @@
 	}
 
 /***/ },
-/* 211 */
+/* 220 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -23966,7 +25827,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 212 */
+/* 221 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -24003,7 +25864,7 @@
 	var routes = exports.routes = oneOfType([route, arrayOf(route)]);
 
 /***/ },
-/* 213 */
+/* 222 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -24015,7 +25876,7 @@
 	exports.getParams = getParams;
 	exports.formatPattern = formatPattern;
 	
-	var _invariant = __webpack_require__(214);
+	var _invariant = __webpack_require__(223);
 	
 	var _invariant2 = _interopRequireDefault(_invariant);
 	
@@ -24221,7 +26082,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 214 */
+/* 223 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -24279,7 +26140,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 215 */
+/* 224 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -24288,15 +26149,15 @@
 	
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 	
-	var _createHashHistory = __webpack_require__(216);
+	var _createHashHistory = __webpack_require__(225);
 	
 	var _createHashHistory2 = _interopRequireDefault(_createHashHistory);
 	
-	var _useQueries = __webpack_require__(232);
+	var _useQueries = __webpack_require__(241);
 	
 	var _useQueries2 = _interopRequireDefault(_useQueries);
 	
-	var _invariant = __webpack_require__(214);
+	var _invariant = __webpack_require__(223);
 	
 	var _invariant2 = _interopRequireDefault(_invariant);
 	
@@ -24304,21 +26165,21 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _createTransitionManager = __webpack_require__(235);
+	var _createTransitionManager = __webpack_require__(244);
 	
 	var _createTransitionManager2 = _interopRequireDefault(_createTransitionManager);
 	
-	var _InternalPropTypes = __webpack_require__(212);
+	var _InternalPropTypes = __webpack_require__(221);
 	
-	var _RouterContext = __webpack_require__(243);
+	var _RouterContext = __webpack_require__(252);
 	
 	var _RouterContext2 = _interopRequireDefault(_RouterContext);
 	
-	var _RouteUtils = __webpack_require__(207);
+	var _RouteUtils = __webpack_require__(216);
 	
-	var _RouterUtils = __webpack_require__(245);
+	var _RouterUtils = __webpack_require__(254);
 	
-	var _routerWarning = __webpack_require__(210);
+	var _routerWarning = __webpack_require__(219);
 	
 	var _routerWarning2 = _interopRequireDefault(_routerWarning);
 	
@@ -24509,7 +26370,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 216 */
+/* 225 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -24520,25 +26381,25 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
-	var _warning = __webpack_require__(217);
+	var _warning = __webpack_require__(226);
 	
 	var _warning2 = _interopRequireDefault(_warning);
 	
-	var _invariant = __webpack_require__(214);
+	var _invariant = __webpack_require__(223);
 	
 	var _invariant2 = _interopRequireDefault(_invariant);
 	
-	var _Actions = __webpack_require__(218);
+	var _Actions = __webpack_require__(227);
 	
-	var _PathUtils = __webpack_require__(219);
+	var _PathUtils = __webpack_require__(228);
 	
-	var _ExecutionEnvironment = __webpack_require__(220);
+	var _ExecutionEnvironment = __webpack_require__(229);
 	
-	var _DOMUtils = __webpack_require__(221);
+	var _DOMUtils = __webpack_require__(230);
 	
-	var _DOMStateStorage = __webpack_require__(222);
+	var _DOMStateStorage = __webpack_require__(231);
 	
-	var _createDOMHistory = __webpack_require__(223);
+	var _createDOMHistory = __webpack_require__(232);
 	
 	var _createDOMHistory2 = _interopRequireDefault(_createDOMHistory);
 	
@@ -24761,7 +26622,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 217 */
+/* 226 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -24828,7 +26689,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 218 */
+/* 227 */
 /***/ function(module, exports) {
 
 	/**
@@ -24864,7 +26725,7 @@
 	};
 
 /***/ },
-/* 219 */
+/* 228 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -24875,7 +26736,7 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
-	var _warning = __webpack_require__(217);
+	var _warning = __webpack_require__(226);
 	
 	var _warning2 = _interopRequireDefault(_warning);
 	
@@ -24917,7 +26778,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 220 */
+/* 229 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -24927,7 +26788,7 @@
 	exports.canUseDOM = canUseDOM;
 
 /***/ },
-/* 221 */
+/* 230 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -25007,7 +26868,7 @@
 	}
 
 /***/ },
-/* 222 */
+/* 231 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/*eslint-disable no-empty */
@@ -25019,7 +26880,7 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
-	var _warning = __webpack_require__(217);
+	var _warning = __webpack_require__(226);
 	
 	var _warning2 = _interopRequireDefault(_warning);
 	
@@ -25086,7 +26947,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 223 */
+/* 232 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -25097,15 +26958,15 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
-	var _invariant = __webpack_require__(214);
+	var _invariant = __webpack_require__(223);
 	
 	var _invariant2 = _interopRequireDefault(_invariant);
 	
-	var _ExecutionEnvironment = __webpack_require__(220);
+	var _ExecutionEnvironment = __webpack_require__(229);
 	
-	var _DOMUtils = __webpack_require__(221);
+	var _DOMUtils = __webpack_require__(230);
 	
-	var _createHistory = __webpack_require__(224);
+	var _createHistory = __webpack_require__(233);
 	
 	var _createHistory2 = _interopRequireDefault(_createHistory);
 	
@@ -25132,7 +26993,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 224 */
+/* 233 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -25143,29 +27004,29 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
-	var _warning = __webpack_require__(217);
+	var _warning = __webpack_require__(226);
 	
 	var _warning2 = _interopRequireDefault(_warning);
 	
-	var _deepEqual = __webpack_require__(225);
+	var _deepEqual = __webpack_require__(234);
 	
 	var _deepEqual2 = _interopRequireDefault(_deepEqual);
 	
-	var _PathUtils = __webpack_require__(219);
+	var _PathUtils = __webpack_require__(228);
 	
-	var _AsyncUtils = __webpack_require__(228);
+	var _AsyncUtils = __webpack_require__(237);
 	
-	var _Actions = __webpack_require__(218);
+	var _Actions = __webpack_require__(227);
 	
-	var _createLocation2 = __webpack_require__(229);
+	var _createLocation2 = __webpack_require__(238);
 	
 	var _createLocation3 = _interopRequireDefault(_createLocation2);
 	
-	var _runTransitionHook = __webpack_require__(230);
+	var _runTransitionHook = __webpack_require__(239);
 	
 	var _runTransitionHook2 = _interopRequireDefault(_runTransitionHook);
 	
-	var _deprecate = __webpack_require__(231);
+	var _deprecate = __webpack_require__(240);
 	
 	var _deprecate2 = _interopRequireDefault(_deprecate);
 	
@@ -25426,12 +27287,12 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 225 */
+/* 234 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var pSlice = Array.prototype.slice;
-	var objectKeys = __webpack_require__(226);
-	var isArguments = __webpack_require__(227);
+	var objectKeys = __webpack_require__(235);
+	var isArguments = __webpack_require__(236);
 	
 	var deepEqual = module.exports = function (actual, expected, opts) {
 	  if (!opts) opts = {};
@@ -25526,7 +27387,7 @@
 
 
 /***/ },
-/* 226 */
+/* 235 */
 /***/ function(module, exports) {
 
 	exports = module.exports = typeof Object.keys === 'function'
@@ -25541,7 +27402,7 @@
 
 
 /***/ },
-/* 227 */
+/* 236 */
 /***/ function(module, exports) {
 
 	var supportsArgumentsClass = (function(){
@@ -25567,7 +27428,7 @@
 
 
 /***/ },
-/* 228 */
+/* 237 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -25630,7 +27491,7 @@
 	}
 
 /***/ },
-/* 229 */
+/* 238 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -25641,13 +27502,13 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
-	var _warning = __webpack_require__(217);
+	var _warning = __webpack_require__(226);
 	
 	var _warning2 = _interopRequireDefault(_warning);
 	
-	var _Actions = __webpack_require__(218);
+	var _Actions = __webpack_require__(227);
 	
-	var _PathUtils = __webpack_require__(219);
+	var _PathUtils = __webpack_require__(228);
 	
 	function createLocation() {
 	  var location = arguments.length <= 0 || arguments[0] === undefined ? '/' : arguments[0];
@@ -25687,7 +27548,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 230 */
+/* 239 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -25696,7 +27557,7 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
-	var _warning = __webpack_require__(217);
+	var _warning = __webpack_require__(226);
 	
 	var _warning2 = _interopRequireDefault(_warning);
 	
@@ -25717,7 +27578,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 231 */
+/* 240 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -25726,7 +27587,7 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
-	var _warning = __webpack_require__(217);
+	var _warning = __webpack_require__(226);
 	
 	var _warning2 = _interopRequireDefault(_warning);
 	
@@ -25742,7 +27603,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 232 */
+/* 241 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -25753,19 +27614,19 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
-	var _warning = __webpack_require__(217);
+	var _warning = __webpack_require__(226);
 	
 	var _warning2 = _interopRequireDefault(_warning);
 	
-	var _queryString = __webpack_require__(233);
+	var _queryString = __webpack_require__(242);
 	
-	var _runTransitionHook = __webpack_require__(230);
+	var _runTransitionHook = __webpack_require__(239);
 	
 	var _runTransitionHook2 = _interopRequireDefault(_runTransitionHook);
 	
-	var _PathUtils = __webpack_require__(219);
+	var _PathUtils = __webpack_require__(228);
 	
-	var _deprecate = __webpack_require__(231);
+	var _deprecate = __webpack_require__(240);
 	
 	var _deprecate2 = _interopRequireDefault(_deprecate);
 	
@@ -25924,11 +27785,11 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 233 */
+/* 242 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
-	var strictUriEncode = __webpack_require__(234);
+	var strictUriEncode = __webpack_require__(243);
 	
 	exports.extract = function (str) {
 		return str.split('?')[1] || '';
@@ -25996,7 +27857,7 @@
 
 
 /***/ },
-/* 234 */
+/* 243 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -26008,7 +27869,7 @@
 
 
 /***/ },
-/* 235 */
+/* 244 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -26019,25 +27880,25 @@
 	
 	exports.default = createTransitionManager;
 	
-	var _routerWarning = __webpack_require__(210);
+	var _routerWarning = __webpack_require__(219);
 	
 	var _routerWarning2 = _interopRequireDefault(_routerWarning);
 	
-	var _computeChangedRoutes2 = __webpack_require__(236);
+	var _computeChangedRoutes2 = __webpack_require__(245);
 	
 	var _computeChangedRoutes3 = _interopRequireDefault(_computeChangedRoutes2);
 	
-	var _TransitionUtils = __webpack_require__(237);
+	var _TransitionUtils = __webpack_require__(246);
 	
-	var _isActive2 = __webpack_require__(239);
+	var _isActive2 = __webpack_require__(248);
 	
 	var _isActive3 = _interopRequireDefault(_isActive2);
 	
-	var _getComponents = __webpack_require__(240);
+	var _getComponents = __webpack_require__(249);
 	
 	var _getComponents2 = _interopRequireDefault(_getComponents);
 	
-	var _matchRoutes = __webpack_require__(242);
+	var _matchRoutes = __webpack_require__(251);
 	
 	var _matchRoutes2 = _interopRequireDefault(_matchRoutes);
 	
@@ -26316,14 +28177,14 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 236 */
+/* 245 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	exports.__esModule = true;
 	
-	var _PatternUtils = __webpack_require__(213);
+	var _PatternUtils = __webpack_require__(222);
 	
 	function routeParamsChanged(route, prevState, nextState) {
 	  if (!route.path) return false;
@@ -26398,7 +28259,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 237 */
+/* 246 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -26408,9 +28269,9 @@
 	exports.runChangeHooks = runChangeHooks;
 	exports.runLeaveHooks = runLeaveHooks;
 	
-	var _AsyncUtils = __webpack_require__(238);
+	var _AsyncUtils = __webpack_require__(247);
 	
-	var _routerWarning = __webpack_require__(210);
+	var _routerWarning = __webpack_require__(219);
 	
 	var _routerWarning2 = _interopRequireDefault(_routerWarning);
 	
@@ -26526,7 +28387,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 238 */
+/* 247 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -26619,7 +28480,7 @@
 	}
 
 /***/ },
-/* 239 */
+/* 248 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -26630,7 +28491,7 @@
 	
 	exports.default = isActive;
 	
-	var _PatternUtils = __webpack_require__(213);
+	var _PatternUtils = __webpack_require__(222);
 	
 	function deepEqual(a, b) {
 	  if (a == b) return true;
@@ -26776,16 +28637,16 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 240 */
+/* 249 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	exports.__esModule = true;
 	
-	var _AsyncUtils = __webpack_require__(238);
+	var _AsyncUtils = __webpack_require__(247);
 	
-	var _makeStateWithLocation = __webpack_require__(241);
+	var _makeStateWithLocation = __webpack_require__(250);
 	
 	var _makeStateWithLocation2 = _interopRequireDefault(_makeStateWithLocation);
 	
@@ -26827,7 +28688,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 241 */
+/* 250 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -26838,9 +28699,9 @@
 	
 	exports.default = makeStateWithLocation;
 	
-	var _deprecateObjectProperties = __webpack_require__(209);
+	var _deprecateObjectProperties = __webpack_require__(218);
 	
-	var _routerWarning = __webpack_require__(210);
+	var _routerWarning = __webpack_require__(219);
 	
 	var _routerWarning2 = _interopRequireDefault(_routerWarning);
 	
@@ -26882,7 +28743,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 242 */
+/* 251 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -26895,19 +28756,19 @@
 	
 	exports.default = matchRoutes;
 	
-	var _AsyncUtils = __webpack_require__(238);
+	var _AsyncUtils = __webpack_require__(247);
 	
-	var _makeStateWithLocation = __webpack_require__(241);
+	var _makeStateWithLocation = __webpack_require__(250);
 	
 	var _makeStateWithLocation2 = _interopRequireDefault(_makeStateWithLocation);
 	
-	var _PatternUtils = __webpack_require__(213);
+	var _PatternUtils = __webpack_require__(222);
 	
-	var _routerWarning = __webpack_require__(210);
+	var _routerWarning = __webpack_require__(219);
 	
 	var _routerWarning2 = _interopRequireDefault(_routerWarning);
 	
-	var _RouteUtils = __webpack_require__(207);
+	var _RouteUtils = __webpack_require__(216);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -27139,7 +29000,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 243 */
+/* 252 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -27150,7 +29011,7 @@
 	
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 	
-	var _invariant = __webpack_require__(214);
+	var _invariant = __webpack_require__(223);
 	
 	var _invariant2 = _interopRequireDefault(_invariant);
 	
@@ -27158,17 +29019,17 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _deprecateObjectProperties = __webpack_require__(209);
+	var _deprecateObjectProperties = __webpack_require__(218);
 	
 	var _deprecateObjectProperties2 = _interopRequireDefault(_deprecateObjectProperties);
 	
-	var _getRouteParams = __webpack_require__(244);
+	var _getRouteParams = __webpack_require__(253);
 	
 	var _getRouteParams2 = _interopRequireDefault(_getRouteParams);
 	
-	var _RouteUtils = __webpack_require__(207);
+	var _RouteUtils = __webpack_require__(216);
 	
-	var _routerWarning = __webpack_require__(210);
+	var _routerWarning = __webpack_require__(219);
 	
 	var _routerWarning2 = _interopRequireDefault(_routerWarning);
 	
@@ -27301,14 +29162,14 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 244 */
+/* 253 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	exports.__esModule = true;
 	
-	var _PatternUtils = __webpack_require__(213);
+	var _PatternUtils = __webpack_require__(222);
 	
 	/**
 	 * Extracts an object of params the given route cares about from
@@ -27332,7 +29193,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 245 */
+/* 254 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -27344,7 +29205,7 @@
 	exports.createRouterObject = createRouterObject;
 	exports.createRoutingHistory = createRoutingHistory;
 	
-	var _deprecateObjectProperties = __webpack_require__(209);
+	var _deprecateObjectProperties = __webpack_require__(218);
 	
 	var _deprecateObjectProperties2 = _interopRequireDefault(_deprecateObjectProperties);
 	
@@ -27370,7 +29231,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 246 */
+/* 255 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -27383,15 +29244,15 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _routerWarning = __webpack_require__(210);
+	var _routerWarning = __webpack_require__(219);
 	
 	var _routerWarning2 = _interopRequireDefault(_routerWarning);
 	
-	var _invariant = __webpack_require__(214);
+	var _invariant = __webpack_require__(223);
 	
 	var _invariant2 = _interopRequireDefault(_invariant);
 	
-	var _PropTypes = __webpack_require__(208);
+	var _PropTypes = __webpack_require__(217);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -27552,7 +29413,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 247 */
+/* 256 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -27565,7 +29426,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _Link = __webpack_require__(246);
+	var _Link = __webpack_require__(255);
 	
 	var _Link2 = _interopRequireDefault(_Link);
 	
@@ -27585,7 +29446,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 248 */
+/* 257 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -27596,7 +29457,7 @@
 	
 	exports.default = withRouter;
 	
-	var _invariant = __webpack_require__(214);
+	var _invariant = __webpack_require__(223);
 	
 	var _invariant2 = _interopRequireDefault(_invariant);
 	
@@ -27604,11 +29465,11 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _hoistNonReactStatics = __webpack_require__(249);
+	var _hoistNonReactStatics = __webpack_require__(258);
 	
 	var _hoistNonReactStatics2 = _interopRequireDefault(_hoistNonReactStatics);
 	
-	var _PropTypes = __webpack_require__(208);
+	var _PropTypes = __webpack_require__(217);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -27655,7 +29516,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 249 */
+/* 258 */
 /***/ function(module, exports) {
 
 	/**
@@ -27711,7 +29572,7 @@
 
 
 /***/ },
-/* 250 */
+/* 259 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -27722,19 +29583,19 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _routerWarning = __webpack_require__(210);
+	var _routerWarning = __webpack_require__(219);
 	
 	var _routerWarning2 = _interopRequireDefault(_routerWarning);
 	
-	var _invariant = __webpack_require__(214);
+	var _invariant = __webpack_require__(223);
 	
 	var _invariant2 = _interopRequireDefault(_invariant);
 	
-	var _Redirect = __webpack_require__(251);
+	var _Redirect = __webpack_require__(260);
 	
 	var _Redirect2 = _interopRequireDefault(_Redirect);
 	
-	var _InternalPropTypes = __webpack_require__(212);
+	var _InternalPropTypes = __webpack_require__(221);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -27780,7 +29641,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 251 */
+/* 260 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -27791,15 +29652,15 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _invariant = __webpack_require__(214);
+	var _invariant = __webpack_require__(223);
 	
 	var _invariant2 = _interopRequireDefault(_invariant);
 	
-	var _RouteUtils = __webpack_require__(207);
+	var _RouteUtils = __webpack_require__(216);
 	
-	var _PatternUtils = __webpack_require__(213);
+	var _PatternUtils = __webpack_require__(222);
 	
-	var _InternalPropTypes = __webpack_require__(212);
+	var _InternalPropTypes = __webpack_require__(221);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -27888,7 +29749,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 252 */
+/* 261 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -27899,17 +29760,17 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _routerWarning = __webpack_require__(210);
+	var _routerWarning = __webpack_require__(219);
 	
 	var _routerWarning2 = _interopRequireDefault(_routerWarning);
 	
-	var _invariant = __webpack_require__(214);
+	var _invariant = __webpack_require__(223);
 	
 	var _invariant2 = _interopRequireDefault(_invariant);
 	
-	var _RouteUtils = __webpack_require__(207);
+	var _RouteUtils = __webpack_require__(216);
 	
-	var _InternalPropTypes = __webpack_require__(212);
+	var _InternalPropTypes = __webpack_require__(221);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -27954,7 +29815,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 253 */
+/* 262 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -27965,13 +29826,13 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _invariant = __webpack_require__(214);
+	var _invariant = __webpack_require__(223);
 	
 	var _invariant2 = _interopRequireDefault(_invariant);
 	
-	var _RouteUtils = __webpack_require__(207);
+	var _RouteUtils = __webpack_require__(216);
 	
-	var _InternalPropTypes = __webpack_require__(212);
+	var _InternalPropTypes = __webpack_require__(221);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -28017,18 +29878,18 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 254 */
+/* 263 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
 	
 	exports.__esModule = true;
 	
-	var _routerWarning = __webpack_require__(210);
+	var _routerWarning = __webpack_require__(219);
 	
 	var _routerWarning2 = _interopRequireDefault(_routerWarning);
 	
-	var _InternalPropTypes = __webpack_require__(212);
+	var _InternalPropTypes = __webpack_require__(221);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -28052,14 +29913,14 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 255 */
+/* 264 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
 	
 	exports.__esModule = true;
 	
-	var _routerWarning = __webpack_require__(210);
+	var _routerWarning = __webpack_require__(219);
 	
 	var _routerWarning2 = _interopRequireDefault(_routerWarning);
 	
@@ -28067,7 +29928,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _invariant = __webpack_require__(214);
+	var _invariant = __webpack_require__(223);
 	
 	var _invariant2 = _interopRequireDefault(_invariant);
 	
@@ -28126,14 +29987,14 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 256 */
+/* 265 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
 	
 	exports.__esModule = true;
 	
-	var _routerWarning = __webpack_require__(210);
+	var _routerWarning = __webpack_require__(219);
 	
 	var _routerWarning2 = _interopRequireDefault(_routerWarning);
 	
@@ -28177,7 +30038,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 257 */
+/* 266 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -28186,15 +30047,15 @@
 	
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 	
-	var _useQueries = __webpack_require__(232);
+	var _useQueries = __webpack_require__(241);
 	
 	var _useQueries2 = _interopRequireDefault(_useQueries);
 	
-	var _createTransitionManager = __webpack_require__(235);
+	var _createTransitionManager = __webpack_require__(244);
 	
 	var _createTransitionManager2 = _interopRequireDefault(_createTransitionManager);
 	
-	var _routerWarning = __webpack_require__(210);
+	var _routerWarning = __webpack_require__(219);
 	
 	var _routerWarning2 = _interopRequireDefault(_routerWarning);
 	
@@ -28234,7 +30095,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 258 */
+/* 267 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -28245,11 +30106,11 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _RouterContext = __webpack_require__(243);
+	var _RouterContext = __webpack_require__(252);
 	
 	var _RouterContext2 = _interopRequireDefault(_RouterContext);
 	
-	var _routerWarning = __webpack_require__(210);
+	var _routerWarning = __webpack_require__(219);
 	
 	var _routerWarning2 = _interopRequireDefault(_routerWarning);
 	
@@ -28270,7 +30131,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 259 */
+/* 268 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -28279,23 +30140,23 @@
 	
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 	
-	var _Actions = __webpack_require__(218);
+	var _Actions = __webpack_require__(227);
 	
-	var _invariant = __webpack_require__(214);
+	var _invariant = __webpack_require__(223);
 	
 	var _invariant2 = _interopRequireDefault(_invariant);
 	
-	var _createMemoryHistory = __webpack_require__(260);
+	var _createMemoryHistory = __webpack_require__(269);
 	
 	var _createMemoryHistory2 = _interopRequireDefault(_createMemoryHistory);
 	
-	var _createTransitionManager = __webpack_require__(235);
+	var _createTransitionManager = __webpack_require__(244);
 	
 	var _createTransitionManager2 = _interopRequireDefault(_createTransitionManager);
 	
-	var _RouteUtils = __webpack_require__(207);
+	var _RouteUtils = __webpack_require__(216);
 	
-	var _RouterUtils = __webpack_require__(245);
+	var _RouterUtils = __webpack_require__(254);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -28359,7 +30220,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 260 */
+/* 269 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28367,15 +30228,15 @@
 	exports.__esModule = true;
 	exports.default = createMemoryHistory;
 	
-	var _useQueries = __webpack_require__(232);
+	var _useQueries = __webpack_require__(241);
 	
 	var _useQueries2 = _interopRequireDefault(_useQueries);
 	
-	var _useBasename = __webpack_require__(261);
+	var _useBasename = __webpack_require__(270);
 	
 	var _useBasename2 = _interopRequireDefault(_useBasename);
 	
-	var _createMemoryHistory = __webpack_require__(262);
+	var _createMemoryHistory = __webpack_require__(271);
 	
 	var _createMemoryHistory2 = _interopRequireDefault(_createMemoryHistory);
 	
@@ -28396,7 +30257,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 261 */
+/* 270 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -28407,19 +30268,19 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
-	var _warning = __webpack_require__(217);
+	var _warning = __webpack_require__(226);
 	
 	var _warning2 = _interopRequireDefault(_warning);
 	
-	var _ExecutionEnvironment = __webpack_require__(220);
+	var _ExecutionEnvironment = __webpack_require__(229);
 	
-	var _PathUtils = __webpack_require__(219);
+	var _PathUtils = __webpack_require__(228);
 	
-	var _runTransitionHook = __webpack_require__(230);
+	var _runTransitionHook = __webpack_require__(239);
 	
 	var _runTransitionHook2 = _interopRequireDefault(_runTransitionHook);
 	
-	var _deprecate = __webpack_require__(231);
+	var _deprecate = __webpack_require__(240);
 	
 	var _deprecate2 = _interopRequireDefault(_deprecate);
 	
@@ -28560,7 +30421,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 262 */
+/* 271 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -28571,19 +30432,19 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
-	var _warning = __webpack_require__(217);
+	var _warning = __webpack_require__(226);
 	
 	var _warning2 = _interopRequireDefault(_warning);
 	
-	var _invariant = __webpack_require__(214);
+	var _invariant = __webpack_require__(223);
 	
 	var _invariant2 = _interopRequireDefault(_invariant);
 	
-	var _PathUtils = __webpack_require__(219);
+	var _PathUtils = __webpack_require__(228);
 	
-	var _Actions = __webpack_require__(218);
+	var _Actions = __webpack_require__(227);
 	
-	var _createHistory = __webpack_require__(224);
+	var _createHistory = __webpack_require__(233);
 	
 	var _createHistory2 = _interopRequireDefault(_createHistory);
 	
@@ -28720,7 +30581,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 263 */
+/* 272 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28728,11 +30589,11 @@
 	exports.__esModule = true;
 	exports.default = useRouterHistory;
 	
-	var _useQueries = __webpack_require__(232);
+	var _useQueries = __webpack_require__(241);
 	
 	var _useQueries2 = _interopRequireDefault(_useQueries);
 	
-	var _useBasename = __webpack_require__(261);
+	var _useBasename = __webpack_require__(270);
 	
 	var _useBasename2 = _interopRequireDefault(_useBasename);
 	
@@ -28748,7 +30609,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 264 */
+/* 273 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -28761,11 +30622,11 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _RouterContext = __webpack_require__(243);
+	var _RouterContext = __webpack_require__(252);
 	
 	var _RouterContext2 = _interopRequireDefault(_RouterContext);
 	
-	var _routerWarning = __webpack_require__(210);
+	var _routerWarning = __webpack_require__(219);
 	
 	var _routerWarning2 = _interopRequireDefault(_routerWarning);
 	
@@ -28811,18 +30672,18 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 265 */
+/* 274 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	exports.__esModule = true;
 	
-	var _createBrowserHistory = __webpack_require__(266);
+	var _createBrowserHistory = __webpack_require__(275);
 	
 	var _createBrowserHistory2 = _interopRequireDefault(_createBrowserHistory);
 	
-	var _createRouterHistory = __webpack_require__(267);
+	var _createRouterHistory = __webpack_require__(276);
 	
 	var _createRouterHistory2 = _interopRequireDefault(_createRouterHistory);
 	
@@ -28832,7 +30693,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 266 */
+/* 275 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -28843,21 +30704,21 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
-	var _invariant = __webpack_require__(214);
+	var _invariant = __webpack_require__(223);
 	
 	var _invariant2 = _interopRequireDefault(_invariant);
 	
-	var _Actions = __webpack_require__(218);
+	var _Actions = __webpack_require__(227);
 	
-	var _PathUtils = __webpack_require__(219);
+	var _PathUtils = __webpack_require__(228);
 	
-	var _ExecutionEnvironment = __webpack_require__(220);
+	var _ExecutionEnvironment = __webpack_require__(229);
 	
-	var _DOMUtils = __webpack_require__(221);
+	var _DOMUtils = __webpack_require__(230);
 	
-	var _DOMStateStorage = __webpack_require__(222);
+	var _DOMStateStorage = __webpack_require__(231);
 	
-	var _createDOMHistory = __webpack_require__(223);
+	var _createDOMHistory = __webpack_require__(232);
 	
 	var _createDOMHistory2 = _interopRequireDefault(_createDOMHistory);
 	
@@ -29018,7 +30879,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 267 */
+/* 276 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -29031,7 +30892,7 @@
 	  return history;
 	};
 	
-	var _useRouterHistory = __webpack_require__(263);
+	var _useRouterHistory = __webpack_require__(272);
 	
 	var _useRouterHistory2 = _interopRequireDefault(_useRouterHistory);
 	
@@ -29042,18 +30903,18 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 268 */
+/* 277 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	exports.__esModule = true;
 	
-	var _createHashHistory = __webpack_require__(216);
+	var _createHashHistory = __webpack_require__(225);
 	
 	var _createHashHistory2 = _interopRequireDefault(_createHashHistory);
 	
-	var _createRouterHistory = __webpack_require__(267);
+	var _createRouterHistory = __webpack_require__(276);
 	
 	var _createRouterHistory2 = _interopRequireDefault(_createRouterHistory);
 	
@@ -29061,6 +30922,1475 @@
 	
 	exports.default = (0, _createRouterHistory2.default)(_createHashHistory2.default);
 	module.exports = exports['default'];
+
+/***/ },
+/* 278 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(1),
+	    connect = __webpack_require__(172).connect,
+	    userActions = __webpack_require__(203),
+	    Link = __webpack_require__(215).Link;
+	
+	var mainPage = React.createClass({
+		displayName: 'mainPage',
+	
+		handleSubmit: function handleSubmit(event) {
+			event.preventDefault();
+			if (this.refs.username.value == '') {
+				return alert('Username Field Required');
+			}
+			if (this.refs.password.value == '') {
+				return alert('Password Field Required');
+			}
+			this.props.dispatch(userActions.login(this.refs.username.value, this.refs.password.value, this));
+			this.refs.username.value = '';
+			this.refs.password.value = '';
+		},
+		componentWillUnmount: function componentWillUnmount() {
+			this.refs.username.value = '';
+			this.refs.password.value = '';
+		},
+		render: function render() {
+			if (this.props.loginFailed) {
+				alert('Invaild Username and Password');
+			}
+			return React.createElement(
+				'div',
+				{ className: 'login' },
+				React.createElement(
+					'h1',
+					null,
+					'Login'
+				),
+				React.createElement(
+					'form',
+					{ onSubmit: this.handleSubmit },
+					React.createElement(
+						'div',
+						null,
+						React.createElement(
+							'label',
+							null,
+							'Username:'
+						),
+						React.createElement('input', { type: 'text', ref: 'username', name: 'username' })
+					),
+					React.createElement(
+						'div',
+						null,
+						React.createElement(
+							'label',
+							null,
+							'Password:'
+						),
+						React.createElement('input', { type: 'password', ref: 'password', name: 'password' })
+					),
+					React.createElement(
+						'div',
+						null,
+						React.createElement('input', { type: 'submit', value: 'LOGIN' }),
+						React.createElement(
+							Link,
+							{ to: '/signup' },
+							'SIGNUP'
+						)
+					)
+				)
+			);
+		}
+	});
+	
+	var mapStateToProps = function mapStateToProps(state, props) {
+		return {
+			loginFailed: state.user.loginFailed
+		};
+	};
+	
+	var Container = connect(mapStateToProps)(mainPage);
+	
+	module.exports = Container;
+
+/***/ },
+/* 279 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(1),
+	    connect = __webpack_require__(172).connect;
+	
+	var LoginContainer = function LoginContainer(props) {
+	    if ('cookie' in document) {
+	        var userKey = document.cookie.split('=');
+	        if (userKey[0] == 'UserKey') {
+	            if (userKey[1] != 'null') {
+	                props.history.replace('/user');
+	            }
+	        }
+	    }
+	    return React.createElement(
+	        'div',
+	        { className: 'login-page' },
+	        React.createElement(
+	            'div',
+	            { className: 'login-page-body' },
+	            props.children
+	        )
+	    );
+	};
+	
+	var mapStateToProps = function mapStateToProps(state, props) {
+	    return {
+	        name: state.user.name
+	    };
+	};
+	
+	var Container = connect(mapStateToProps)(LoginContainer);
+	
+	module.exports = Container;
+
+/***/ },
+/* 280 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(1),
+	    connect = __webpack_require__(172).connect;
+	
+	var SignupContainer = React.createClass({
+	    displayName: 'SignupContainer',
+	
+	    render: function render() {
+	        if ('cookie' in document) {
+	            var userKey = document.cookie.split('=');
+	            if (userKey[0] == 'UserKey') {
+	                if (userKey[1] != 'null') {
+	                    this.props.history.replace('/user');
+	                }
+	            }
+	        }
+	        return React.createElement(
+	            'div',
+	            { className: 'signup-page' },
+	            React.createElement(
+	                'div',
+	                { className: 'signup-page-body' },
+	                this.props.children
+	            )
+	        );
+	    }
+	});
+	
+	var mapStateToProps = function mapStateToProps(state, props) {
+	    return {
+	        name: state.user.name
+	    };
+	};
+	
+	var Container = connect(mapStateToProps)(SignupContainer);
+	
+	module.exports = Container;
+
+/***/ },
+/* 281 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(1),
+	    connect = __webpack_require__(172).connect,
+	    userActions = __webpack_require__(203),
+	    Link = __webpack_require__(215).Link;
+	
+	var mainPage = React.createClass({
+		displayName: 'mainPage',
+	
+		handleSubmit: function handleSubmit(event) {
+			event.preventDefault();
+			if (this.refs.name.value == '') {
+				return alert('Name Field Required');
+			}
+			if (this.refs.username.value == '') {
+				return alert('Username Field Required');
+			}
+			if (this.refs.password.value == '') {
+				return alert('Password Field Required');
+			}
+			if (this.refs.confrimedPassword.value == '') {
+				return alert('Confrimed Password Field Required');
+			}
+			if (this.refs.password.value == this.refs.confrimedPassword.value) {
+				this.props.dispatch(userActions.signup(this.refs.name.value, this.refs.username.value, this.refs.password.value, this));
+				this.refs.username.value = '';
+				this.refs.password.value = '';
+				this.refs.confrimedPassword.value = '';
+			} else {
+				this.refs.password.value = '';
+				this.refs.confrimedPassword.value = '';
+				alert('Passwords must match');
+			}
+		},
+		componentWillUnmount: function componentWillUnmount() {
+			this.refs.name.value = '';
+			this.refs.username.value = '';
+			this.refs.password.value = '';
+			this.refs.confrimedPassword.value = '';
+		},
+		render: function render() {
+			if (this.props.signupFailed) {
+				alert('invaild username');
+			}
+			var component = React.createElement(
+				'div',
+				{ className: 'signup' },
+				React.createElement(
+					'h1',
+					null,
+					'Signup'
+				),
+				React.createElement(
+					'form',
+					{ onSubmit: this.handleSubmit },
+					React.createElement(
+						'div',
+						null,
+						React.createElement(
+							'label',
+							null,
+							'Name:'
+						),
+						React.createElement('input', { type: 'text', ref: 'name', name: 'name' })
+					),
+					React.createElement(
+						'div',
+						null,
+						React.createElement(
+							'label',
+							null,
+							'Username:'
+						),
+						React.createElement('input', { type: 'text', ref: 'username', name: 'username' })
+					),
+					React.createElement(
+						'div',
+						null,
+						React.createElement(
+							'label',
+							null,
+							'Password:'
+						),
+						React.createElement('input', { type: 'password', ref: 'password', name: 'password' })
+					),
+					React.createElement(
+						'div',
+						null,
+						React.createElement(
+							'label',
+							null,
+							'Confrimed Password:'
+						),
+						React.createElement('input', { type: 'password', ref: 'confrimedPassword', name: 'confrimedPassword' })
+					),
+					React.createElement(
+						'div',
+						null,
+						React.createElement('input', { type: 'submit', value: 'SIGNUP' }),
+						React.createElement(
+							Link,
+							{ to: '/login' },
+							'LOGIN'
+						)
+					)
+				)
+			);
+	
+			return component;
+		}
+	});
+	
+	var mapStateToProps = function mapStateToProps(state, props) {
+		return {
+			signupFailed: state.user.signupFailed
+		};
+	};
+	
+	var Container = connect(mapStateToProps)(mainPage);
+	
+	module.exports = Container;
+
+/***/ },
+/* 282 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(1),
+	    connect = __webpack_require__(172).connect,
+	    characterActions = __webpack_require__(207),
+	    Nav = __webpack_require__(214),
+	    CharacterName = __webpack_require__(283),
+	    CreateCharacter = __webpack_require__(284);
+	
+	var mainPage = React.createClass({
+		displayName: 'mainPage',
+	
+		componentDidMount: function componentDidMount() {
+			this.props.dispatch(characterActions.getListOfCharacters());
+		},
+		render: function render() {
+			var characters = [];
+			for (var i = 0; i < this.props.listOfCharacters.length; i++) {
+				this.props.listOfCharacters[i];
+				characters.push(React.createElement(CharacterName, { link: this.props.history, name: this.props.listOfCharacters[i].name, _id: this.props.listOfCharacters[i]._id }));
+			}
+			if (!'cookie' in document) {
+				this.props.history.replace('/');
+			}
+			var userKey = document.cookie.split('=');
+			if (userKey[0] != 'UserKey') {
+				this.props.history.replace('/');
+			}
+			if (userKey[1] == 'null') {
+				this.props.history.replace('/');
+			}
+			return React.createElement(
+				'div',
+				{ className: 'user-page' },
+				React.createElement(Nav, null),
+				React.createElement(
+					'h1',
+					null,
+					'Characters'
+				),
+				React.createElement(
+					'ul',
+					null,
+					characters
+				),
+				React.createElement(CreateCharacter, { link: this.props.history })
+			);
+		}
+	});
+	
+	var mapStateToProps = function mapStateToProps(state, props) {
+		return {
+			listOfCharacters: state.character.listOfCharacters
+		};
+	};
+	
+	var Container = connect(mapStateToProps)(mainPage);
+	
+	module.exports = Container;
+
+/***/ },
+/* 283 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(1),
+	    connect = __webpack_require__(172).connect,
+	    characterActions = __webpack_require__(207);
+	
+	var characterName = React.createClass({
+	    displayName: 'characterName',
+	
+	    onCharacter: function onCharacter() {
+	        this.props.link.replace('/character/' + this.props._id);
+	    },
+	    render: function render() {
+	        return React.createElement(
+	            'li',
+	            { className: 'character-name' },
+	            React.createElement(
+	                'button',
+	                { onClick: this.onCharacter },
+	                this.props.name
+	            )
+	        );
+	    }
+	});
+	
+	var mapStateToProps = function mapStateToProps(state, props) {
+	    return {};
+	};
+	
+	var Container = connect(mapStateToProps)(characterName);
+	
+	module.exports = Container;
+
+/***/ },
+/* 284 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(1),
+	    connect = __webpack_require__(172).connect,
+	    characterActions = __webpack_require__(207);
+	
+	var character = React.createClass({
+		displayName: 'character',
+	
+		handleSubmit: function handleSubmit(event) {
+			event.preventDefault();
+			if (this.refs.name.value) {
+				this.props.dispatch(characterActions.createCharacter(this.refs.name.value, this.props.link));
+				this.refs.name.value = '';
+			} else {
+				alert("Name Field required.");
+			}
+		},
+		componentWillUnmount: function componentWillUnmount() {
+			this.refs.name.value = '';
+		},
+		render: function render() {
+			return React.createElement(
+				'form',
+				{ onSubmit: this.handleSubmit },
+				React.createElement(
+					'div',
+					null,
+					React.createElement(
+						'label',
+						null,
+						'Name:'
+					),
+					React.createElement('input', { type: 'text', ref: 'name', name: 'name' })
+				),
+				React.createElement(
+					'div',
+					null,
+					React.createElement('input', { type: 'submit', value: 'CREATE' })
+				)
+			);
+		}
+	});
+	
+	var mapStateToProps = function mapStateToProps(state, props) {
+		return {
+			character: state.character.character
+		};
+	};
+	
+	var Container = connect(mapStateToProps)(character);
+	
+	module.exports = Container;
+
+/***/ },
+/* 285 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(1),
+	    connect = __webpack_require__(172).connect,
+	    characterActions = __webpack_require__(207),
+	    Nav = __webpack_require__(214),
+	    FeatContainer = __webpack_require__(286),
+	    AcitemContainer = __webpack_require__(289);
+	
+	var character = React.createClass({
+		displayName: 'character',
+	
+		getInitialState: function getInitialState() {
+			var state = {};
+			state._id = false;
+			return state;
+		},
+		componentDidMount: function componentDidMount() {
+			if (this.props.params._characterId) {
+				this.props.dispatch(characterActions.getCharacter(this.props.params._characterId));
+			}
+		},
+		editField: function editField(that) {
+			var state = this.state;
+			state[that.target.name] = that.target.value;
+			this.setState(state);
+		},
+		saveCharacter: function saveCharacter(event) {
+			event.preventDefault();
+			this.props.dispatch(characterActions.updateCharacter(this.state, this.props.character));
+		},
+		deleteCharacter: function deleteCharacter() {
+			this.props.dispatch(characterActions.deleteCharacter(this.props.character._id, this.props.history));
+		},
+		render: function render() {
+			if (Object.keys(this.props.params).length == 0) {
+				this.props.history.replace('/user');
+			}
+			if (!this.state._id) {
+				if (this.props.character.name) {
+					this.setState(this.props.character);
+				}
+			}
+			return React.createElement(
+				'div',
+				{ className: 'character-page' },
+				React.createElement(Nav, null),
+				React.createElement(
+					'h1',
+					null,
+					'Character'
+				),
+				React.createElement(
+					'p',
+					null,
+					this.props.character.name
+				),
+				React.createElement(
+					'p',
+					null,
+					this.state.name
+				),
+				React.createElement(
+					'div',
+					{ createClass: 'character' },
+					React.createElement(
+						'div',
+						null,
+						React.createElement(
+							'label',
+							null,
+							'Name:'
+						),
+						React.createElement('input', { type: 'text', name: 'name', onChange: this.editField, value: this.state.name }),
+						React.createElement(
+							'label',
+							null,
+							'ability_score_str:'
+						),
+						React.createElement('input', { type: 'text', name: 'ability_score_str', onChange: this.editField, value: this.state.ability_score_str }),
+						React.createElement(
+							'label',
+							null,
+							'ability_score_dex:'
+						),
+						React.createElement('input', { type: 'text', name: 'ability_score_dex', onChange: this.editField, value: this.state.ability_score_dex }),
+						React.createElement(
+							'label',
+							null,
+							'ability_score_con:'
+						),
+						React.createElement('input', { type: 'text', name: 'ability_score_con', onChange: this.editField, value: this.state.ability_score_con }),
+						React.createElement(
+							'label',
+							null,
+							'ability_score_int:'
+						),
+						React.createElement('input', { type: 'text', name: 'ability_score_int', onChange: this.editField, value: this.state.ability_score_int }),
+						React.createElement(
+							'label',
+							null,
+							'ability_score_wis:'
+						),
+						React.createElement('input', { type: 'text', name: 'ability_score_wis', onChange: this.editField, value: this.state.ability_score_wis }),
+						React.createElement(
+							'label',
+							null,
+							'ability_score_cha:'
+						),
+						React.createElement('input', { type: 'text', name: 'ability_score_cha', onChange: this.editField, value: this.state.ability_score_cha }),
+						React.createElement(
+							'label',
+							null,
+							'ability_score_str_temp:'
+						),
+						React.createElement('input', { type: 'text', name: 'ability_score_str_temp', onChange: this.editField, value: this.state.ability_score_str_temp }),
+						React.createElement(
+							'label',
+							null,
+							'ability_score_dex_temp:'
+						),
+						React.createElement('input', { type: 'text', name: 'ability_score_dex_temp', onChange: this.editField, value: this.state.ability_score_dex_temp }),
+						React.createElement(
+							'label',
+							null,
+							'ability_score_con_temp:'
+						),
+						React.createElement('input', { type: 'text', name: 'ability_score_con_temp', onChange: this.editField, value: this.state.ability_score_con_temp }),
+						React.createElement(
+							'label',
+							null,
+							'ability_score_int_temp:'
+						),
+						React.createElement('input', { type: 'text', name: 'ability_score_int_temp', onChange: this.editField, value: this.state.ability_score_int_temp }),
+						React.createElement(
+							'label',
+							null,
+							'ability_score_wis_temp:'
+						),
+						React.createElement('input', { type: 'text', name: 'ability_score_wis_temp', onChange: this.editField, value: this.state.ability_score_wis_temp }),
+						React.createElement(
+							'label',
+							null,
+							'ability_score_cha_temp:'
+						),
+						React.createElement('input', { type: 'text', name: 'ability_score_cha_temp', onChange: this.editField, value: this.state.ability_score_cha_temp }),
+						React.createElement(
+							'label',
+							null,
+							'race:'
+						),
+						React.createElement('input', { type: 'text', name: 'race', onChange: this.editField, value: this.state.race }),
+						React.createElement(
+							'label',
+							null,
+							'size:'
+						),
+						React.createElement('input', { type: 'text', name: 'size', onChange: this.editField, value: this.state.size }),
+						React.createElement(
+							'label',
+							null,
+							'class:'
+						),
+						React.createElement('input', { type: 'text', name: 'class', onChange: this.editField, value: this.state.class }),
+						React.createElement(
+							'label',
+							null,
+							'level:'
+						),
+						React.createElement('input', { type: 'text', name: 'level', onChange: this.editField, value: this.state.level }),
+						React.createElement(
+							'label',
+							null,
+							'base_attack_bonus:'
+						),
+						React.createElement('input', { type: 'text', name: 'base_attack_bonus', onChange: this.editField, value: this.state.base_attack_bonus }),
+						React.createElement(
+							'label',
+							null,
+							'hit_points:'
+						),
+						React.createElement('input', { type: 'text', name: 'hit_points', onChange: this.editField, value: this.state.hit_points }),
+						React.createElement(
+							'label',
+							null,
+							'land_speed:'
+						),
+						React.createElement('input', { type: 'text', name: 'land_speed', onChange: this.editField, value: this.state.land_speed }),
+						React.createElement(
+							'label',
+							null,
+							'armor_speed:'
+						),
+						React.createElement('input', { type: 'text', name: 'armor_speed', onChange: this.editField, value: this.state.armor_speed }),
+						React.createElement(
+							'label',
+							null,
+							'fly_speed:'
+						),
+						React.createElement('input', { type: 'text', name: 'fly_speed', onChange: this.editField, value: this.state.fly_speed }),
+						React.createElement(
+							'label',
+							null,
+							'climb_speed:'
+						),
+						React.createElement('input', { type: 'text', name: 'climb_speed', onChange: this.editField, value: this.state.climb_speed }),
+						React.createElement(
+							'label',
+							null,
+							'swim_speed:'
+						),
+						React.createElement('input', { type: 'text', name: 'swim_speed', onChange: this.editField, value: this.state.swim_speed }),
+						React.createElement(
+							'label',
+							null,
+							'borrow_speed:'
+						),
+						React.createElement('input', { type: 'text', name: 'borrow_speed', onChange: this.editField, value: this.state.borrow_speed }),
+						React.createElement(
+							'label',
+							null,
+							'fort_base_save:'
+						),
+						React.createElement('input', { type: 'text', name: 'fort_base_save', onChange: this.editField, value: this.state.fort_base_save }),
+						React.createElement(
+							'label',
+							null,
+							'fort_magic_mod:'
+						),
+						React.createElement('input', { type: 'text', name: 'fort_magic_mod', onChange: this.editField, value: this.state.fort_magic_mod }),
+						React.createElement(
+							'label',
+							null,
+							'fort_misc_mod:'
+						),
+						React.createElement('input', { type: 'text', name: 'fort_misc_mod', onChange: this.editField, value: this.state.fort_misc_mod }),
+						React.createElement(
+							'label',
+							null,
+							'fort_temp_mod:'
+						),
+						React.createElement('input', { type: 'text', name: 'fort_temp_mod', onChange: this.editField, value: this.state.fort_temp_mod }),
+						React.createElement(
+							'label',
+							null,
+							'ref_base_save:'
+						),
+						React.createElement('input', { type: 'text', name: 'ref_base_save', onChange: this.editField, value: this.state.ref_base_save }),
+						React.createElement(
+							'label',
+							null,
+							'ref_magic_mod:'
+						),
+						React.createElement('input', { type: 'text', name: 'ref_magic_mod', onChange: this.editField, value: this.state.ref_magic_mod }),
+						React.createElement(
+							'label',
+							null,
+							'ref_misc_mod:'
+						),
+						React.createElement('input', { type: 'text', name: 'ref_misc_mod', onChange: this.editField, value: this.state.ref_misc_mod }),
+						React.createElement(
+							'label',
+							null,
+							'ref_temp_mod:'
+						),
+						React.createElement('input', { type: 'text', name: 'ref_temp_mod', onChange: this.editField, value: this.state.ref_temp_mod }),
+						React.createElement(
+							'label',
+							null,
+							'will_base_save:'
+						),
+						React.createElement('input', { type: 'text', name: 'will_base_save', onChange: this.editField, value: this.state.will_base_save }),
+						React.createElement(
+							'label',
+							null,
+							'will_magic_mod:'
+						),
+						React.createElement('input', { type: 'text', name: 'will_magic_mod', onChange: this.editField, value: this.state.will_magic_mod }),
+						React.createElement(
+							'label',
+							null,
+							'will_misc_mod:'
+						),
+						React.createElement('input', { type: 'text', name: 'will_misc_mod', onChange: this.editField, value: this.state.will_misc_mod }),
+						React.createElement(
+							'label',
+							null,
+							'will_temp_mod:'
+						),
+						React.createElement('input', { type: 'text', name: 'will_temp_mod', onChange: this.editField, value: this.state.will_temp_mod }),
+						React.createElement(
+							'label',
+							null,
+							'init_misc_mod:'
+						),
+						React.createElement('input', { type: 'text', name: 'init_misc_mod', onChange: this.editField, value: this.state.init_misc_mod }),
+						React.createElement(
+							'label',
+							null,
+							'weight:'
+						),
+						React.createElement('input', { type: 'text', name: 'weight', onChange: this.editField, value: this.state.weight }),
+						React.createElement(
+							'label',
+							null,
+							'height:'
+						),
+						React.createElement('input', { type: 'text', name: 'height', onChange: this.editField, value: this.state.height }),
+						React.createElement(
+							'label',
+							null,
+							'damage_reduction:'
+						),
+						React.createElement('input', { type: 'text', name: 'damage_reduction', onChange: this.editField, value: this.state.damage_reduction }),
+						React.createElement(
+							'label',
+							null,
+							'spell_resistance:'
+						),
+						React.createElement('input', { type: 'text', name: 'spell_resistance', onChange: this.editField, value: this.state.spell_resistance }),
+						React.createElement(
+							'label',
+							null,
+							'size_mod:'
+						),
+						React.createElement('input', { type: 'text', name: 'size_mod', onChange: this.editField, value: this.state.size_mod }),
+						React.createElement(
+							'label',
+							null,
+							'xp_points:'
+						),
+						React.createElement('input', { type: 'text', name: 'xp_points', onChange: this.editField, value: this.state.xp_points }),
+						React.createElement(
+							'label',
+							null,
+							'next_level:'
+						),
+						React.createElement('input', { type: 'text', name: 'next_level', onChange: this.editField, value: this.state.next_level }),
+						React.createElement(
+							'label',
+							null,
+							'money_cp:'
+						),
+						React.createElement('input', { type: 'text', name: 'money_cp', onChange: this.editField, value: this.state.money_cp }),
+						React.createElement(
+							'label',
+							null,
+							'money_sp:'
+						),
+						React.createElement('input', { type: 'text', name: 'money_sp', onChange: this.editField, value: this.state.money_sp }),
+						React.createElement(
+							'label',
+							null,
+							'money_gp:'
+						),
+						React.createElement('input', { type: 'text', name: 'money_gp', onChange: this.editField, value: this.state.money_gp }),
+						React.createElement(
+							'label',
+							null,
+							'money_pp:'
+						),
+						React.createElement('input', { type: 'text', name: 'money_pp', onChange: this.editField, value: this.state.money_pp }),
+						React.createElement(
+							'label',
+							null,
+							'light_load:'
+						),
+						React.createElement('input', { type: 'text', name: 'light_load', onChange: this.editField, value: this.state.light_load }),
+						React.createElement(
+							'label',
+							null,
+							'medium_load:'
+						),
+						React.createElement('input', { type: 'text', name: 'medium_load', onChange: this.editField, value: this.state.medium_load }),
+						React.createElement(
+							'label',
+							null,
+							'heavy_load:'
+						),
+						React.createElement('input', { type: 'text', name: 'heavy_load', onChange: this.editField, value: this.state.heavy_load }),
+						React.createElement(
+							'label',
+							null,
+							'lift_over_head:'
+						),
+						React.createElement('input', { type: 'text', name: 'lift_over_head', onChange: this.editField, value: this.state.lift_over_head }),
+						React.createElement(
+							'label',
+							null,
+							'lift_off_ground:'
+						),
+						React.createElement('input', { type: 'text', name: 'lift_off_ground', onChange: this.editField, value: this.state.lift_off_ground }),
+						React.createElement(
+							'label',
+							null,
+							'drag_or_push:'
+						),
+						React.createElement('input', { type: 'text', name: 'drag_or_push', onChange: this.editField, value: this.state.drag_or_push }),
+						React.createElement(
+							'label',
+							null,
+							'age:'
+						),
+						React.createElement('input', { type: 'text', name: 'age', onChange: this.editField, value: this.state.age }),
+						React.createElement(
+							'label',
+							null,
+							'gender:'
+						),
+						React.createElement('input', { type: 'text', name: 'gender', onChange: this.editField, value: this.state.gender }),
+						React.createElement(
+							'label',
+							null,
+							'hair:'
+						),
+						React.createElement('input', { type: 'text', name: 'hair', onChange: this.editField, value: this.state.hair }),
+						React.createElement(
+							'label',
+							null,
+							'eyes:'
+						),
+						React.createElement('input', { type: 'text', name: 'eyes', onChange: this.editField, value: this.state.eyes }),
+						React.createElement(
+							'label',
+							null,
+							'deity:'
+						),
+						React.createElement('input', { type: 'text', name: 'deity', onChange: this.editField, value: this.state.deity }),
+						React.createElement(
+							'label',
+							null,
+							'alignment:'
+						),
+						React.createElement('input', { type: 'text', name: 'alignment', onChange: this.editField, value: this.state.alignment }),
+						React.createElement(
+							'label',
+							null,
+							'homeland:'
+						),
+						React.createElement('input', { type: 'text', name: 'homeland', onChange: this.editField, value: this.state.homeland }),
+						React.createElement(
+							'label',
+							null,
+							'background_stories:'
+						),
+						React.createElement('input', { type: 'text', name: 'background_stories', onChange: this.editField, value: this.state.background_stories }),
+						React.createElement(
+							'label',
+							null,
+							'languages:'
+						),
+						React.createElement('input', { type: 'text', name: 'languages', onChange: this.editField, value: this.state.languages }),
+						React.createElement(
+							'label',
+							null,
+							'domain_and_specialty_school:'
+						),
+						React.createElement('input', { type: 'text', name: 'domain_and_specialty_school', onChange: this.editField, value: this.state.domain_and_specialty_school }),
+						React.createElement(
+							'label',
+							null,
+							'level_0_spell_per_day:'
+						),
+						React.createElement('input', { type: 'text', name: 'level_0_spell_per_day', onChange: this.editField, value: this.state.level_0_spell_per_day }),
+						React.createElement(
+							'label',
+							null,
+							'level_0_bonus_spells:'
+						),
+						React.createElement('input', { type: 'text', name: 'level_0_bonus_spells', onChange: this.editField, value: this.state.level_0_bonus_spells }),
+						React.createElement(
+							'label',
+							null,
+							'level_0_spell_save_dc:'
+						),
+						React.createElement('input', { type: 'text', name: 'level_0_spell_save_dc', onChange: this.editField, value: this.state.level_0_spell_save_dc }),
+						React.createElement(
+							'label',
+							null,
+							'level_0_spells_known:'
+						),
+						React.createElement('input', { type: 'text', name: 'level_0_spells_known', onChange: this.editField, value: this.state.level_0_spells_known }),
+						React.createElement(
+							'label',
+							null,
+							'level_1_spell_per_day:'
+						),
+						React.createElement('input', { type: 'text', name: 'level_1_spell_per_day', onChange: this.editField, value: this.state.level_1_spell_per_day }),
+						React.createElement(
+							'label',
+							null,
+							'level_1_bonus_spells:'
+						),
+						React.createElement('input', { type: 'text', name: 'level_1_bonus_spells', onChange: this.editField, value: this.state.level_1_bonus_spells }),
+						React.createElement(
+							'label',
+							null,
+							'level_1_spell_save_dc:'
+						),
+						React.createElement('input', { type: 'text', name: 'level_1_spell_save_dc', onChange: this.editField, value: this.state.level_1_spell_save_dc }),
+						React.createElement(
+							'label',
+							null,
+							'level_1_spells_known:'
+						),
+						React.createElement('input', { type: 'text', name: 'level_1_spells_known', onChange: this.editField, value: this.state.level_1_spells_known }),
+						React.createElement(
+							'label',
+							null,
+							'level_2_spell_per_day:'
+						),
+						React.createElement('input', { type: 'text', name: 'level_2_spell_per_day', onChange: this.editField, value: this.state.level_2_spell_per_day }),
+						React.createElement(
+							'label',
+							null,
+							'level_2_bonus_spells:'
+						),
+						React.createElement('input', { type: 'text', name: 'level_2_bonus_spells', onChange: this.editField, value: this.state.level_2_bonus_spells }),
+						React.createElement(
+							'label',
+							null,
+							'level_2_spell_save_dc:'
+						),
+						React.createElement('input', { type: 'text', name: 'level_2_spell_save_dc', onChange: this.editField, value: this.state.level_2_spell_save_dc }),
+						React.createElement(
+							'label',
+							null,
+							'level_2_spells_known:'
+						),
+						React.createElement('input', { type: 'text', name: 'level_2_spells_known', onChange: this.editField, value: this.state.level_2_spells_known }),
+						React.createElement(
+							'label',
+							null,
+							'level_3_spell_per_day:'
+						),
+						React.createElement('input', { type: 'text', name: 'level_3_spell_per_day', onChange: this.editField, value: this.state.level_3_spell_per_day }),
+						React.createElement(
+							'label',
+							null,
+							'level_3_bonus_spells:'
+						),
+						React.createElement('input', { type: 'text', name: 'level_3_bonus_spells', onChange: this.editField, value: this.state.level_3_bonus_spells }),
+						React.createElement(
+							'label',
+							null,
+							'level_3_spell_save_dc:'
+						),
+						React.createElement('input', { type: 'text', name: 'level_3_spell_save_dc', onChange: this.editField, value: this.state.level_3_spell_save_dc }),
+						React.createElement(
+							'label',
+							null,
+							'level_3_spells_known:'
+						),
+						React.createElement('input', { type: 'text', name: 'level_3_spells_known', onChange: this.editField, value: this.state.level_3_spells_known }),
+						React.createElement(
+							'label',
+							null,
+							'level_4_spell_per_day:'
+						),
+						React.createElement('input', { type: 'text', name: 'level_4_spell_per_day', onChange: this.editField, value: this.state.level_4_spell_per_day }),
+						React.createElement(
+							'label',
+							null,
+							'level_4_bonus_spells:'
+						),
+						React.createElement('input', { type: 'text', name: 'level_4_bonus_spells', onChange: this.editField, value: this.state.level_4_bonus_spells }),
+						React.createElement(
+							'label',
+							null,
+							'level_4_spell_save_dc:'
+						),
+						React.createElement('input', { type: 'text', name: 'level_4_spell_save_dc', onChange: this.editField, value: this.state.level_4_spell_save_dc }),
+						React.createElement(
+							'label',
+							null,
+							'level_4_spells_known:'
+						),
+						React.createElement('input', { type: 'text', name: 'level_4_spells_known', onChange: this.editField, value: this.state.level_4_spells_known }),
+						React.createElement(
+							'label',
+							null,
+							'level_5_spell_per_day:'
+						),
+						React.createElement('input', { type: 'text', name: 'level_5_spell_per_day', onChange: this.editField, value: this.state.level_5_spell_per_day }),
+						React.createElement(
+							'label',
+							null,
+							'level_5_bonus_spells:'
+						),
+						React.createElement('input', { type: 'text', name: 'level_5_bonus_spells', onChange: this.editField, value: this.state.level_5_bonus_spells }),
+						React.createElement(
+							'label',
+							null,
+							'level_5_spell_save_dc:'
+						),
+						React.createElement('input', { type: 'text', name: 'level_5_spell_save_dc', onChange: this.editField, value: this.state.level_5_spell_save_dc }),
+						React.createElement(
+							'label',
+							null,
+							'level_5_spells_known:'
+						),
+						React.createElement('input', { type: 'text', name: 'level_5_spells_known', onChange: this.editField, value: this.state.level_5_spells_known }),
+						React.createElement(
+							'label',
+							null,
+							'level_6_spell_per_day:'
+						),
+						React.createElement('input', { type: 'text', name: 'level_6_spell_per_day', onChange: this.editField, value: this.state.level_6_spell_per_day }),
+						React.createElement(
+							'label',
+							null,
+							'level_6_bonus_spells:'
+						),
+						React.createElement('input', { type: 'text', name: 'level_6_bonus_spells', onChange: this.editField, value: this.state.level_6_bonus_spells }),
+						React.createElement(
+							'label',
+							null,
+							'level_6_spell_save_dc:'
+						),
+						React.createElement('input', { type: 'text', name: 'level_6_spell_save_dc', onChange: this.editField, value: this.state.level_6_spell_save_dc }),
+						React.createElement(
+							'label',
+							null,
+							'level_6_spells_known:'
+						),
+						React.createElement('input', { type: 'text', name: 'level_6_spells_known', onChange: this.editField, value: this.state.level_6_spells_known }),
+						React.createElement(
+							'label',
+							null,
+							'level_7_spell_per_day:'
+						),
+						React.createElement('input', { type: 'text', name: 'level_7_spell_per_day', onChange: this.editField, value: this.state.level_7_spell_per_day }),
+						React.createElement(
+							'label',
+							null,
+							'level_7_bonus_spells:'
+						),
+						React.createElement('input', { type: 'text', name: 'level_7_bonus_spells', onChange: this.editField, value: this.state.level_7_bonus_spells }),
+						React.createElement(
+							'label',
+							null,
+							'level_7_spell_save_dc:'
+						),
+						React.createElement('input', { type: 'text', name: 'level_7_spell_save_dc', onChange: this.editField, value: this.state.level_7_spell_save_dc }),
+						React.createElement(
+							'label',
+							null,
+							'level_7_spells_known:'
+						),
+						React.createElement('input', { type: 'text', name: 'level_7_spells_known', onChange: this.editField, value: this.state.level_7_spells_known }),
+						React.createElement(
+							'label',
+							null,
+							'level_8_spell_per_day:'
+						),
+						React.createElement('input', { type: 'text', name: 'level_8_spell_per_day', onChange: this.editField, value: this.state.level_8_spell_per_day }),
+						React.createElement(
+							'label',
+							null,
+							'level_8_bonus_spells:'
+						),
+						React.createElement('input', { type: 'text', name: 'level_8_bonus_spells', onChange: this.editField, value: this.state.level_8_bonus_spells }),
+						React.createElement(
+							'label',
+							null,
+							'level_8_spell_save_dc:'
+						),
+						React.createElement('input', { type: 'text', name: 'level_8_spell_save_dc', onChange: this.editField, value: this.state.level_8_spell_save_dc }),
+						React.createElement(
+							'label',
+							null,
+							'level_8_spells_known:'
+						),
+						React.createElement('input', { type: 'text', name: 'level_8_spells_known', onChange: this.editField, value: this.state.level_8_spells_known }),
+						React.createElement(
+							'label',
+							null,
+							'level_9_spell_per_day:'
+						),
+						React.createElement('input', { type: 'text', name: 'level_9_spell_per_day', onChange: this.editField, value: this.state.level_9_spell_per_day }),
+						React.createElement(
+							'label',
+							null,
+							'level_9_bonus_spells:'
+						),
+						React.createElement('input', { type: 'text', name: 'level_9_bonus_spells', onChange: this.editField, value: this.state.level_9_bonus_spells }),
+						React.createElement(
+							'label',
+							null,
+							'level_9_spell_save_dc:'
+						),
+						React.createElement('input', { type: 'text', name: 'level_9_spell_save_dc', onChange: this.editField, value: this.state.level_9_spell_save_dc }),
+						React.createElement(
+							'label',
+							null,
+							'level_9_spells_known:'
+						),
+						React.createElement('input', { type: 'text', name: 'level_9_spells_known', onChange: this.editField, value: this.state.level_9_spells_known })
+					),
+					React.createElement(FeatContainer, { _characterId: this.props.params._characterId }),
+					React.createElement(AcitemContainer, { _characterId: this.props.params._characterId }),
+					React.createElement(
+						'div',
+						null,
+						React.createElement('input', { type: 'button', onClick: this.saveCharacter, value: 'SAVE' }),
+						React.createElement('input', { type: 'button', value: 'DELETE', onClick: this.deleteCharacter })
+					)
+				)
+			);
+		}
+	});
+	
+	var mapStateToProps = function mapStateToProps(state, props) {
+		return {
+			character: state.character.character
+		};
+	};
+	
+	var Container = connect(mapStateToProps)(character);
+	
+	module.exports = Container;
+
+/***/ },
+/* 286 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(1),
+	    connect = __webpack_require__(172).connect,
+	    featActions = __webpack_require__(209),
+	    FeatList = __webpack_require__(287);
+	
+	var FeatContainer = React.createClass({
+	    displayName: 'FeatContainer',
+	
+	    componentDidMount: function componentDidMount() {
+	        this.props.dispatch(featActions.getFeats(this.props._characterId));
+	    },
+	    render: function render() {
+	        if (this.props.updated) {
+	            this.props.dispatch(featActions.getFeats(this.props._characterId));
+	        }
+	        return React.createElement(
+	            'div',
+	            { className: 'feat-container' },
+	            React.createElement(FeatList, { _characterId: this.props._characterId })
+	        );
+	    }
+	});
+	
+	var mapStateToProps = function mapStateToProps(state, props) {
+	    return {
+	        updated: state.feat.updated
+	    };
+	};
+	
+	var Container = connect(mapStateToProps)(FeatContainer);
+	
+	module.exports = Container;
+
+/***/ },
+/* 287 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(1),
+	    connect = __webpack_require__(172).connect,
+	    featActions = __webpack_require__(209),
+	    Feat = __webpack_require__(288);
+	
+	var FeatList = React.createClass({
+	    displayName: 'FeatList',
+	
+	    addFeat: function addFeat() {
+	        if (this.refs.featname.value) {
+	            this.props.dispatch(featActions.createFeat(this.props._characterId, this.refs.featname.value));
+	            this.refs.featname.value = '';
+	        }
+	    },
+	    render: function render() {
+	        console.log(this);
+	        var feats = [];
+	        for (var i = 0; i < this.props.feats.length; i++) {
+	            feats.push(React.createElement(Feat, { feat: this.props.feats[i] }));
+	        }
+	        feats.push(React.createElement(
+	            'li',
+	            null,
+	            React.createElement('input', { type: 'text', onBlur: this.addFeat, name: 'featname', ref: 'featname', placeholder: 'NEW FEAT' })
+	        ));
+	        return React.createElement(
+	            'ul',
+	            { className: 'feat-list' },
+	            feats
+	        );
+	    }
+	});
+	
+	var mapStateToProps = function mapStateToProps(state, props) {
+	    return {
+	        feats: state.feat.feats
+	    };
+	};
+	
+	var Container = connect(mapStateToProps)(FeatList);
+	
+	module.exports = Container;
+
+/***/ },
+/* 288 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(1),
+	    connect = __webpack_require__(172).connect,
+	    featActions = __webpack_require__(209);
+	
+	var Feat = React.createClass({
+	    displayName: 'Feat',
+	
+	    getInitialState: function getInitialState() {
+	        var state = {};
+	        state._id = false;
+	        return state;
+	    },
+	    editField: function editField(that) {
+	        var state = this.state;
+	        state[that.target.name] = that.target.value;
+	        this.setState(state);
+	    },
+	    saveFeat: function saveFeat() {
+	        if (this.state.name == '') {
+	            this.props.dispatch(featActions.deleteFeat(this.props.feat._id, this.props.feat._characterId));
+	        } else {
+	            this.props.dispatch(featActions.updateFeat(this.state, this.props.feat));
+	        }
+	    },
+	    render: function render() {
+	        if (!this.state._id) {
+	            if (this.props.feat.name) {
+	                this.setState(this.props.feat);
+	            }
+	        }
+	        return React.createElement(
+	            'li',
+	            { className: 'feat' },
+	            React.createElement('input', { type: 'text', onChange: this.editField, onBlur: this.saveFeat, name: 'name', value: this.state.name })
+	        );
+	    }
+	});
+	
+	var mapStateToProps = function mapStateToProps(state, props) {
+	    return {
+	        feats: state.feat.feats
+	    };
+	};
+	
+	var Container = connect(mapStateToProps)(Feat);
+	
+	module.exports = Container;
+
+/***/ },
+/* 289 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(1),
+	    connect = __webpack_require__(172).connect,
+	    acitemActions = __webpack_require__(211),
+	    AcitemList = __webpack_require__(290);
+	
+	var AcitemContainer = React.createClass({
+	    displayName: 'AcitemContainer',
+	
+	    componentDidMount: function componentDidMount() {
+	        this.props.dispatch(acitemActions.getAcitems(this.props._characterId));
+	    },
+	    render: function render() {
+	        if (this.props.updated) {
+	            this.props.dispatch(acitemActions.getAcitems(this.props._characterId));
+	        }
+	        return React.createElement(
+	            'div',
+	            { className: 'acitem-container' },
+	            React.createElement(AcitemList, { _characterId: this.props._characterId })
+	        );
+	    }
+	});
+	
+	var mapStateToProps = function mapStateToProps(state, props) {
+	    return {
+	        updated: state.acitem.updated
+	    };
+	};
+	
+	var Container = connect(mapStateToProps)(AcitemContainer);
+	
+	module.exports = Container;
+
+/***/ },
+/* 290 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(1),
+	    connect = __webpack_require__(172).connect,
+	    acitemActions = __webpack_require__(211),
+	    Acitem = __webpack_require__(291);
+	
+	var AcitemList = React.createClass({
+	    displayName: 'AcitemList',
+	
+	    addacitem: function addacitem() {
+	        if (this.refs.acitemname.value) {
+	            console.log('here');
+	            this.props.dispatch(acitemActions.createAcitem(this.props._characterId, this.refs.acitemname.value));
+	            this.refs.acitemname.value = '';
+	        }
+	    },
+	    render: function render() {
+	        console.log(this);
+	        var acitems = [];
+	        for (var i = 0; i < this.props.acitems.length; i++) {
+	            acitems.push(React.createElement(Acitem, { acitem: this.props.acitems[i] }));
+	        }
+	        acitems.push(React.createElement(
+	            'li',
+	            null,
+	            React.createElement('input', { type: 'text', onBlur: this.addAcitem, name: 'acitemname', ref: 'acitemname', placeholder: 'NEW AC ITEM' })
+	        ));
+	        return React.createElement(
+	            'ul',
+	            { className: 'acitem-list' },
+	            acitems
+	        );
+	    }
+	});
+	
+	var mapStateToProps = function mapStateToProps(state, props) {
+	    return {
+	        acitems: state.acitem.acitems
+	    };
+	};
+	
+	var Container = connect(mapStateToProps)(AcitemList);
+	
+	module.exports = Container;
+
+/***/ },
+/* 291 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(1),
+	    connect = __webpack_require__(172).connect,
+	    acitemActions = __webpack_require__(211);
+	
+	var Acitem = React.createClass({
+	    displayName: 'Acitem',
+	
+	    getInitialState: function getInitialState() {
+	        var state = {};
+	        state._id = false;
+	        return state;
+	    },
+	    editField: function editField(that) {
+	        var state = this.state;
+	        state[that.target.name] = that.target.value;
+	        this.setState(state);
+	    },
+	    saveAcitem: function saveAcitem() {
+	        if (this.state.name == '') {
+	            this.props.dispatch(acitemActions.deleteAcitem(this.props.acitem._id, this.props.acitem._characterId));
+	        } else {
+	            this.props.dispatch(acitemActions.updateAcitem(this.state, this.props.acitem));
+	        }
+	    },
+	    render: function render() {
+	        if (!this.state._id) {
+	            if (this.props.acitem.name) {
+	                this.setState(this.props.acitem);
+	            }
+	        }
+	        return React.createElement(
+	            'li',
+	            { className: 'acitem' },
+	            React.createElement('input', { type: 'text', onChange: this.editField, onBlur: this.saveAcitem, name: 'name', value: this.state.name })
+	        );
+	    }
+	});
+	
+	var mapStateToProps = function mapStateToProps(state, props) {
+	    return {
+	        acitems: state.acitem.acitems
+	    };
+	};
+	
+	var Container = connect(mapStateToProps)(Acitem);
+	
+	module.exports = Container;
 
 /***/ }
 /******/ ]);

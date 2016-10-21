@@ -43,8 +43,8 @@ module.exports = function () {
                     });
                 }).then(function(user) {
                     res.should.have.status(200);
-                    res.request.cookies.should.equal(cookie.serialize('UserKey', btoa(SECRET + ':' + user._id)));
                     agent.post('/character')
+                    .set('Authentication', cookie.serialize('UserKey', btoa(SECRET + ':' + user._id)))
                     .send({
                         name: characterName
                     })
@@ -83,8 +83,8 @@ module.exports = function () {
                     });
                 }).then(function(user) {
                     res.should.have.status(200);
-                    res.request.cookies.should.equal(cookie.serialize('UserKey', btoa(SECRET + ':' + user._id)));
                     agent.post('/spell')
+                    .set('Authentication', cookie.serialize('UserKey', btoa(SECRET + ':' + user._id)))
                     .send({
                         _characterId: _characterId,
                         name: spellName,
@@ -130,8 +130,8 @@ module.exports = function () {
                     });
                 }).then(function(user) {
                     res.should.have.status(200);
-                    res.request.cookies.should.equal(cookie.serialize('UserKey', btoa(SECRET + ':' + user._id)));
                     agent.get('/spell/' + _characterId + '/' + _spellId)
+                    .set('Authentication', cookie.serialize('UserKey', btoa(SECRET + ':' + user._id)))
                     .end(function (error, res) {
                         if (error) {return done(error)}
                         res.should.have.status(200);
@@ -171,8 +171,8 @@ module.exports = function () {
                     });
                 }).then(function(user) {
                     res.should.have.status(200);
-                    res.request.cookies.should.equal(cookie.serialize('UserKey', btoa(SECRET + ':' + user._id)));
                     agent.get('/spell/' + _characterId)
+                    .set('Authentication', cookie.serialize('UserKey', btoa(SECRET + ':' + user._id)))
                     .end(function (error, res) {
                         if (error) {return done(error)}
                         res.should.have.status(200);
@@ -213,7 +213,6 @@ module.exports = function () {
                     });
                 }).then(function(user) {
                     res.should.have.status(200);
-                    res.request.cookies.should.equal(cookie.serialize('UserKey', btoa(SECRET + ':' + user._id)));
                     var data = {
                         _spellId: _spellId,
                         _characterId: _characterId,
@@ -224,6 +223,7 @@ module.exports = function () {
                         used: 0
                     };
                     agent.put('/spell')
+                    .set('Authentication', cookie.serialize('UserKey', btoa(SECRET + ':' + user._id)))
                     .send(data)
                     .end(function (error, res) {
                         if (error) {return done(error)}
@@ -264,8 +264,8 @@ module.exports = function () {
                     });
                 }).then(function(user) {
                     res.should.have.status(200);
-                    res.request.cookies.should.equal(cookie.serialize('UserKey', btoa(SECRET + ':' + user._id)));
                     agent.delete('/spell')
+                    .set('Authentication', cookie.serialize('UserKey', btoa(SECRET + ':' + user._id)))
                     .send({
                         _spellId: _spellId,
                         _characterId: _characterId

@@ -75,7 +75,7 @@ AcitemController.prototype.createAcitem = function(req, res, next) {
 	});
 };
 
-// Update Acitem queries: _characterId and _acitemId update: name, specialties returns: new Acitem 
+// Update Acitem queries: _characterId and _id update: name, specialties returns: new Acitem 
 AcitemController.prototype.updateAcitem = function(req, res, next) {
 	var changes = {};
 	if ('body' in req) {
@@ -111,7 +111,7 @@ AcitemController.prototype.updateAcitem = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
 		Acitem.findOneAndUpdate({
 			_characterId: req.body._characterId,
-			_id: req.body._acitemId
+			_id: req.body._id
 		}, {
 			$set: changes
 		}, {
@@ -130,11 +130,11 @@ AcitemController.prototype.updateAcitem = function(req, res, next) {
 	});
 };
 
-// delete Acitem queries: _characterId and _acitemId
+// delete Acitem queries: _characterId and _id
 AcitemController.prototype.deleteAcitem = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
 		Acitem.findOneAndRemove({
-			_id: req.body._acitemId,
+			_id: req.body._id,
 			_characterId: req.body._characterId
 		}, function(error, acitem) {
 			if (error) {

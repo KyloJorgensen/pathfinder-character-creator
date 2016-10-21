@@ -116,35 +116,7 @@ var characterSchema = mongoose.Schema({
     level_9_spell_per_day: {type: Number, require: true, default: 0},
     level_9_bonus_spells: {type: Number, require: true, default: 0},
     level_9_spell_save_dc: {type: Number, require: true, default: 0},
-    level_9_spells_known: {type: Number, require: true, default: 0},
-    skills: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Skill'
-    }],
-    features: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Feature'
-    }],
-    feats: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Feat'
-    }],
-    gear: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Gear'
-    }],
-    acitems: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Acitem'
-    }],
-    weapons: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Weapon'
-    }],
-    spells: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Spell'
-    }]
+    level_9_spells_known: {type: Number, require: true, default: 0}
 });
 
 module.exports = mongoose.model('Character', characterSchema);

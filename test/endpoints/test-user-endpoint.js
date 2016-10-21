@@ -50,8 +50,8 @@ module.exports = function() {
                     });
                 }).then(function(user) {
                     res.should.have.status(200);
-                    res.request.cookies.should.equal(cookie.serialize('UserKey', btoa(SECRET + ':' + user._id)));
                     agent.get('/user')
+                    .set('Authentication', cookie.serialize('UserKey', btoa(SECRET + ':' + user._id)))
                     .end(function (error, res) {
                         if (error) {return done(error)}
                         res.should.have.status(200);

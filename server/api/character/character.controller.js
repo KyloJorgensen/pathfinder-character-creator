@@ -40,7 +40,6 @@ CharacterController.prototype.getCharacter = function(req, res, next) {
 	});
 };
 
-
 CharacterController.prototype.createCharacter = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
 		User.findOne({

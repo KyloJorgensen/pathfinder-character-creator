@@ -56,8 +56,7 @@ FeatController.prototype.createFeat = function(req, res, next) {
 			} else {
 				Feat.create({
 					_characterId: character._id,
-					name: req.body.name,
-					key_ability: req.body.key_ability
+					name: req.body.name
 				}, {
 					new: true
 				}, function(error, feat) {
@@ -76,7 +75,7 @@ FeatController.prototype.createFeat = function(req, res, next) {
 	});
 };
 
-// Update Feat queries: _characterId and _featId update: name, specialties returns: new Feat 
+// Update Feat queries: _characterId and _id update: name, specialties returns: new Feat 
 FeatController.prototype.updateFeat = function(req, res, next) {
 	var changes = {};
 	if ('body' in req) {
@@ -94,7 +93,7 @@ FeatController.prototype.updateFeat = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
 		Feat.findOneAndUpdate({
 			_characterId: req.body._characterId,
-			_id: req.body._featId
+			_id: req.body._id
 		}, {
 			$set: changes
 		}, {
@@ -113,11 +112,11 @@ FeatController.prototype.updateFeat = function(req, res, next) {
 	});
 };
 
-// delete Feat queries: _characterId and _featId
+// delete Feat queries: _characterId and _id
 FeatController.prototype.deleteFeat = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
 		Feat.findOneAndRemove({
-			_id: req.body._featId,
+			_id: req.body._id,
 			_characterId: req.body._characterId
 		}, function(error, feat) {
 			if (error) {

@@ -35,10 +35,10 @@ UserController.prototype.createUser = function(req, res, next) {
                 })
             }).then(function(user) {
 				res.setHeader('Set-Cookie', cookie.serialize('UserKey', btoa(SECRET + ':' + user._id), {
-				   	httpOnly: true,
+				   	httpOnly: false,
 				   	maxAge: 60 * 60 * 24 * 7 // 1 week 
 				}));
-				res.redirect('/');
+				res.status(200).json('');
             }).catch(function(error) {
                 next(error);
             });

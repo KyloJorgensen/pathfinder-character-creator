@@ -1,14 +1,14 @@
 'use strict';
 
-var Acitem = require('./acitem.model');
+var Weapon = require('./weapon.model');
 var Character = require('../character/character.model');
 
 function WeaponController() {};
 
-// get Acitems queries: _characterId returns: Acitems
-WeaponController.prototype.getAcitems = function(req, res, next) {
+// get Weapons queries: _characterId returns: Weapons
+WeaponController.prototype.getWeapons = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
-		Acitem.find({
+		Weapon.find({
 			_characterId: req.params._characterId
 		}, function(error, weapons) {
 			if (error) {
@@ -24,10 +24,10 @@ WeaponController.prototype.getAcitems = function(req, res, next) {
 	});
 };
 
-// get a Acitem queries: _characterId and _weaponId returns: Acitem
-WeaponController.prototype.getAcitem = function(req, res, next) {
+// get a Weapon queries: _characterId and _weaponId returns: Weapon
+WeaponController.prototype.getWeapon = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
-		Acitem.findOne({
+		Weapon.findOne({
 			_characterId: req.params._characterId,
 			_id: req.params._weaponId
 		}, function(error, weapon) {
@@ -44,8 +44,8 @@ WeaponController.prototype.getAcitem = function(req, res, next) {
 	});
 };
 
-// create Acitem create: _characterId, name returns: new Acitem
-WeaponController.prototype.createAcitem = function(req, res, next) {
+// create Weapon create: _characterId, name returns: new Weapon
+WeaponController.prototype.createWeapon = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
 		Character.findOne({
 			_id: req.body._characterId,
@@ -54,7 +54,7 @@ WeaponController.prototype.createAcitem = function(req, res, next) {
 			if (error) {
 				reject(error);
 			} else {
-				Acitem.create({
+				Weapon.create({
 					_characterId: character._id,
 					name: req.body.name
 				}, {
@@ -75,8 +75,8 @@ WeaponController.prototype.createAcitem = function(req, res, next) {
 	});
 };
 
-// Update Acitem queries: _characterId and _weaponId update: name, specialties returns: new Acitem 
-WeaponController.prototype.updateAcitem = function(req, res, next) {
+// Update Weapon queries: _characterId and _weaponId update: name, specialties returns: new Weapon 
+WeaponController.prototype.updateWeapon = function(req, res, next) {
 	var changes = {};
 	if ('body' in req) {
 		if ('name' in req.body) {
@@ -106,7 +106,7 @@ WeaponController.prototype.updateAcitem = function(req, res, next) {
 		return next(error);
 	}
 	return new Promise(function(resolve, reject) {
-		Acitem.findOneAndUpdate({
+		Weapon.findOneAndUpdate({
 			_characterId: req.body._characterId,
 			_id: req.body._weaponId
 		}, {
@@ -127,10 +127,10 @@ WeaponController.prototype.updateAcitem = function(req, res, next) {
 	});
 };
 
-// delete Acitem queries: _characterId and _weaponId
-WeaponController.prototype.deleteAcitem = function(req, res, next) {
+// delete Weapon queries: _characterId and _weaponId
+WeaponController.prototype.deleteWeapon = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
-		Acitem.findOneAndRemove({
+		Weapon.findOneAndRemove({
 			_id: req.body._weaponId,
 			_characterId: req.body._characterId
 		}, function(error, weapon) {

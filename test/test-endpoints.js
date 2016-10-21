@@ -9,4 +9,5 @@ var testMainEndpoint = require('./endpoints/test-main-endpoint')(),
 	testFeatEndpoint = require('./endpoints/test-feat-endpoint')(),
 	testFeatureEndpoint = require('./endpoints/test-feature-endpoint')(),
 	testAcitemEndpoint = require('./endpoints/test-acitem-endpoint')(),
-	testSpellEndpoint = require('./endpoints/test-spell-endpoint')();
+	testSpellEndpoint = require('./endpoints/test-spell-endpoint')(),
+	testWeaponEndpoint = require('./endpoints/test-weapon-endpoint')();

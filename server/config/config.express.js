@@ -3,8 +3,8 @@
 var express = require('express'),
 	path = require('path'),
 	bodyParser = require('body-parser'),
-	cookieParser = require('cookie-parser'),
-	cookie = require('cookie');
+	cookieParser = require('cookie-parser');
+
 
 
 module.exports = function(app) {
