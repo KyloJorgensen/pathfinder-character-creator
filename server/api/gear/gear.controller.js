@@ -76,7 +76,7 @@ GearController.prototype.createGear = function(req, res, next) {
 	});
 };
 
-// Update Gear queries: _characterId and _gearId update: name, specialties returns: new Gear 
+// Update Gear queries: _characterId and _id update: name, specialties returns: new Gear 
 GearController.prototype.updateGear = function(req, res, next) {
 	var changes = {};
 	if ('body' in req) {
@@ -94,7 +94,7 @@ GearController.prototype.updateGear = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
 		Gear.findOneAndUpdate({
 			_characterId: req.body._characterId,
-			_id: req.body._gearId
+			_id: req.body._id
 		}, {
 			$set: changes
 		}, {
@@ -113,11 +113,11 @@ GearController.prototype.updateGear = function(req, res, next) {
 	});
 };
 
-// delete Gear queries: _characterId and _gearId
+// delete Gear queries: _characterId and _id
 GearController.prototype.deleteGear = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
 		Gear.findOneAndRemove({
-			_id: req.body._gearId,
+			_id: req.body._id,
 			_characterId: req.body._characterId
 		}, function(error, gear) {
 			if (error) {

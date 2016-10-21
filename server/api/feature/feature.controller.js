@@ -76,7 +76,7 @@ FeatureController.prototype.createFeature = function(req, res, next) {
 	});
 };
 
-// Update Feature queries: _characterId and _featureId update: name returns: new Feature 
+// Update Feature queries: _characterId and _id update: name returns: new Feature 
 FeatureController.prototype.updateFeature = function(req, res, next) {
 	var changes = {};
 	if ('body' in req) {
@@ -91,7 +91,7 @@ FeatureController.prototype.updateFeature = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
 		Feature.findOneAndUpdate({
 			_characterId: req.body._characterId,
-			_id: req.body._featureId
+			_id: req.body._id
 		}, {
 			$set: changes
 		}, {
@@ -110,11 +110,11 @@ FeatureController.prototype.updateFeature = function(req, res, next) {
 	});
 };
 
-// delete Feature queries: _characterId and _featureId
+// delete Feature queries: _characterId and _id
 FeatureController.prototype.deleteFeature = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
 		Feature.findOneAndRemove({
-			_id: req.body._featureId,
+			_id: req.body._id,
 			_characterId: req.body._characterId
 		}, function(error, feature) {
 			if (error) {

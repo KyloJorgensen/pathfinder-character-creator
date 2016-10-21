@@ -77,7 +77,7 @@ SpellController.prototype.createSpell = function(req, res, next) {
 	});
 };
 
-// Update Spell queries: _characterId and _spellId update: name, level, school, perpared, and/or used returns: new Spell 
+// Update Spell queries: _characterId and _id update: name, level, school, perpared, and/or used returns: new Spell 
 SpellController.prototype.updateSpell = function(req, res, next) {
 	var changes = {};
 	if ('body' in req) {
@@ -104,7 +104,7 @@ SpellController.prototype.updateSpell = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
 		Spell.findOneAndUpdate({
 			_characterId: req.body._characterId,
-			_id: req.body._spellId
+			_id: req.body._id
 		}, {
 			$set: changes
 		}, {
@@ -123,11 +123,11 @@ SpellController.prototype.updateSpell = function(req, res, next) {
 	});
 };
 
-// delete Spell queries: _characterId and _spellId
+// delete Spell queries: _characterId and _id
 SpellController.prototype.deleteSpell = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
 		Spell.findOneAndRemove({
-			_id: req.body._spellId,
+			_id: req.body._id,
 			_characterId: req.body._characterId
 		}, function(error, spell) {
 			if (error) {

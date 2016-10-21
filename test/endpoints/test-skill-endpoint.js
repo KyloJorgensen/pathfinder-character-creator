@@ -217,7 +217,7 @@ module.exports = function () {
                 }).then(function(user) {
                     res.should.have.status(200);
                     var data = {
-                        _skillId: _skillId,
+                        _id: _skillId,
                         _characterId: _characterId,
                         name: 'Jump',
                         specialties: 'up',
@@ -274,7 +274,7 @@ module.exports = function () {
                     agent.delete('/skill')
                     .set('Authentication', cookie.serialize('UserKey', btoa(SECRET + ':' + user._id)))
                     .send({
-                        _skillId: _skillId,
+                        _id: _skillId,
                         _characterId: _characterId
                     })
                     .end(function (error, res) {

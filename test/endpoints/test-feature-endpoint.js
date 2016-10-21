@@ -199,7 +199,7 @@ module.exports = function () {
                 }).then(function(user) {
                     res.should.have.status(200);
                     var data = {
-                        _featureId: _featureId,
+                        _id: _featureId,
                         _characterId: _characterId,
                         name: 'Jump'
                     };
@@ -244,7 +244,7 @@ module.exports = function () {
                     agent.delete('/feature')
                     .set('Authentication', cookie.serialize('UserKey', btoa(SECRET + ':' + user._id)))
                     .send({
-                        _featureId: _featureId,
+                        _id: _featureId,
                         _characterId: _characterId
                     })
                     .end(function (error, res) {

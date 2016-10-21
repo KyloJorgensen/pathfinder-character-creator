@@ -205,7 +205,7 @@ module.exports = function () {
                     res.should.have.status(200);
                     res.request.cookies.should.equal(cookie.serialize('UserKey', btoa(SECRET + ':' + user._id)));
                     var data = {
-                        _gearId: _gearId,
+                        _id: _gearId,
                         _characterId: _characterId,
                         name: 'Jump',
                         specialties: 'up'
@@ -251,7 +251,7 @@ module.exports = function () {
                     res.request.cookies.should.equal(cookie.serialize('UserKey', btoa(SECRET + ':' + user._id)));
                     agent.delete('/gear')
                     .send({
-                        _gearId: _gearId,
+                        _id: _gearId,
                         _characterId: _characterId
                     })
                     .end(function (error, res) {

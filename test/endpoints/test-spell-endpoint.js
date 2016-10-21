@@ -214,7 +214,7 @@ module.exports = function () {
                 }).then(function(user) {
                     res.should.have.status(200);
                     var data = {
-                        _spellId: _spellId,
+                        _id: _spellId,
                         _characterId: _characterId,
                         name: 'Jump',
                         level: 4,
@@ -267,7 +267,7 @@ module.exports = function () {
                     agent.delete('/spell')
                     .set('Authentication', cookie.serialize('UserKey', btoa(SECRET + ':' + user._id)))
                     .send({
-                        _spellId: _spellId,
+                        _id: _spellId,
                         _characterId: _characterId
                     })
                     .end(function (error, res) {

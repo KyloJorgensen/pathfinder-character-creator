@@ -76,7 +76,7 @@ SkillController.prototype.createSkill = function(req, res, next) {
 	});
 };
 
-// Update Skill queries: _characterId and _skillId update: name, key_ability, misc_bonus, trained, train_only, and/or rank returns: new Skill 
+// Update Skill queries: _characterId and _id update: name, key_ability, misc_bonus, trained, train_only, and/or rank returns: new Skill 
 SkillController.prototype.updateSkill = function(req, res, next) {
 	var changes = {};
 	if ('body' in req) {
@@ -109,7 +109,7 @@ SkillController.prototype.updateSkill = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
 		Skill.findOneAndUpdate({
 			_characterId: req.body._characterId,
-			_id: req.body._skillId
+			_id: req.body._id
 		}, {
 			$set: changes
 		}, {
@@ -128,11 +128,11 @@ SkillController.prototype.updateSkill = function(req, res, next) {
 	});
 };
 
-// delete skill queries: _characterId and _skillId
+// delete skill queries: _characterId and _id
 SkillController.prototype.deleteSkill = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
 		Skill.findOneAndRemove({
-			_id: req.body._skillId,
+			_id: req.body._id,
 			_characterId: req.body._characterId
 		}, function(error, skill) {
 			if (error) {

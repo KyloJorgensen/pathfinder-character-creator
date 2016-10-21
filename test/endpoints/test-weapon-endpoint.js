@@ -217,7 +217,7 @@ module.exports = function () {
                 }).then(function(user) {
                     res.should.have.status(200);
                     var data = {
-                        _weaponId: _weaponId,
+                        _id: _weaponId,
                         _characterId: _characterId,
                         name: 'spear',
                         damage_type: 'S',
@@ -274,7 +274,7 @@ module.exports = function () {
                     agent.delete('/weapon')
                     .set('Authentication', cookie.serialize('UserKey', btoa(SECRET + ':' + user._id)))
                     .send({
-                        _weaponId: _weaponId,
+                        _id: _weaponId,
                         _characterId: _characterId
                     })
                     .end(function (error, res) {

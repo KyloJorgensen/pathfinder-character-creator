@@ -75,7 +75,7 @@ WeaponController.prototype.createWeapon = function(req, res, next) {
 	});
 };
 
-// Update Weapon queries: _characterId and _weaponId update: name, specialties returns: new Weapon 
+// Update Weapon queries: _characterId and _id update: name, specialties returns: new Weapon 
 WeaponController.prototype.updateWeapon = function(req, res, next) {
 	var changes = {};
 	if ('body' in req) {
@@ -108,7 +108,7 @@ WeaponController.prototype.updateWeapon = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
 		Weapon.findOneAndUpdate({
 			_characterId: req.body._characterId,
-			_id: req.body._weaponId
+			_id: req.body._id
 		}, {
 			$set: changes
 		}, {
@@ -127,11 +127,11 @@ WeaponController.prototype.updateWeapon = function(req, res, next) {
 	});
 };
 
-// delete Weapon queries: _characterId and _weaponId
+// delete Weapon queries: _characterId and _id
 WeaponController.prototype.deleteWeapon = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
 		Weapon.findOneAndRemove({
-			_id: req.body._weaponId,
+			_id: req.body._id,
 			_characterId: req.body._characterId
 		}, function(error, weapon) {
 			if (error) {
