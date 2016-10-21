@@ -11,6 +11,7 @@ var AcitemContainer = React.createClass({
     },
     render: function() {
         if (this.props.updated) {
+            console.log('asdf')
             this.props.dispatch(acitemActions.getAcitems(this.props._characterId));
         }
         return (

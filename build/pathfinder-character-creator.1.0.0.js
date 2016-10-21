@@ -24776,6 +24776,7 @@
 	    }
 	    if (action.type === actions.CREATE_ACITEM_SUCCESS) {
 	        state.acitems = [];
+	        console.log('create');
 	        state.updated = true;
 	    }
 	    if (action.type === actions.CREATE_ACITEM_ERROR) {
@@ -24862,7 +24863,7 @@
 	var getAcitemsSuccess = function getAcitemsSuccess(data) {
 	    return {
 	        type: GET_ACITEMS_SUCCESS,
-	        feats: data
+	        acitems: data
 	    };
 	};
 	
@@ -24920,6 +24921,7 @@
 	        }).then(function (response) {
 	            return response.json();
 	        }).then(function (data) {
+	            console.log(data);
 	            return dispatch(createAcitemSuccess());
 	        }).catch(function (error) {
 	            return dispatch(createAcitemError(error));
@@ -32268,6 +32270,7 @@
 	    },
 	    render: function render() {
 	        if (this.props.updated) {
+	            console.log('asdf');
 	            this.props.dispatch(acitemActions.getAcitems(this.props._characterId));
 	        }
 	        return React.createElement(
@@ -32302,9 +32305,9 @@
 	var AcitemList = React.createClass({
 	    displayName: 'AcitemList',
 	
-	    addacitem: function addacitem() {
+	    addAcitem: function addAcitem() {
 	        if (this.refs.acitemname.value) {
-	            console.log('here');
+	            console.log(this.props._characterId, this.refs.acitemname.value);
 	            this.props.dispatch(acitemActions.createAcitem(this.props._characterId, this.refs.acitemname.value));
 	            this.refs.acitemname.value = '';
 	        }
@@ -32377,18 +32380,19 @@
 	        return React.createElement(
 	            'li',
 	            { className: 'acitem' },
-	            React.createElement('input', { type: 'text', onChange: this.editField, onBlur: this.saveAcitem, name: 'name', value: this.state.name })
+	            React.createElement('input', { type: 'text', onChange: this.editField, onBlur: this.saveAcitem, name: 'name', value: this.state.name }),
+	            React.createElement('input', { type: 'text', onChange: this.editField, onBlur: this.saveAcitem, name: 'bonus', value: this.state.bonus }),
+	            React.createElement('input', { type: 'text', onChange: this.editField, onBlur: this.saveAcitem, name: 'type', value: this.state.type }),
+	            React.createElement('input', { type: 'text', onChange: this.editField, onBlur: this.saveAcitem, name: 'check_penalty', value: this.state.check_penalty }),
+	            React.createElement('input', { type: 'text', onChange: this.editField, onBlur: this.saveAcitem, name: 'spell_failure', value: this.state.spell_failure }),
+	            React.createElement('input', { type: 'text', onChange: this.editField, onBlur: this.saveAcitem, name: 'weight', value: this.state.weight }),
+	            React.createElement('input', { type: 'text', onChange: this.editField, onBlur: this.saveAcitem, name: 'properties', value: this.state.properties }),
+	            React.createElement('input', { type: 'text', onChange: this.editField, onBlur: this.saveAcitem, name: 'max_dex_bonus', value: this.state.max_dex_bonus })
 	        );
 	    }
 	});
 	
-	var mapStateToProps = function mapStateToProps(state, props) {
-	    return {
-	        acitems: state.acitem.acitems
-	    };
-	};
-	
-	var Container = connect(mapStateToProps)(Acitem);
+	var Container = connect()(Acitem);
 	
 	module.exports = Container;
 

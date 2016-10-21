@@ -6,9 +6,9 @@ var React = require('react'),
     Acitem = require('./acitem.component');
 
 var AcitemList = React.createClass({
-    addacitem: function() {
+    addAcitem: function() {
         if (this.refs.acitemname.value) {
-            console.log('here');
+            console.log(this.props._characterId, this.refs.acitemname.value)
             this.props.dispatch(acitemActions.createAcitem(this.props._characterId, this.refs.acitemname.value));
             this.refs.acitemname.value = '';
         }

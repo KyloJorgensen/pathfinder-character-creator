@@ -31,17 +31,18 @@ var Acitem = React.createClass({
         return (
             <li className="acitem">
                 <input type="text" onChange={this.editField} onBlur={this.saveAcitem} name="name" value={this.state.name} />
+                <input type="text" onChange={this.editField} onBlur={this.saveAcitem} name="bonus" value={this.state.bonus} />
+                <input type="text" onChange={this.editField} onBlur={this.saveAcitem} name="type" value={this.state.type} />
+                <input type="text" onChange={this.editField} onBlur={this.saveAcitem} name="check_penalty" value={this.state.check_penalty} />
+                <input type="text" onChange={this.editField} onBlur={this.saveAcitem} name="spell_failure" value={this.state.spell_failure} />
+                <input type="text" onChange={this.editField} onBlur={this.saveAcitem} name="weight" value={this.state.weight} />
+                <input type="text" onChange={this.editField} onBlur={this.saveAcitem} name="properties" value={this.state.properties} />
+                <input type="text" onChange={this.editField} onBlur={this.saveAcitem} name="max_dex_bonus" value={this.state.max_dex_bonus} />
             </li>
         );
     }
 });
 
-var mapStateToProps = function(state, props) {
-    return {
-        acitems: state.acitem.acitems
-    };
-};
-
-var Container = connect(mapStateToProps)(Acitem);
+var Container = connect()(Acitem);
 
 module.exports = Container;

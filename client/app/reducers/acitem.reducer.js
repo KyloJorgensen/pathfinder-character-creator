@@ -19,6 +19,7 @@ var acitemReducer = function(state, action) {
     }
     if (action.type === actions.CREATE_ACITEM_SUCCESS) {
     	state.acitems = [];
+        console.log('create')
         state.updated = true;
     }
     if (action.type === actions.CREATE_ACITEM_ERROR) {

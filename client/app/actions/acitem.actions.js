@@ -58,7 +58,7 @@ var GET_ACITEMS_SUCCESS = 'GET_ACITEMS_SUCCESS';
 var getAcitemsSuccess = function(data) {
     return {
         type: GET_ACITEMS_SUCCESS,
-        feats: data
+        acitems: data
     };
 };
 
@@ -118,6 +118,7 @@ var createAcitem = function(_characterId, name) {
             return response.json();
         })
         .then(function(data) {
+            console.log(data)
             return dispatch(createAcitemSuccess());
         })
         .catch(function(error) {
