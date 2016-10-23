@@ -17,12 +17,17 @@ var character = React.createClass({
 	componentWillUnmount: function() {
 		this.refs.name.value = '';
 	},
+    hitkey: function(event) {
+        if (event.key == 'Enter') {
+            this.saveInteractive();
+        }
+    },
 	render: function() {
 		return (
 			<form onSubmit={this.handleSubmit}>
 			    <div>
 			        <label>Name:</label>
-			        <input type="text" ref="name" name="name"/>
+			        <input type="text" onKeyPress={this.hitkey} ref="name" name="name"/>
 			    </div>
 			    <div>
 			        <input type="submit" value="CREATE"/>

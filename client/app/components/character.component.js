@@ -3,6 +3,7 @@
 var React = require('react'),
 	connect = require('react-redux').connect,
 	characterActions = require('../actions/character.actions'),
+	userActions = require('../actions/user.actions'),
 	Nav = require('./nav.component'),
 	interactiveContainer = require('./interactive-container.component'),
 	interactives = require('../interactives'),
@@ -21,6 +22,7 @@ var character = React.createClass({
 		return state;
 	},
 	componentDidMount: function() {
+		this.props.dispatch(userActions.getUserName(this.props.history));
 		if (this.props.params._characterId) {
 			this.props.dispatch(characterActions.getCharacter(this.props.params._characterId, this.props.history));
 		}

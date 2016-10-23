@@ -13,12 +13,17 @@ module.exports = function(label) {
                 this.refs.newItem.value = '';
             }
         },
+        hitkey: function(event) {
+            if (event.key == 'Enter') {
+                this.addInteractive();
+            }
+        },
         render: function() {
             var interactives = [];
             for (var i = 0; i < this.props.interactives.length; i++) {
                 interactives.push(<Interactive key={i} interactive={this.props.interactives[i]} />);
             }
-            interactives.push(<li><input type="text" onBlur={this.addInteractive} name="newItem" ref="newItem" placeholder="ADD NEW" /></li>);
+            interactives.push(<li><input type="text" onKeyPress={this.hitkey} onBlur={this.addInteractive} name="newItem" ref="newItem" placeholder="ADD NEW" /></li>);
             var className = label + '-list';
             return (
                 <ul className={className}>

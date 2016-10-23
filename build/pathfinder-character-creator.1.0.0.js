@@ -31341,6 +31341,11 @@
 		componentWillUnmount: function componentWillUnmount() {
 			this.refs.name.value = '';
 		},
+		hitkey: function hitkey(event) {
+			if (event.key == 'Enter') {
+				this.saveInteractive();
+			}
+		},
 		render: function render() {
 			return React.createElement(
 				'form',
@@ -31353,7 +31358,7 @@
 						null,
 						'Name:'
 					),
-					React.createElement('input', { type: 'text', ref: 'name', name: 'name' })
+					React.createElement('input', { type: 'text', onKeyPress: this.hitkey, ref: 'name', name: 'name' })
 				),
 				React.createElement(
 					'div',
@@ -31383,6 +31388,7 @@
 	var React = __webpack_require__(1),
 	    connect = __webpack_require__(172).connect,
 	    characterActions = __webpack_require__(209),
+	    userActions = __webpack_require__(203),
 	    Nav = __webpack_require__(215),
 	    interactiveContainer = __webpack_require__(287),
 	    interactives = __webpack_require__(212),
@@ -31403,6 +31409,7 @@
 			return state;
 		},
 		componentDidMount: function componentDidMount() {
+			this.props.dispatch(userActions.getUserName(this.props.history));
 			if (this.props.params._characterId) {
 				this.props.dispatch(characterActions.getCharacter(this.props.params._characterId, this.props.history));
 			}
@@ -32175,6 +32182,11 @@
 	                this.refs.newItem.value = '';
 	            }
 	        },
+	        hitkey: function hitkey(event) {
+	            if (event.key == 'Enter') {
+	                this.addInteractive();
+	            }
+	        },
 	        render: function render() {
 	            var interactives = [];
 	            for (var i = 0; i < this.props.interactives.length; i++) {
@@ -32183,7 +32195,7 @@
 	            interactives.push(React.createElement(
 	                'li',
 	                null,
-	                React.createElement('input', { type: 'text', onBlur: this.addInteractive, name: 'newItem', ref: 'newItem', placeholder: 'ADD NEW' })
+	                React.createElement('input', { type: 'text', onKeyPress: this.hitkey, onBlur: this.addInteractive, name: 'newItem', ref: 'newItem', placeholder: 'ADD NEW' })
 	            ));
 	            var className = label + '-list';
 	            return React.createElement(
@@ -32224,6 +32236,11 @@
 	            state[that.target.name] = that.target.value;
 	            this.setState(state);
 	        },
+	        hitkey: function hitkey(event) {
+	            if (event.key == 'Enter') {
+	                this.saveInteractive();
+	            }
+	        },
 	        saveInteractive: function saveInteractive() {
 	            if (this.state.name == '') {
 	                this.props.dispatch(interactiveActions.remove(this.props.interactive._id, this.props.interactive._characterId));
@@ -32241,7 +32258,7 @@
 	            for (var i = 0; i < keys.length; i++) {
 	                if (keys[i] != '_id' && keys[i] != '_characterId' && keys[i] != '_userId' && keys[i] != '__v') {
 	                    keys[i];
-	                    items.push(React.createElement('input', { type: 'text', onChange: this.editField, onBlur: this.saveInteractive, name: keys[i], value: this.state[keys[i]] }));
+	                    items.push(React.createElement('input', { type: 'text', onKeyPress: this.hitkey, onChange: this.editField, onBlur: this.saveInteractive, name: keys[i], value: this.state[keys[i]] }));
 	                }
 	            }
 	            return React.createElement(

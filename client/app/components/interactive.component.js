@@ -11,6 +11,11 @@ module.exports = function(label) {
             state[that.target.name] = that.target.value;
             this.setState(state);
         },
+        hitkey: function(event) {
+            if (event.key == 'Enter') {
+                this.saveInteractive();
+            }
+        },
         saveInteractive: function() {
             if (this.state.name == '') {
                 this.props.dispatch(interactiveActions.remove(this.props.interactive._id, this.props.interactive._characterId));
@@ -28,7 +33,7 @@ module.exports = function(label) {
             for (var i = 0; i < keys.length; i++) {
                 if (keys[i] != '_id' && keys[i] != '_characterId' && keys[i] != '_userId' && keys[i] != '__v') {
                     keys[i]
-                    items.push(<input type="text" onChange={this.editField} onBlur={this.saveInteractive} name={keys[i]} value={this.state[keys[i]]} />)
+                    items.push(<input type="text" onKeyPress={this.hitkey} onChange={this.editField} onBlur={this.saveInteractive} name={keys[i]} value={this.state[keys[i]]} />)
                 }
             }
             return (
