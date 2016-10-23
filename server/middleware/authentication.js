@@ -24,8 +24,15 @@ module.exports = function(req, res, next) {
                 }
             });
         }).then(function(user) {
-            req._userId = user._id;
-            next();
+            if (user) {
+                req._userId = user._id;
+                next(); 
+            } else {
+                var error = new Error('Bad Authentication');
+                error.name = 'AuthenticationError';
+                error.user = false;
+                next(error);
+            }
         }).catch(function(error) {
             next(error);
         });            

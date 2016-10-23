@@ -2,6 +2,7 @@
 
 var React = require('react'),
 	connect = require('react-redux').connect,
+	userActions = require('../actions/user.actions'),
 	characterActions = require('../actions/character.actions'),
 	Nav = require('../components/nav.component'),
 	CharacterName = require('../components/character-name.component'),
@@ -9,6 +10,7 @@ var React = require('react'),
 
 var mainPage = React.createClass({
 	componentDidMount: function() {
+		this.props.dispatch(userActions.getUserName(this.props.history));
         this.props.dispatch(characterActions.getListOfCharacters());
 	},
 	render: function() {

@@ -2,8 +2,9 @@
 
 var fetch = require('isomorphic-fetch');
 var redirect = false;
+var cookie = require('react-cookie');
 
-var getUserName = function() {
+var getUserName = function(link) {
     if (!'cookie' in document) {
         var error = new Error('cookie is missing');
         return {
@@ -26,6 +27,7 @@ var getUserName = function() {
             error: error
         };
     }
+    redirect = link;
     return function(dispatch) {
         var url = '/user';
         return fetch(url, {
@@ -66,6 +68,9 @@ var getUserNameSuccess = function(data) {
 
 var GET_USER_NAME_ERROR = 'GET_USER_NAME_ERROR';
 var getUserNameError = function(error) {
+    console.log(cookie);
+    cookie.remove('UserKey');
+    redirect.replace('/');
     redirect = false;
     return {
         type: GET_USER_NAME_ERROR,

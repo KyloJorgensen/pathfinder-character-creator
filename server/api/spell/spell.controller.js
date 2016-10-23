@@ -9,6 +9,7 @@ function SpellController() {};
 SpellController.prototype.getSpells = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
 		Spell.find({
+			_userId: req._userId,
 			_characterId: req.params._characterId
 		}, function(error, spells) {
 			if (error) {
@@ -28,6 +29,7 @@ SpellController.prototype.getSpells = function(req, res, next) {
 SpellController.prototype.getSpell = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
 		Spell.findOne({
+			_userId: req._userId,
 			_characterId: req.params._characterId,
 			_id: req.params._spellId
 		}, function(error, spell) {
@@ -48,6 +50,7 @@ SpellController.prototype.getSpell = function(req, res, next) {
 SpellController.prototype.createSpell = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
 		Character.findOne({
+			_userId: req._userId,
 			_id: req.body._characterId,
 			_userId: req._userId
 		}, function(error, character) {
@@ -55,6 +58,7 @@ SpellController.prototype.createSpell = function(req, res, next) {
 				reject(error);
 			} else {
 				Spell.create({
+					_userId: req._userId,
 					_characterId: character._id,
 					name: req.body.name,
 					level: req.body.level,
@@ -103,6 +107,7 @@ SpellController.prototype.updateSpell = function(req, res, next) {
 	}
 	return new Promise(function(resolve, reject) {
 		Spell.findOneAndUpdate({
+			_userId: req._userId,
 			_characterId: req.body._characterId,
 			_id: req.body._id
 		}, {
@@ -127,6 +132,7 @@ SpellController.prototype.updateSpell = function(req, res, next) {
 SpellController.prototype.deleteSpell = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
 		Spell.findOneAndRemove({
+			_userId: req._userId,
 			_id: req.body._id,
 			_characterId: req.body._characterId
 		}, function(error, spell) {

@@ -4,9 +4,16 @@ var React = require('react'),
 	connect = require('react-redux').connect,
 	characterActions = require('../actions/character.actions'),
 	Nav = require('./nav.component'),
-	FeatContainer = require('./feat-container.component'),
-	AcitemContainer = require('./acitem-container.component');
-
+	interactiveContainer = require('./interactive-container.component'),
+	interactives = require('../interactives'),
+	AcitemContainer = require('./interactive-container.component')(interactives.ACITEM),
+	FeatContainer = require('./interactive-container.component')(interactives.FEAT),
+	FeatureContainer = require('./interactive-container.component')(interactives.FEATURE),
+	GearContainer = require('./interactive-container.component')(interactives.GEAR),
+	SkillContainer = require('./interactive-container.component')(interactives.SKILL),
+	SpellContainer = require('./interactive-container.component')(interactives.SPELL),
+	WeaponContainer = require('./interactive-container.component')(interactives.WEAPON);
+	
 var character = React.createClass({
 	getInitialState: function() {
 		var state = {};
@@ -15,7 +22,7 @@ var character = React.createClass({
 	},
 	componentDidMount: function() {
 		if (this.props.params._characterId) {
-			this.props.dispatch(characterActions.getCharacter(this.props.params._characterId));
+			this.props.dispatch(characterActions.getCharacter(this.props.params._characterId, this.props.history));
 		}
 	},
 	editField: function(that) {
@@ -50,29 +57,29 @@ var character = React.createClass({
 				        <label>Name:</label>
 						<input type="text" name="name" onChange={this.editField} value={this.state.name} />
 						<label>ability_score_str:</label>
-						<input type="text" name="ability_score_str" onChange={this.editField} value={this.state.ability_score_str} />
+						<input type="number" name="ability_score_str" onChange={this.editField} value={this.state.ability_score_str} />
 						<label>ability_score_dex:</label>
-						<input type="text" name="ability_score_dex" onChange={this.editField} value={this.state.ability_score_dex} />
+						<input type="number" name="ability_score_dex" onChange={this.editField} value={this.state.ability_score_dex} />
 						<label>ability_score_con:</label>
-						<input type="text" name="ability_score_con" onChange={this.editField} value={this.state.ability_score_con} />
+						<input type="number" name="ability_score_con" onChange={this.editField} value={this.state.ability_score_con} />
 						<label>ability_score_int:</label>
-						<input type="text" name="ability_score_int" onChange={this.editField} value={this.state.ability_score_int} />
+						<input type="number" name="ability_score_int" onChange={this.editField} value={this.state.ability_score_int} />
 						<label>ability_score_wis:</label>
-						<input type="text" name="ability_score_wis" onChange={this.editField} value={this.state.ability_score_wis} />
+						<input type="number" name="ability_score_wis" onChange={this.editField} value={this.state.ability_score_wis} />
 						<label>ability_score_cha:</label>
-						<input type="text" name="ability_score_cha" onChange={this.editField} value={this.state.ability_score_cha} />
+						<input type="number" name="ability_score_cha" onChange={this.editField} value={this.state.ability_score_cha} />
 						<label>ability_score_str_temp:</label>
-						<input type="text" name="ability_score_str_temp" onChange={this.editField} value={this.state.ability_score_str_temp} />
+						<input type="number" name="ability_score_str_temp" onChange={this.editField} value={this.state.ability_score_str_temp} />
 						<label>ability_score_dex_temp:</label>
-						<input type="text" name="ability_score_dex_temp" onChange={this.editField} value={this.state.ability_score_dex_temp} />
+						<input type="number" name="ability_score_dex_temp" onChange={this.editField} value={this.state.ability_score_dex_temp} />
 						<label>ability_score_con_temp:</label>
-						<input type="text" name="ability_score_con_temp" onChange={this.editField} value={this.state.ability_score_con_temp} />
+						<input type="number" name="ability_score_con_temp" onChange={this.editField} value={this.state.ability_score_con_temp} />
 						<label>ability_score_int_temp:</label>
-						<input type="text" name="ability_score_int_temp" onChange={this.editField} value={this.state.ability_score_int_temp} />
+						<input type="number" name="ability_score_int_temp" onChange={this.editField} value={this.state.ability_score_int_temp} />
 						<label>ability_score_wis_temp:</label>
-						<input type="text" name="ability_score_wis_temp" onChange={this.editField} value={this.state.ability_score_wis_temp} />
+						<input type="number" name="ability_score_wis_temp" onChange={this.editField} value={this.state.ability_score_wis_temp} />
 						<label>ability_score_cha_temp:</label>
-						<input type="text" name="ability_score_cha_temp" onChange={this.editField} value={this.state.ability_score_cha_temp} />
+						<input type="number" name="ability_score_cha_temp" onChange={this.editField} value={this.state.ability_score_cha_temp} />
 						<label>race:</label>
 						<input type="text" name="race" onChange={this.editField} value={this.state.race} />
 						<label>size:</label>
@@ -80,49 +87,49 @@ var character = React.createClass({
 						<label>class:</label>
 						<input type="text" name="class" onChange={this.editField} value={this.state.class} />
 						<label>level:</label>
-						<input type="text" name="level" onChange={this.editField} value={this.state.level} />
+						<input type="number" name="level" onChange={this.editField} value={this.state.level} />
 						<label>base_attack_bonus:</label>
-						<input type="text" name="base_attack_bonus" onChange={this.editField} value={this.state.base_attack_bonus} />
+						<input type="number" name="base_attack_bonus" onChange={this.editField} value={this.state.base_attack_bonus} />
 						<label>hit_points:</label>
-						<input type="text" name="hit_points" onChange={this.editField} value={this.state.hit_points} />
+						<input type="number" name="hit_points" onChange={this.editField} value={this.state.hit_points} />
 						<label>land_speed:</label>
-						<input type="text" name="land_speed" onChange={this.editField} value={this.state.land_speed} />
+						<input type="number" name="land_speed" onChange={this.editField} value={this.state.land_speed} />
 						<label>armor_speed:</label>
-						<input type="text" name="armor_speed" onChange={this.editField} value={this.state.armor_speed} />
+						<input type="number" name="armor_speed" onChange={this.editField} value={this.state.armor_speed} />
 						<label>fly_speed:</label>
-						<input type="text" name="fly_speed" onChange={this.editField} value={this.state.fly_speed} />
+						<input type="number" name="fly_speed" onChange={this.editField} value={this.state.fly_speed} />
 						<label>climb_speed:</label>
-						<input type="text" name="climb_speed" onChange={this.editField} value={this.state.climb_speed} />
+						<input type="number" name="climb_speed" onChange={this.editField} value={this.state.climb_speed} />
 						<label>swim_speed:</label>
-						<input type="text" name="swim_speed" onChange={this.editField} value={this.state.swim_speed} />
+						<input type="number" name="swim_speed" onChange={this.editField} value={this.state.swim_speed} />
 						<label>borrow_speed:</label>
-						<input type="text" name="borrow_speed" onChange={this.editField} value={this.state.borrow_speed} />
+						<input type="number" name="borrow_speed" onChange={this.editField} value={this.state.borrow_speed} />
 						<label>fort_base_save:</label>
-						<input type="text" name="fort_base_save" onChange={this.editField} value={this.state.fort_base_save} />
+						<input type="number" name="fort_base_save" onChange={this.editField} value={this.state.fort_base_save} />
 						<label>fort_magic_mod:</label>
-						<input type="text" name="fort_magic_mod" onChange={this.editField} value={this.state.fort_magic_mod} />
+						<input type="number" name="fort_magic_mod" onChange={this.editField} value={this.state.fort_magic_mod} />
 						<label>fort_misc_mod:</label>
-						<input type="text" name="fort_misc_mod" onChange={this.editField} value={this.state.fort_misc_mod} />
+						<input type="number" name="fort_misc_mod" onChange={this.editField} value={this.state.fort_misc_mod} />
 						<label>fort_temp_mod:</label>
-						<input type="text" name="fort_temp_mod" onChange={this.editField} value={this.state.fort_temp_mod} />
+						<input type="number" name="fort_temp_mod" onChange={this.editField} value={this.state.fort_temp_mod} />
 						<label>ref_base_save:</label>
-						<input type="text" name="ref_base_save" onChange={this.editField} value={this.state.ref_base_save} />
+						<input type="number" name="ref_base_save" onChange={this.editField} value={this.state.ref_base_save} />
 						<label>ref_magic_mod:</label>
-						<input type="text" name="ref_magic_mod" onChange={this.editField} value={this.state.ref_magic_mod} />
+						<input type="number" name="ref_magic_mod" onChange={this.editField} value={this.state.ref_magic_mod} />
 						<label>ref_misc_mod:</label>
-						<input type="text" name="ref_misc_mod" onChange={this.editField} value={this.state.ref_misc_mod} />
+						<input type="number" name="ref_misc_mod" onChange={this.editField} value={this.state.ref_misc_mod} />
 						<label>ref_temp_mod:</label>
-						<input type="text" name="ref_temp_mod" onChange={this.editField} value={this.state.ref_temp_mod} />
+						<input type="number" name="ref_temp_mod" onChange={this.editField} value={this.state.ref_temp_mod} />
 						<label>will_base_save:</label>
-						<input type="text" name="will_base_save" onChange={this.editField} value={this.state.will_base_save} />
+						<input type="number" name="will_base_save" onChange={this.editField} value={this.state.will_base_save} />
 						<label>will_magic_mod:</label>
-						<input type="text" name="will_magic_mod" onChange={this.editField} value={this.state.will_magic_mod} />
+						<input type="number" name="will_magic_mod" onChange={this.editField} value={this.state.will_magic_mod} />
 						<label>will_misc_mod:</label>
-						<input type="text" name="will_misc_mod" onChange={this.editField} value={this.state.will_misc_mod} />
+						<input type="number" name="will_misc_mod" onChange={this.editField} value={this.state.will_misc_mod} />
 						<label>will_temp_mod:</label>
-						<input type="text" name="will_temp_mod" onChange={this.editField} value={this.state.will_temp_mod} />
+						<input type="number" name="will_temp_mod" onChange={this.editField} value={this.state.will_temp_mod} />
 						<label>init_misc_mod:</label>
-						<input type="text" name="init_misc_mod" onChange={this.editField} value={this.state.init_misc_mod} />
+						<input type="number" name="init_misc_mod" onChange={this.editField} value={this.state.init_misc_mod} />
 						<label>weight:</label>
 						<input type="text" name="weight" onChange={this.editField} value={this.state.weight} />
 						<label>height:</label>
@@ -132,19 +139,19 @@ var character = React.createClass({
 						<label>spell_resistance:</label>
 						<input type="text" name="spell_resistance" onChange={this.editField} value={this.state.spell_resistance} />
 						<label>size_mod:</label>
-						<input type="text" name="size_mod" onChange={this.editField} value={this.state.size_mod} />
+						<input type="number" name="size_mod" onChange={this.editField} value={this.state.size_mod} />
 						<label>xp_points:</label>
-						<input type="text" name="xp_points" onChange={this.editField} value={this.state.xp_points} />
+						<input type="number" name="xp_points" onChange={this.editField} value={this.state.xp_points} />
 						<label>next_level:</label>
-						<input type="text" name="next_level" onChange={this.editField} value={this.state.next_level} />
+						<input type="number" name="next_level" onChange={this.editField} value={this.state.next_level} />
 						<label>money_cp:</label>
-						<input type="text" name="money_cp" onChange={this.editField} value={this.state.money_cp} />
+						<input type="number" name="money_cp" onChange={this.editField} value={this.state.money_cp} />
 						<label>money_sp:</label>
-						<input type="text" name="money_sp" onChange={this.editField} value={this.state.money_sp} />
+						<input type="number" name="money_sp" onChange={this.editField} value={this.state.money_sp} />
 						<label>money_gp:</label>
-						<input type="text" name="money_gp" onChange={this.editField} value={this.state.money_gp} />
+						<input type="number" name="money_gp" onChange={this.editField} value={this.state.money_gp} />
 						<label>money_pp:</label>
-						<input type="text" name="money_pp" onChange={this.editField} value={this.state.money_pp} />
+						<input type="number" name="money_pp" onChange={this.editField} value={this.state.money_pp} />
 						<label>light_load:</label>
 						<input type="text" name="light_load" onChange={this.editField} value={this.state.light_load} />
 						<label>medium_load:</label>
@@ -158,7 +165,7 @@ var character = React.createClass({
 						<label>drag_or_push:</label>
 						<input type="text" name="drag_or_push" onChange={this.editField} value={this.state.drag_or_push} />
 						<label>age:</label>
-						<input type="text" name="age" onChange={this.editField} value={this.state.age} />
+						<input type="number" name="age" onChange={this.editField} value={this.state.age} />
 						<label>gender:</label>
 						<input type="text" name="gender" onChange={this.editField} value={this.state.gender} />
 						<label>hair:</label>
@@ -178,88 +185,93 @@ var character = React.createClass({
 						<label>domain_and_specialty_school:</label>
 						<input type="text" name="domain_and_specialty_school" onChange={this.editField} value={this.state.domain_and_specialty_school} />
 						<label>level_0_spell_per_day:</label>
-						<input type="text" name="level_0_spell_per_day" onChange={this.editField} value={this.state.level_0_spell_per_day} />
+						<input type="number" name="level_0_spell_per_day" onChange={this.editField} value={this.state.level_0_spell_per_day} />
 						<label>level_0_bonus_spells:</label>
-						<input type="text" name="level_0_bonus_spells" onChange={this.editField} value={this.state.level_0_bonus_spells} />
+						<input type="number" name="level_0_bonus_spells" onChange={this.editField} value={this.state.level_0_bonus_spells} />
 						<label>level_0_spell_save_dc:</label>
-						<input type="text" name="level_0_spell_save_dc" onChange={this.editField} value={this.state.level_0_spell_save_dc} />
+						<input type="number" name="level_0_spell_save_dc" onChange={this.editField} value={this.state.level_0_spell_save_dc} />
 						<label>level_0_spells_known:</label>
-						<input type="text" name="level_0_spells_known" onChange={this.editField} value={this.state.level_0_spells_known} />
+						<input type="number" name="level_0_spells_known" onChange={this.editField} value={this.state.level_0_spells_known} />
 						<label>level_1_spell_per_day:</label>
-						<input type="text" name="level_1_spell_per_day" onChange={this.editField} value={this.state.level_1_spell_per_day} />
+						<input type="number" name="level_1_spell_per_day" onChange={this.editField} value={this.state.level_1_spell_per_day} />
 						<label>level_1_bonus_spells:</label>
-						<input type="text" name="level_1_bonus_spells" onChange={this.editField} value={this.state.level_1_bonus_spells} />
+						<input type="number" name="level_1_bonus_spells" onChange={this.editField} value={this.state.level_1_bonus_spells} />
 						<label>level_1_spell_save_dc:</label>
-						<input type="text" name="level_1_spell_save_dc" onChange={this.editField} value={this.state.level_1_spell_save_dc} />
+						<input type="number" name="level_1_spell_save_dc" onChange={this.editField} value={this.state.level_1_spell_save_dc} />
 						<label>level_1_spells_known:</label>
-						<input type="text" name="level_1_spells_known" onChange={this.editField} value={this.state.level_1_spells_known} />
+						<input type="number" name="level_1_spells_known" onChange={this.editField} value={this.state.level_1_spells_known} />
 						<label>level_2_spell_per_day:</label>
-						<input type="text" name="level_2_spell_per_day" onChange={this.editField} value={this.state.level_2_spell_per_day} />
+						<input type="number" name="level_2_spell_per_day" onChange={this.editField} value={this.state.level_2_spell_per_day} />
 						<label>level_2_bonus_spells:</label>
-						<input type="text" name="level_2_bonus_spells" onChange={this.editField} value={this.state.level_2_bonus_spells} />
+						<input type="number" name="level_2_bonus_spells" onChange={this.editField} value={this.state.level_2_bonus_spells} />
 						<label>level_2_spell_save_dc:</label>
-						<input type="text" name="level_2_spell_save_dc" onChange={this.editField} value={this.state.level_2_spell_save_dc} />
+						<input type="number" name="level_2_spell_save_dc" onChange={this.editField} value={this.state.level_2_spell_save_dc} />
 						<label>level_2_spells_known:</label>
-						<input type="text" name="level_2_spells_known" onChange={this.editField} value={this.state.level_2_spells_known} />
+						<input type="number" name="level_2_spells_known" onChange={this.editField} value={this.state.level_2_spells_known} />
 						<label>level_3_spell_per_day:</label>
-						<input type="text" name="level_3_spell_per_day" onChange={this.editField} value={this.state.level_3_spell_per_day} />
+						<input type="number" name="level_3_spell_per_day" onChange={this.editField} value={this.state.level_3_spell_per_day} />
 						<label>level_3_bonus_spells:</label>
-						<input type="text" name="level_3_bonus_spells" onChange={this.editField} value={this.state.level_3_bonus_spells} />
+						<input type="number" name="level_3_bonus_spells" onChange={this.editField} value={this.state.level_3_bonus_spells} />
 						<label>level_3_spell_save_dc:</label>
-						<input type="text" name="level_3_spell_save_dc" onChange={this.editField} value={this.state.level_3_spell_save_dc} />
+						<input type="number" name="level_3_spell_save_dc" onChange={this.editField} value={this.state.level_3_spell_save_dc} />
 						<label>level_3_spells_known:</label>
-						<input type="text" name="level_3_spells_known" onChange={this.editField} value={this.state.level_3_spells_known} />
+						<input type="number" name="level_3_spells_known" onChange={this.editField} value={this.state.level_3_spells_known} />
 						<label>level_4_spell_per_day:</label>
-						<input type="text" name="level_4_spell_per_day" onChange={this.editField} value={this.state.level_4_spell_per_day} />
+						<input type="number" name="level_4_spell_per_day" onChange={this.editField} value={this.state.level_4_spell_per_day} />
 						<label>level_4_bonus_spells:</label>
-						<input type="text" name="level_4_bonus_spells" onChange={this.editField} value={this.state.level_4_bonus_spells} />
+						<input type="number" name="level_4_bonus_spells" onChange={this.editField} value={this.state.level_4_bonus_spells} />
 						<label>level_4_spell_save_dc:</label>
-						<input type="text" name="level_4_spell_save_dc" onChange={this.editField} value={this.state.level_4_spell_save_dc} />
+						<input type="number" name="level_4_spell_save_dc" onChange={this.editField} value={this.state.level_4_spell_save_dc} />
 						<label>level_4_spells_known:</label>
-						<input type="text" name="level_4_spells_known" onChange={this.editField} value={this.state.level_4_spells_known} />
+						<input type="number" name="level_4_spells_known" onChange={this.editField} value={this.state.level_4_spells_known} />
 						<label>level_5_spell_per_day:</label>
-						<input type="text" name="level_5_spell_per_day" onChange={this.editField} value={this.state.level_5_spell_per_day} />
+						<input type="number" name="level_5_spell_per_day" onChange={this.editField} value={this.state.level_5_spell_per_day} />
 						<label>level_5_bonus_spells:</label>
-						<input type="text" name="level_5_bonus_spells" onChange={this.editField} value={this.state.level_5_bonus_spells} />
+						<input type="number" name="level_5_bonus_spells" onChange={this.editField} value={this.state.level_5_bonus_spells} />
 						<label>level_5_spell_save_dc:</label>
-						<input type="text" name="level_5_spell_save_dc" onChange={this.editField} value={this.state.level_5_spell_save_dc} />
+						<input type="number" name="level_5_spell_save_dc" onChange={this.editField} value={this.state.level_5_spell_save_dc} />
 						<label>level_5_spells_known:</label>
-						<input type="text" name="level_5_spells_known" onChange={this.editField} value={this.state.level_5_spells_known} />
+						<input type="number" name="level_5_spells_known" onChange={this.editField} value={this.state.level_5_spells_known} />
 						<label>level_6_spell_per_day:</label>
-						<input type="text" name="level_6_spell_per_day" onChange={this.editField} value={this.state.level_6_spell_per_day} />
+						<input type="number" name="level_6_spell_per_day" onChange={this.editField} value={this.state.level_6_spell_per_day} />
 						<label>level_6_bonus_spells:</label>
-						<input type="text" name="level_6_bonus_spells" onChange={this.editField} value={this.state.level_6_bonus_spells} />
+						<input type="number" name="level_6_bonus_spells" onChange={this.editField} value={this.state.level_6_bonus_spells} />
 						<label>level_6_spell_save_dc:</label>
-						<input type="text" name="level_6_spell_save_dc" onChange={this.editField} value={this.state.level_6_spell_save_dc} />
+						<input type="number" name="level_6_spell_save_dc" onChange={this.editField} value={this.state.level_6_spell_save_dc} />
 						<label>level_6_spells_known:</label>
-						<input type="text" name="level_6_spells_known" onChange={this.editField} value={this.state.level_6_spells_known} />
+						<input type="number" name="level_6_spells_known" onChange={this.editField} value={this.state.level_6_spells_known} />
 						<label>level_7_spell_per_day:</label>
-						<input type="text" name="level_7_spell_per_day" onChange={this.editField} value={this.state.level_7_spell_per_day} />
+						<input type="number" name="level_7_spell_per_day" onChange={this.editField} value={this.state.level_7_spell_per_day} />
 						<label>level_7_bonus_spells:</label>
-						<input type="text" name="level_7_bonus_spells" onChange={this.editField} value={this.state.level_7_bonus_spells} />
+						<input type="number" name="level_7_bonus_spells" onChange={this.editField} value={this.state.level_7_bonus_spells} />
 						<label>level_7_spell_save_dc:</label>
-						<input type="text" name="level_7_spell_save_dc" onChange={this.editField} value={this.state.level_7_spell_save_dc} />
+						<input type="number" name="level_7_spell_save_dc" onChange={this.editField} value={this.state.level_7_spell_save_dc} />
 						<label>level_7_spells_known:</label>
-						<input type="text" name="level_7_spells_known" onChange={this.editField} value={this.state.level_7_spells_known} />
+						<input type="number" name="level_7_spells_known" onChange={this.editField} value={this.state.level_7_spells_known} />
 						<label>level_8_spell_per_day:</label>
-						<input type="text" name="level_8_spell_per_day" onChange={this.editField} value={this.state.level_8_spell_per_day} />
+						<input type="number" name="level_8_spell_per_day" onChange={this.editField} value={this.state.level_8_spell_per_day} />
 						<label>level_8_bonus_spells:</label>
-						<input type="text" name="level_8_bonus_spells" onChange={this.editField} value={this.state.level_8_bonus_spells} />
+						<input type="number" name="level_8_bonus_spells" onChange={this.editField} value={this.state.level_8_bonus_spells} />
 						<label>level_8_spell_save_dc:</label>
-						<input type="text" name="level_8_spell_save_dc" onChange={this.editField} value={this.state.level_8_spell_save_dc} />
+						<input type="number" name="level_8_spell_save_dc" onChange={this.editField} value={this.state.level_8_spell_save_dc} />
 						<label>level_8_spells_known:</label>
-						<input type="text" name="level_8_spells_known" onChange={this.editField} value={this.state.level_8_spells_known} />
+						<input type="number" name="level_8_spells_known" onChange={this.editField} value={this.state.level_8_spells_known} />
 						<label>level_9_spell_per_day:</label>
-						<input type="text" name="level_9_spell_per_day" onChange={this.editField} value={this.state.level_9_spell_per_day} />
+						<input type="number" name="level_9_spell_per_day" onChange={this.editField} value={this.state.level_9_spell_per_day} />
 						<label>level_9_bonus_spells:</label>
-						<input type="text" name="level_9_bonus_spells" onChange={this.editField} value={this.state.level_9_bonus_spells} />
+						<input type="number" name="level_9_bonus_spells" onChange={this.editField} value={this.state.level_9_bonus_spells} />
 						<label>level_9_spell_save_dc:</label>
-						<input type="text" name="level_9_spell_save_dc" onChange={this.editField} value={this.state.level_9_spell_save_dc} />
+						<input type="number" name="level_9_spell_save_dc" onChange={this.editField} value={this.state.level_9_spell_save_dc} />
 						<label>level_9_spells_known:</label>
-						<input type="text" name="level_9_spells_known" onChange={this.editField} value={this.state.level_9_spells_known} />
+						<input type="number" name="level_9_spells_known" onChange={this.editField} value={this.state.level_9_spells_known} />
 				    </div>
 				    <FeatContainer _characterId={this.props.params._characterId} />
 				    <AcitemContainer _characterId={this.props.params._characterId} />
+					<FeatureContainer _characterId={this.props.params._characterId} />
+					<GearContainer _characterId={this.props.params._characterId} />
+					<SkillContainer _characterId={this.props.params._characterId} />
+					<SpellContainer _characterId={this.props.params._characterId} />
+					<WeaponContainer _characterId={this.props.params._characterId} />
 				    <div>
 				        <input type="button" onClick={this.saveCharacter} value="SAVE"/>
 				        <input type="button" value="DELETE" onClick={this.deleteCharacter} />

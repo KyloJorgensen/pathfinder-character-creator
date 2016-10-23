@@ -50,15 +50,15 @@
 	    ReactDOM = __webpack_require__(34),
 	    Provider = __webpack_require__(172).Provider,
 	    store = __webpack_require__(200),
-	    App = __webpack_require__(212),
-	    MainPage = __webpack_require__(213),
-	    Login = __webpack_require__(278),
-	    LoginContainer = __webpack_require__(279),
-	    SignupContainer = __webpack_require__(280),
-	    Signup = __webpack_require__(281),
-	    User = __webpack_require__(282),
-	    Character = __webpack_require__(285),
-	    router = __webpack_require__(215),
+	    App = __webpack_require__(223),
+	    MainPage = __webpack_require__(224),
+	    Login = __webpack_require__(289),
+	    LoginContainer = __webpack_require__(290),
+	    SignupContainer = __webpack_require__(291),
+	    Signup = __webpack_require__(292),
+	    User = __webpack_require__(293),
+	    Character = __webpack_require__(296),
+	    router = __webpack_require__(226),
 	    Router = router.Router,
 	    Route = router.Route,
 	    hashHistory = router.hashHistory,
@@ -23208,25 +23208,28 @@
 
 	'use strict';
 	
-	var redux = __webpack_require__(179);
-	var createStore = redux.createStore;
-	var applyMiddleware = redux.applyMiddleware;
-	var thunk = __webpack_require__(201).default;
-	var userReducer = __webpack_require__(202);
-	var characterReducer = __webpack_require__(206);
-	var featReducer = __webpack_require__(208);
-	var acitemReducer = __webpack_require__(210);
+	var redux = __webpack_require__(179),
+	    createStore = redux.createStore,
+	    applyMiddleware = redux.applyMiddleware,
+	    thunk = __webpack_require__(201).default,
+	    userReducer = __webpack_require__(202),
+	    characterReducer = __webpack_require__(208),
+	    interactiveReducer = __webpack_require__(210),
+	    interactives = __webpack_require__(212);
 	
 	var initialState = {};
 	
 	var reducers = function reducers(state, action) {
-	    state = state || initialState;
-	    return {
-	        user: userReducer(state.user, action),
-	        character: characterReducer(state.character, action),
-	        feat: featReducer(state.feat, action),
-	        acitem: acitemReducer(state.acitem, action)
-	    };
+		state = state || initialState;
+		var _state = {};
+		_state.user = userReducer(state.user, action);
+		_state.character = characterReducer(state.character, action);
+		var keys = Object.keys(interactives);
+		for (var i = 0; i < keys.length; i++) {
+			var label = interactives[keys[i]];
+			_state[label] = interactiveReducer(state[label], action, label);
+		}
+		return _state;
 	};
 	
 	var store = createStore(reducers, applyMiddleware(thunk));
@@ -23307,8 +23310,9 @@
 	
 	var fetch = __webpack_require__(204);
 	var redirect = false;
+	var cookie = __webpack_require__(206);
 	
-	var getUserName = function getUserName() {
+	var getUserName = function getUserName(link) {
 	    if (!'cookie' in document) {
 	        var error = new Error('cookie is missing');
 	        return {
@@ -23331,6 +23335,7 @@
 	            error: error
 	        };
 	    }
+	    redirect = link;
 	    return function (dispatch) {
 	        var url = '/user';
 	        return fetch(url, {
@@ -23368,6 +23373,9 @@
 	
 	var GET_USER_NAME_ERROR = 'GET_USER_NAME_ERROR';
 	var getUserNameError = function getUserNameError(error) {
+	    console.log(cookie);
+	    cookie.remove('UserKey');
+	    redirect.replace('/');
 	    redirect = false;
 	    return {
 	        type: GET_USER_NAME_ERROR,
@@ -23951,9 +23959,324 @@
 /* 206 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var cookie = __webpack_require__(207);
+	
+	if (typeof Object.assign != 'function') {
+	  Object.assign = function(target) {
+	    'use strict';
+	    if (target == null) {
+	      throw new TypeError('Cannot convert undefined or null to object');
+	    }
+	
+	    target = Object(target);
+	    for (var index = 1; index < arguments.length; index++) {
+	      var source = arguments[index];
+	      if (source != null) {
+	        for (var key in source) {
+	          if (Object.prototype.hasOwnProperty.call(source, key)) {
+	            target[key] = source[key];
+	          }
+	        }
+	      }
+	    }
+	    return target;
+	  };
+	}
+	
+	var _rawCookie = {};
+	var _res = undefined;
+	
+	function _isResWritable() {
+	  if(!_res)
+	    return false
+	  if(_res.headersSent === true)
+	    return false
+	  return true
+	}
+	
+	function load(name, doNotParse) {
+	  var cookies = (typeof document === 'undefined') ? _rawCookie : cookie.parse(document.cookie);
+	  var cookieVal = cookies && cookies[name];
+	
+	  if (!doNotParse) {
+	    try {
+	      cookieVal = JSON.parse(cookieVal);
+	    } catch(e) {
+	      // Not serialized object
+	    }
+	  }
+	
+	  return cookieVal;
+	}
+	
+	function select(regex) {
+	  var cookies = (typeof document === 'undefined') ? _rawCookie : cookie.parse(document.cookie);
+	  if(!cookies)
+	    return {}
+	  if(!regex)
+	    return cookies
+	  return Object.keys(cookies)
+	    .reduce(function(accumulator, name) {
+	      if(!regex.test(name))
+	        return accumulator
+	      var newCookie = {}
+	      newCookie[name] = cookies[name]
+	      return Object.assign({}, accumulator, newCookie)
+	    }, {})
+	}
+	
+	function save(name, val, opt) {
+	  _rawCookie[name] = val;
+	
+	  // allow you to work with cookies as objects.
+	  if (typeof val === 'object') {
+	    _rawCookie[name] = JSON.stringify(val);
+	  }
+	
+	  // Cookies only work in the browser
+	  if (typeof document !== 'undefined') {
+	    document.cookie = cookie.serialize(name, _rawCookie[name], opt);
+	  }
+	
+	  if (_isResWritable() && _res.cookie) {
+	    _res.cookie(name, val, opt);
+	  }
+	}
+	
+	function remove(name, opt) {
+	  delete _rawCookie[name];
+	
+	  if (typeof opt === 'undefined') {
+	    opt = {};
+	  } else if (typeof opt === 'string') {
+	    // Will be deprecated in future versions
+	    opt = { path: opt };
+	  } else {
+	    // Prevent mutation of opt below
+	    opt = Object.assign({}, opt);
+	  }
+	
+	  if (typeof document !== 'undefined') {
+	    opt.expires = new Date(1970, 1, 1, 0, 0, 1);
+	    document.cookie = cookie.serialize(name, '', opt);
+	  }
+	
+	  if (_isResWritable() && _res.clearCookie) {
+	    _res.clearCookie(name, opt);
+	  }
+	}
+	
+	function setRawCookie(rawCookie) {
+	  if (rawCookie) {
+	    _rawCookie = cookie.parse(rawCookie);
+	  } else {
+	    _rawCookie = {};
+	  }
+	}
+	
+	function plugToRequest(req, res) {
+	  if (req.cookie) {
+	    _rawCookie = req.cookie;
+	  } else if (req.cookies) {
+	    _rawCookie = req.cookies;
+	  } else if (req.headers && req.headers.cookie) {
+	    setRawCookie(req.headers.cookie);
+	  } else {
+	    _rawCookie = {};
+	  }
+	
+	  _res = res;
+	  return function unplug() {
+	    _res = null;
+	    _rawCookie = {};
+	  }
+	}
+	
+	var reactCookie = {
+	  load: load,
+	  select: select,
+	  save: save,
+	  remove: remove,
+	  setRawCookie: setRawCookie,
+	  plugToRequest: plugToRequest
+	};
+	
+	if (typeof window !== 'undefined') {
+	  window['reactCookie'] = reactCookie;
+	}
+	
+	module.exports = reactCookie;
+
+
+/***/ },
+/* 207 */
+/***/ function(module, exports) {
+
+	/*!
+	 * cookie
+	 * Copyright(c) 2012-2014 Roman Shtylman
+	 * Copyright(c) 2015 Douglas Christopher Wilson
+	 * MIT Licensed
+	 */
+	
+	/**
+	 * Module exports.
+	 * @public
+	 */
+	
+	exports.parse = parse;
+	exports.serialize = serialize;
+	
+	/**
+	 * Module variables.
+	 * @private
+	 */
+	
+	var decode = decodeURIComponent;
+	var encode = encodeURIComponent;
+	
+	/**
+	 * RegExp to match field-content in RFC 7230 sec 3.2
+	 *
+	 * field-content = field-vchar [ 1*( SP / HTAB ) field-vchar ]
+	 * field-vchar   = VCHAR / obs-text
+	 * obs-text      = %x80-FF
+	 */
+	
+	var fieldContentRegExp = /^[\u0009\u0020-\u007e\u0080-\u00ff]+$/;
+	
+	/**
+	 * Parse a cookie header.
+	 *
+	 * Parse the given cookie header string into an object
+	 * The object has the various cookies as keys(names) => values
+	 *
+	 * @param {string} str
+	 * @param {object} [options]
+	 * @return {object}
+	 * @public
+	 */
+	
+	function parse(str, options) {
+	  if (typeof str !== 'string') {
+	    throw new TypeError('argument str must be a string');
+	  }
+	
+	  var obj = {}
+	  var opt = options || {};
+	  var pairs = str.split(/; */);
+	  var dec = opt.decode || decode;
+	
+	  pairs.forEach(function(pair) {
+	    var eq_idx = pair.indexOf('=')
+	
+	    // skip things that don't look like key=value
+	    if (eq_idx < 0) {
+	      return;
+	    }
+	
+	    var key = pair.substr(0, eq_idx).trim()
+	    var val = pair.substr(++eq_idx, pair.length).trim();
+	
+	    // quoted values
+	    if ('"' == val[0]) {
+	      val = val.slice(1, -1);
+	    }
+	
+	    // only assign once
+	    if (undefined == obj[key]) {
+	      obj[key] = tryDecode(val, dec);
+	    }
+	  });
+	
+	  return obj;
+	}
+	
+	/**
+	 * Serialize data into a cookie header.
+	 *
+	 * Serialize the a name value pair into a cookie string suitable for
+	 * http headers. An optional options object specified cookie parameters.
+	 *
+	 * serialize('foo', 'bar', { httpOnly: true })
+	 *   => "foo=bar; httpOnly"
+	 *
+	 * @param {string} name
+	 * @param {string} val
+	 * @param {object} [options]
+	 * @return {string}
+	 * @public
+	 */
+	
+	function serialize(name, val, options) {
+	  var opt = options || {};
+	  var enc = opt.encode || encode;
+	
+	  if (!fieldContentRegExp.test(name)) {
+	    throw new TypeError('argument name is invalid');
+	  }
+	
+	  var value = enc(val);
+	
+	  if (value && !fieldContentRegExp.test(value)) {
+	    throw new TypeError('argument val is invalid');
+	  }
+	
+	  var pairs = [name + '=' + value];
+	
+	  if (null != opt.maxAge) {
+	    var maxAge = opt.maxAge - 0;
+	    if (isNaN(maxAge)) throw new Error('maxAge should be a Number');
+	    pairs.push('Max-Age=' + maxAge);
+	  }
+	
+	  if (opt.domain) {
+	    if (!fieldContentRegExp.test(opt.domain)) {
+	      throw new TypeError('option domain is invalid');
+	    }
+	
+	    pairs.push('Domain=' + opt.domain);
+	  }
+	
+	  if (opt.path) {
+	    if (!fieldContentRegExp.test(opt.path)) {
+	      throw new TypeError('option path is invalid');
+	    }
+	
+	    pairs.push('Path=' + opt.path);
+	  }
+	
+	  if (opt.expires) pairs.push('Expires=' + opt.expires.toUTCString());
+	  if (opt.httpOnly) pairs.push('HttpOnly');
+	  if (opt.secure) pairs.push('Secure');
+	
+	  return pairs.join('; ');
+	}
+	
+	/**
+	 * Try decoding a string using a decoding function.
+	 *
+	 * @param {string} str
+	 * @param {function} decode
+	 * @private
+	 */
+	
+	function tryDecode(str, decode) {
+	  try {
+	    return decode(str);
+	  } catch (e) {
+	    return str;
+	  }
+	}
+
+
+/***/ },
+/* 208 */
+/***/ function(module, exports, __webpack_require__) {
+
 	'use strict';
 	
-	var actions = __webpack_require__(207);
+	var actions = __webpack_require__(209);
 	
 	var characterInitialState = {
 	    loginFailed: false,
@@ -24014,7 +24337,7 @@
 	module.exports = characterReducer;
 
 /***/ },
-/* 207 */
+/* 209 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -24087,9 +24410,10 @@
 	    };
 	};
 	
-	var getCharacter = function getCharacter(_id) {
+	var getCharacter = function getCharacter(_id, link) {
 	    if (!'cookie' in document) {
 	        var error = new Error('cookie is missing');
+	        link.replace('/user');
 	        return {
 	            type: GET_CHARACTER_ERROR,
 	            error: error
@@ -24098,6 +24422,7 @@
 	    var userKey = document.cookie.split('=');
 	    if (userKey[0] != 'UserKey') {
 	        var error = new Error('UserKey cookie is missing');
+	        link.replace('/user');
 	        return {
 	            type: GET_CHARACTER_ERROR,
 	            error: error
@@ -24105,11 +24430,13 @@
 	    }
 	    if (userKey[1] == 'null') {
 	        var error = new Error('UserKey cookie is null');
+	        link.replace('/user');
 	        return {
 	            type: GET_CHARACTER_ERROR,
 	            error: error
 	        };
 	    }
+	    redirect = link;
 	    return function (dispatch) {
 	        var url = '/character/' + _id;
 	        return fetch(url, {
@@ -24138,6 +24465,7 @@
 	
 	var GET_CHARACTER_SUCCESS = 'GET_CHARACTER_SUCCESS';
 	var getCharacterSuccess = function getCharacterSuccess(data) {
+	    redirect = false;
 	    return {
 	        type: GET_CHARACTER_SUCCESS,
 	        character: data
@@ -24146,6 +24474,8 @@
 	
 	var GET_CHARACTER_ERROR = 'GET_CHARACTER_ERROR';
 	var getCharacterError = function getCharacterError(error) {
+	    redirect.replace('/user');
+	    redirect = false;
 	    return {
 	        type: GET_CHARACTER_ERROR,
 	        error: error
@@ -24393,414 +24723,48 @@
 	exports.updateCharacterError = updateCharacterError;
 
 /***/ },
-/* 208 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var actions = __webpack_require__(209);
-	
-	var featInitialState = {
-	    feats: [],
-	    updated: false
-	};
-	
-	var featReducer = function featReducer(state, action) {
-	    state = state || featInitialState;
-	    if (action.type === actions.GET_FEATS_SUCCESS) {
-	        state.feats = action.feats;
-	        state.updated = false;
-	    }
-	    if (action.type === actions.GET_FEATS_ERROR) {
-	        state.feats = [];
-	        state.updated = false;
-	    }
-	    if (action.type === actions.CREATE_FEAT_SUCCESS) {
-	        state.feats = [];
-	        state.updated = true;
-	    }
-	    if (action.type === actions.CREATE_FEAT_ERROR) {
-	        console.log(action.error);
-	    }
-	    if (action.type === actions.DELETE_FEAT_SUCCESS) {
-	        state.feats = [];
-	        console.log('delete');
-	        state.updated = true;
-	    }
-	    if (action.type === actions.DELETE_FEAT_ERROR) {
-	        console.log(action.error);
-	    }
-	    if (action.type === actions.UPDATE_FEAT_SUCCESS) {
-	        state.feats = [];
-	        state.updated = true;
-	    }
-	    if (action.type === actions.UPDATE_FEAT_ERROR) {
-	        console.log(action.error);
-	    }
-	    return state;
-	};
-	
-	module.exports = featReducer;
-
-/***/ },
-/* 209 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var fetch = __webpack_require__(204);
-	
-	var getFeats = function getFeats(_characterId) {
-	    if (!'cookie' in document) {
-	        var error = new Error('cookie is missing');
-	        return {
-	            type: GET_FEATS_ERROR,
-	            error: error
-	        };
-	    }
-	    var userKey = document.cookie.split('=');
-	    if (userKey[0] != 'UserKey') {
-	        var error = new Error('UserKey cookie is missing');
-	        return {
-	            type: GET_FEATS_ERROR,
-	            error: error
-	        };
-	    }
-	    if (userKey[1] == 'null') {
-	        var error = new Error('UserKey cookie is null');
-	        return {
-	            type: GET_FEATS_ERROR,
-	            error: error
-	        };
-	    }
-	    return function (dispatch) {
-	        var url = '/feat/' + _characterId;
-	        return fetch(url, {
-	            method: 'get',
-	            headers: {
-	                'Content-Type': 'application/json',
-	                'Accept': 'application/json',
-	                'Authentication': document.cookie
-	            }
-	        }).then(function (response) {
-	            if (response.status < 200 || response.status >= 300) {
-	                var error = new Error(response.statusText);
-	                error.response = response;
-	                throw error;
-	            }
-	            return response;
-	        }).then(function (response) {
-	            return response.json();
-	        }).then(function (data) {
-	            return dispatch(getFeatsSuccess(data));
-	        }).catch(function (error) {
-	            return dispatch(getFeatsError(error));
-	        });
-	    };
-	};
-	
-	var GET_FEATS_SUCCESS = 'GET_FEATS_SUCCESS';
-	var getFeatsSuccess = function getFeatsSuccess(data) {
-	    return {
-	        type: GET_FEATS_SUCCESS,
-	        feats: data
-	    };
-	};
-	
-	var GET_FEATS_ERROR = 'GET_FEATS_ERROR';
-	var getFeatsError = function getFeatsError(error) {
-	    return {
-	        type: GET_FEATS_ERROR,
-	        error: error
-	    };
-	};
-	
-	var createFeat = function createFeat(_characterId, name) {
-	    if (!'cookie' in document) {
-	        var error = new Error('cookie is missing');
-	        return {
-	            type: CREATE_FEAT_ERROR,
-	            error: error
-	        };
-	    }
-	    var userKey = document.cookie.split('=');
-	    if (userKey[0] != 'UserKey') {
-	        var error = new Error('UserKey cookie is missing');
-	        return {
-	            type: CREATE_FEAT_ERROR,
-	            error: error
-	        };
-	    }
-	    if (userKey[1] == 'null') {
-	        var error = new Error('UserKey cookie is null');
-	        return {
-	            type: CREATE_FEAT_ERROR,
-	            error: error
-	        };
-	    }
-	    var data = {};
-	    data.name = name;
-	    data._characterId = _characterId;
-	    return function (dispatch) {
-	        var url = '/feat';
-	        return fetch(url, {
-	            method: 'post',
-	            headers: {
-	                'Content-Type': 'application/json',
-	                'Accept': 'application/json',
-	                'Authentication': document.cookie
-	            },
-	            body: JSON.stringify(data)
-	        }).then(function (response) {
-	            if (response.status < 200 || response.status >= 300) {
-	                var error = new Error(response.statusText);
-	                error.response = response;
-	                throw error;
-	            }
-	            return response;
-	        }).then(function (response) {
-	            return response.json();
-	        }).then(function (data) {
-	            return dispatch(createFeatSuccess());
-	        }).catch(function (error) {
-	            return dispatch(createFeatError(error));
-	        });
-	    };
-	};
-	
-	var CREATE_FEAT_SUCCESS = 'CREATE_FEAT_SUCCESS';
-	var createFeatSuccess = function createFeatSuccess() {
-	    return {
-	        type: CREATE_FEAT_SUCCESS
-	    };
-	};
-	
-	var CREATE_FEAT_ERROR = 'CREATE_FEAT_ERROR';
-	var createFeatError = function createFeatError(error) {
-	    return {
-	        type: CREATE_FEAT_ERROR,
-	        error: error
-	    };
-	};
-	
-	var deleteFeat = function deleteFeat(_id, _characterId) {
-	    console.log('delete');
-	    if (!'cookie' in document) {
-	        var error = new Error('cookie is missing');
-	        return {
-	            type: DELETE_FEAT_ERROR,
-	            error: error
-	        };
-	    }
-	    var userKey = document.cookie.split('=');
-	    if (userKey[0] != 'UserKey') {
-	        var error = new Error('UserKey cookie is missing');
-	        return {
-	            type: DELETE_FEAT_ERROR,
-	            error: error
-	        };
-	    }
-	    if (userKey[1] == 'null') {
-	        var error = new Error('UserKey cookie is null');
-	        return {
-	            type: DELETE_FEAT_ERROR,
-	            error: error
-	        };
-	    }
-	
-	    var data = {
-	        _id: _id,
-	        _characterId: _characterId
-	    };
-	    return function (dispatch) {
-	        var url = '/feat';
-	        return fetch(url, {
-	            method: 'delete',
-	            headers: {
-	                'Content-Type': 'application/json',
-	                'Accept': 'application/json',
-	                'Authentication': document.cookie
-	            },
-	            body: JSON.stringify(data)
-	        }).then(function (response) {
-	            if (response.status < 200 || response.status >= 300) {
-	                var error = new Error(response.statusText);
-	                error.response = response;
-	                throw error;
-	            }
-	            return response;
-	        }).then(function () {
-	            return dispatch(deleteFeatSuccess());
-	        }).catch(function (error) {
-	            return dispatch(deleteFeatError(error));
-	        });
-	    };
-	};
-	
-	var DELETE_FEAT_SUCCESS = 'DELETE_FEAT_SUCCESS';
-	var deleteFeatSuccess = function deleteFeatSuccess(data) {
-	    return {
-	        type: DELETE_FEAT_SUCCESS
-	    };
-	};
-	
-	var DELETE_FEAT_ERROR = 'DELETE_FEAT_ERROR';
-	var deleteFeatError = function deleteFeatError(error) {
-	    redirect = false;
-	    return {
-	        type: DELETE_FEAT_ERROR,
-	        error: error
-	    };
-	};
-	
-	var updateFeat = function updateFeat(_new, _old) {
-	    if (!'cookie' in document) {
-	        var error = new Error('cookie is missing');
-	        return {
-	            type: UPDATE_FEAT_ERROR,
-	            error: error
-	        };
-	    }
-	    var userKey = document.cookie.split('=');
-	    if (userKey[0] != 'UserKey') {
-	        var error = new Error('UserKey cookie is missing');
-	        return {
-	            type: UPDATE_FEAT_ERROR,
-	            error: error
-	        };
-	    }
-	    if (userKey[1] == 'null') {
-	        var error = new Error('UserKey cookie is null');
-	        return {
-	            type: UPDATE_FEAT_ERROR,
-	            error: error
-	        };
-	    }
-	    var data = {
-	        _id: _new._id,
-	        _characterId: _new._characterId
-	    };
-	
-	    var _newKeys = Object.keys(_new);
-	    for (var i = 0; i < _newKeys.length; i++) {
-	        if (_new[_newKeys[i]] != _old[_newKeys[i]]) {
-	            data[_newKeys[i]] = _new[_newKeys[i]];
-	        }
-	    }
-	
-	    return function (dispatch) {
-	        var url = '/feat';
-	        return fetch(url, {
-	            method: 'put',
-	            headers: {
-	                'Content-Type': 'application/json',
-	                'Accept': 'application/json',
-	                'Authentication': document.cookie
-	            },
-	            body: JSON.stringify(data)
-	        }).then(function (response) {
-	            if (response.status < 200 || response.status >= 300) {
-	                var error = new Error(response.statusText);
-	                error.response = response;
-	                throw error;
-	            }
-	            return response;
-	        }).then(function (response) {
-	            return response.json();
-	        }).then(function (data) {
-	            return dispatch(updateFeatSuccess(data));
-	        }).catch(function (error) {
-	            return dispatch(updateFeatError(error));
-	        });
-	    };
-	};
-	
-	var UPDATE_FEAT_SUCCESS = 'UPDATE_FEAT_SUCCESS';
-	var updateFeatSuccess = function updateFeatSuccess(data) {
-	    return {
-	        type: UPDATE_FEAT_SUCCESS
-	    };
-	};
-	
-	var UPDATE_FEAT_ERROR = 'UPDATE_FEAT_ERROR';
-	var updateFeatError = function updateFeatError(error) {
-	    return {
-	        type: UPDATE_FEAT_ERROR,
-	        error: error
-	    };
-	};
-	
-	exports.getFeats = getFeats;
-	exports.GET_FEATS_SUCCESS = GET_FEATS_SUCCESS;
-	exports.getFeatsSuccess = getFeatsSuccess;
-	exports.GET_FEATS_ERROR = GET_FEATS_ERROR;
-	exports.getFeatsError = getFeatsError;
-	exports.createFeat = createFeat;
-	exports.CREATE_FEAT_SUCCESS = CREATE_FEAT_SUCCESS;
-	exports.createFeatSuccess = createFeatSuccess;
-	exports.CREATE_FEAT_ERROR = CREATE_FEAT_ERROR;
-	exports.createFeatError = createFeatError;
-	exports.deleteFeat = deleteFeat;
-	exports.DELETE_FEAT_SUCCESS = DELETE_FEAT_SUCCESS;
-	exports.deleteFeatSuccess = deleteFeatSuccess;
-	exports.DELETE_FEAT_ERROR = DELETE_FEAT_ERROR;
-	exports.deleteFeatError = deleteFeatError;
-	exports.updateFeat = updateFeat;
-	exports.UPDATE_FEAT_SUCCESS = UPDATE_FEAT_SUCCESS;
-	exports.updateFeatSuccess = updateFeatSuccess;
-	exports.UPDATE_FEAT_ERROR = UPDATE_FEAT_ERROR;
-	exports.updateFeatError = updateFeatError;
-
-/***/ },
 /* 210 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var actions = __webpack_require__(211);
-	
-	var acitemInitialState = {
-	    acitems: [],
-	    updated: false
-	};
-	
-	var acitemReducer = function acitemReducer(state, action) {
-	    state = state || acitemInitialState;
-	    if (action.type === actions.GET_ACITEMS_SUCCESS) {
-	        state.acitems = action.acitems;
+	module.exports = function (state, action, label) {
+	    var actions = __webpack_require__(211)[label];
+	    var InteractiveInitialState = {};
+	    InteractiveInitialState[label] = [];
+	    InteractiveInitialState.updated = false;
+	    state = state || InteractiveInitialState;
+	    if (action.type === actions.GET_SUCCESS) {
+	        state[label] = action.data;
 	        state.updated = false;
 	    }
-	    if (action.type === actions.GET_ACITEMS_ERROR) {
-	        state.acitems = [];
+	    if (action.type === actions.GET_ERROR) {
+	        state[label] = [];
 	        state.updated = false;
 	    }
-	    if (action.type === actions.CREATE_ACITEM_SUCCESS) {
-	        state.acitems = [];
-	        console.log('create');
+	    if (action.type === actions.CREATE_SUCCESS) {
+	        state[label] = [];
 	        state.updated = true;
 	    }
-	    if (action.type === actions.CREATE_ACITEM_ERROR) {
+	    if (action.type === actions.CREATE_ERROR) {
 	        console.log(action.error);
 	    }
-	    if (action.type === actions.DELETE_ACITEM_SUCCESS) {
-	        state.acitems = [];
-	        console.log('delete');
+	    if (action.type === actions.REMOVE_SUCCESS) {
+	        state[label] = [];
 	        state.updated = true;
 	    }
-	    if (action.type === actions.DELETE_ACITEM_ERROR) {
+	    if (action.type === actions.REMOVE_ERROR) {
 	        console.log(action.error);
 	    }
-	    if (action.type === actions.UPDATE_ACITEM_SUCCESS) {
-	        state.acitems = [];
+	    if (action.type === actions.UPDATE_SUCCESS) {
+	        state[label] = [];
 	        state.updated = true;
 	    }
-	    if (action.type === actions.UPDATE_ACITEM_ERROR) {
+	    if (action.type === actions.UPDATE_ERROR) {
 	        console.log(action.error);
 	    }
 	    return state;
 	};
-	
-	module.exports = acitemReducer;
 
 /***/ },
 /* 211 */
@@ -24808,312 +24772,350 @@
 
 	'use strict';
 	
-	var fetch = __webpack_require__(204);
+	var interactives = __webpack_require__(212);
 	
-	var getAcitems = function getAcitems(_characterId) {
-	    if (!'cookie' in document) {
-	        var error = new Error('cookie is missing');
-	        return {
-	            type: GET_ACITEMS_ERROR,
-	            error: error
-	        };
-	    }
-	    var userKey = document.cookie.split('=');
-	    if (userKey[0] != 'UserKey') {
-	        var error = new Error('UserKey cookie is missing');
-	        return {
-	            type: GET_ACITEMS_ERROR,
-	            error: error
-	        };
-	    }
-	    if (userKey[1] == 'null') {
-	        var error = new Error('UserKey cookie is null');
-	        return {
-	            type: GET_ACITEMS_ERROR,
-	            error: error
-	        };
-	    }
-	    return function (dispatch) {
-	        var url = '/acitem/' + _characterId;
-	        return fetch(url, {
-	            method: 'get',
-	            headers: {
-	                'Content-Type': 'application/json',
-	                'Accept': 'application/json',
-	                'Authentication': document.cookie
-	            }
-	        }).then(function (response) {
-	            if (response.status < 200 || response.status >= 300) {
-	                var error = new Error(response.statusText);
-	                error.response = response;
-	                throw error;
-	            }
-	            return response;
-	        }).then(function (response) {
-	            return response.json();
-	        }).then(function (data) {
-	            return dispatch(getAcitemsSuccess(data));
-	        }).catch(function (error) {
-	            return dispatch(getAcitemsError(error));
-	        });
-	    };
-	};
+	var actions = function actions(label) {
+	    var fetch = __webpack_require__(204);
 	
-	var GET_ACITEMS_SUCCESS = 'GET_ACITEMS_SUCCESS';
-	var getAcitemsSuccess = function getAcitemsSuccess(data) {
-	    return {
-	        type: GET_ACITEMS_SUCCESS,
-	        acitems: data
-	    };
-	};
-	
-	var GET_ACITEMS_ERROR = 'GET_ACITEMS_ERROR';
-	var getAcitemsError = function getAcitemsError(error) {
-	    return {
-	        type: GET_ACITEMS_ERROR,
-	        error: error
-	    };
-	};
-	
-	var createAcitem = function createAcitem(_characterId, name) {
-	    if (!'cookie' in document) {
-	        var error = new Error('cookie is missing');
-	        return {
-	            type: CREATE_ACITEM_ERROR,
-	            error: error
-	        };
-	    }
-	    var userKey = document.cookie.split('=');
-	    if (userKey[0] != 'UserKey') {
-	        var error = new Error('UserKey cookie is missing');
-	        return {
-	            type: CREATE_ACITEM_ERROR,
-	            error: error
-	        };
-	    }
-	    if (userKey[1] == 'null') {
-	        var error = new Error('UserKey cookie is null');
-	        return {
-	            type: CREATE_ACITEM_ERROR,
-	            error: error
-	        };
-	    }
-	    var data = {};
-	    data.name = name;
-	    data._characterId = _characterId;
-	    return function (dispatch) {
-	        var url = '/acitem';
-	        return fetch(url, {
-	            method: 'post',
-	            headers: {
-	                'Content-Type': 'application/json',
-	                'Accept': 'application/json',
-	                'Authentication': document.cookie
-	            },
-	            body: JSON.stringify(data)
-	        }).then(function (response) {
-	            if (response.status < 200 || response.status >= 300) {
-	                var error = new Error(response.statusText);
-	                error.response = response;
-	                throw error;
-	            }
-	            return response;
-	        }).then(function (response) {
-	            return response.json();
-	        }).then(function (data) {
-	            console.log(data);
-	            return dispatch(createAcitemSuccess());
-	        }).catch(function (error) {
-	            return dispatch(createAcitemError(error));
-	        });
-	    };
-	};
-	
-	var CREATE_ACITEM_SUCCESS = 'CREATE_ACITEM_SUCCESS';
-	var createAcitemSuccess = function createAcitemSuccess() {
-	    return {
-	        type: CREATE_ACITEM_SUCCESS
-	    };
-	};
-	
-	var CREATE_ACITEM_ERROR = 'CREATE_ACITEM_ERROR';
-	var createAcitemError = function createAcitemError(error) {
-	    return {
-	        type: CREATE_ACITEM_ERROR,
-	        error: error
-	    };
-	};
-	
-	var deleteAcitem = function deleteAcitem(_id, _characterId) {
-	    console.log('delete');
-	    if (!'cookie' in document) {
-	        var error = new Error('cookie is missing');
-	        return {
-	            type: DELETE_ACITEM_ERROR,
-	            error: error
-	        };
-	    }
-	    var userKey = document.cookie.split('=');
-	    if (userKey[0] != 'UserKey') {
-	        var error = new Error('UserKey cookie is missing');
-	        return {
-	            type: DELETE_ACITEM_ERROR,
-	            error: error
-	        };
-	    }
-	    if (userKey[1] == 'null') {
-	        var error = new Error('UserKey cookie is null');
-	        return {
-	            type: DELETE_ACITEM_ERROR,
-	            error: error
-	        };
-	    }
-	
-	    var data = {
-	        _id: _id,
-	        _characterId: _characterId
-	    };
-	    return function (dispatch) {
-	        var url = '/acitem';
-	        return fetch(url, {
-	            method: 'delete',
-	            headers: {
-	                'Content-Type': 'application/json',
-	                'Accept': 'application/json',
-	                'Authentication': document.cookie
-	            },
-	            body: JSON.stringify(data)
-	        }).then(function (response) {
-	            if (response.status < 200 || response.status >= 300) {
-	                var error = new Error(response.statusText);
-	                error.response = response;
-	                throw error;
-	            }
-	            return response;
-	        }).then(function () {
-	            return dispatch(deleteAcitemSuccess());
-	        }).catch(function (error) {
-	            return dispatch(deleteAcitemError(error));
-	        });
-	    };
-	};
-	
-	var DELETE_ACITEM_SUCCESS = 'DELETE_ACITEM_SUCCESS';
-	var deleteAcitemSuccess = function deleteAcitemSuccess(data) {
-	    return {
-	        type: DELETE_ACITEM_SUCCESS
-	    };
-	};
-	
-	var DELETE_ACITEM_ERROR = 'DELETE_ACITEM_ERROR';
-	var deleteAcitemError = function deleteAcitemError(error) {
-	    redirect = false;
-	    return {
-	        type: DELETE_ACITEM_ERROR,
-	        error: error
-	    };
-	};
-	
-	var updateAcitem = function updateAcitem(_new, _old) {
-	    if (!'cookie' in document) {
-	        var error = new Error('cookie is missing');
-	        return {
-	            type: UPDATE_ACITEM_ERROR,
-	            error: error
-	        };
-	    }
-	    var userKey = document.cookie.split('=');
-	    if (userKey[0] != 'UserKey') {
-	        var error = new Error('UserKey cookie is missing');
-	        return {
-	            type: UPDATE_ACITEM_ERROR,
-	            error: error
-	        };
-	    }
-	    if (userKey[1] == 'null') {
-	        var error = new Error('UserKey cookie is null');
-	        return {
-	            type: UPDATE_ACITEM_ERROR,
-	            error: error
-	        };
-	    }
-	    var data = {
-	        _id: _new._id,
-	        _characterId: _new._characterId
-	    };
-	
-	    var _newKeys = Object.keys(_new);
-	    for (var i = 0; i < _newKeys.length; i++) {
-	        if (_new[_newKeys[i]] != _old[_newKeys[i]]) {
-	            data[_newKeys[i]] = _new[_newKeys[i]];
+	    var get = function get(_characterId) {
+	        if (!'cookie' in document) {
+	            var error = new Error('cookie is missing');
+	            return {
+	                type: GET_ERROR,
+	                error: error
+	            };
 	        }
-	    }
+	        var userKey = document.cookie.split('=');
+	        if (userKey[0] != 'UserKey') {
+	            var error = new Error('UserKey cookie is missing');
+	            return {
+	                type: GET_ERROR,
+	                error: error
+	            };
+	        }
+	        if (userKey[1] == 'null') {
+	            var error = new Error('UserKey cookie is null');
+	            return {
+	                type: GET_ERROR,
+	                error: error
+	            };
+	        }
+	        return function (dispatch) {
+	            var url = '/' + label + '/' + _characterId;
+	            return fetch(url, {
+	                method: 'get',
+	                headers: {
+	                    'Content-Type': 'application/json',
+	                    'Accept': 'application/json',
+	                    'Authentication': document.cookie
+	                }
+	            }).then(function (response) {
+	                if (response.status < 200 || response.status >= 300) {
+	                    var error = new Error(response.statusText);
+	                    error.response = response;
+	                    throw error;
+	                }
+	                return response;
+	            }).then(function (response) {
+	                return response.json();
+	            }).then(function (data) {
+	                return dispatch(getSuccess(data));
+	            }).catch(function (error) {
+	                return dispatch(getError(error));
+	            });
+	        };
+	    };
 	
-	    return function (dispatch) {
-	        var url = '/acitem';
-	        return fetch(url, {
-	            method: 'put',
-	            headers: {
-	                'Content-Type': 'application/json',
-	                'Accept': 'application/json',
-	                'Authentication': document.cookie
-	            },
-	            body: JSON.stringify(data)
-	        }).then(function (response) {
-	            if (response.status < 200 || response.status >= 300) {
-	                var error = new Error(response.statusText);
-	                error.response = response;
-	                throw error;
+	    var GET_SUCCESS = 'GET_SUCCESS' + label;
+	    var getSuccess = function getSuccess(data) {
+	        return {
+	            type: GET_SUCCESS,
+	            data: data
+	        };
+	    };
+	
+	    var GET_ERROR = 'GET_ERROR' + label;
+	    var getError = function getError(error) {
+	        return {
+	            type: GET_ERROR,
+	            error: error
+	        };
+	    };
+	
+	    var create = function create(_characterId, name) {
+	        if (!'cookie' in document) {
+	            var error = new Error('cookie is missing');
+	            return {
+	                type: CREATE_ERROR,
+	                error: error
+	            };
+	        }
+	        var userKey = document.cookie.split('=');
+	        if (userKey[0] != 'UserKey') {
+	            var error = new Error('UserKey cookie is missing');
+	            return {
+	                type: CREATE_ERROR,
+	                error: error
+	            };
+	        }
+	        if (userKey[1] == 'null') {
+	            var error = new Error('UserKey cookie is null');
+	            return {
+	                type: CREATE_ERROR,
+	                error: error
+	            };
+	        }
+	        var data = {};
+	        data.name = name;
+	        data._characterId = _characterId;
+	        return function (dispatch) {
+	            var url = '/' + label;
+	            return fetch(url, {
+	                method: 'post',
+	                headers: {
+	                    'Content-Type': 'application/json',
+	                    'Accept': 'application/json',
+	                    'Authentication': document.cookie
+	                },
+	                body: JSON.stringify(data)
+	            }).then(function (response) {
+	                if (response.status < 200 || response.status >= 300) {
+	                    var error = new Error(response.statusText);
+	                    error.response = response;
+	                    throw error;
+	                }
+	                return response;
+	            }).then(function (response) {
+	                return response.json();
+	            }).then(function (data) {
+	                return dispatch(createSuccess());
+	            }).catch(function (error) {
+	                return dispatch(createError(error));
+	            });
+	        };
+	    };
+	
+	    var CREATE_SUCCESS = 'CREATE_SUCCESS' + label;
+	    var createSuccess = function createSuccess() {
+	        return {
+	            type: CREATE_SUCCESS
+	        };
+	    };
+	
+	    var CREATE_ERROR = 'CREATE_ERROR' + label;
+	    var createError = function createError(error) {
+	        return {
+	            type: CREATE_ERROR,
+	            error: error
+	        };
+	    };
+	
+	    var remove = function remove(_id, _characterId) {
+	        if (!'cookie' in document) {
+	            var error = new Error('cookie is missing');
+	            return {
+	                type: REMOVE_ERROR,
+	                error: error
+	            };
+	        }
+	        var userKey = document.cookie.split('=');
+	        if (userKey[0] != 'UserKey') {
+	            var error = new Error('UserKey cookie is missing');
+	            return {
+	                type: REMOVE_ERROR,
+	                error: error
+	            };
+	        }
+	        if (userKey[1] == 'null') {
+	            var error = new Error('UserKey cookie is null');
+	            return {
+	                type: REMOVE_ERROR,
+	                error: error
+	            };
+	        }
+	
+	        var data = {
+	            _id: _id,
+	            _characterId: _characterId
+	        };
+	        return function (dispatch) {
+	            var url = '/' + label;
+	            return fetch(url, {
+	                method: 'delete',
+	                headers: {
+	                    'Content-Type': 'application/json',
+	                    'Accept': 'application/json',
+	                    'Authentication': document.cookie
+	                },
+	                body: JSON.stringify(data)
+	            }).then(function (response) {
+	                if (response.status < 200 || response.status >= 300) {
+	                    var error = new Error(response.statusText);
+	                    error.response = response;
+	                    throw error;
+	                }
+	                return response;
+	            }).then(function () {
+	                return dispatch(removeSuccess());
+	            }).catch(function (error) {
+	                return dispatch(removeError(error));
+	            });
+	        };
+	    };
+	
+	    var REMOVE_SUCCESS = 'REMOVE_SUCCESS' + label;
+	    var removeSuccess = function removeSuccess(data) {
+	        return {
+	            type: REMOVE_SUCCESS
+	        };
+	    };
+	
+	    var REMOVE_ERROR = 'REMOVE_ERROR' + label;
+	    var removeError = function removeError(error) {
+	        redirect = false;
+	        return {
+	            type: REMOVE_ERROR,
+	            error: error
+	        };
+	    };
+	
+	    var update = function update(_new, _old) {
+	        if (!'cookie' in document) {
+	            var error = new Error('cookie is missing');
+	            return {
+	                type: UPDATE_ERROR,
+	                error: error
+	            };
+	        }
+	        var userKey = document.cookie.split('=');
+	        if (userKey[0] != 'UserKey') {
+	            var error = new Error('UserKey cookie is missing');
+	            return {
+	                type: UPDATE_ERROR,
+	                error: error
+	            };
+	        }
+	        if (userKey[1] == 'null') {
+	            var error = new Error('UserKey cookie is null');
+	            return {
+	                type: UPDATE_ERROR,
+	                error: error
+	            };
+	        }
+	        var data = {
+	            _id: _new._id,
+	            _characterId: _new._characterId
+	        };
+	
+	        var _newKeys = Object.keys(_new);
+	        for (var i = 0; i < _newKeys.length; i++) {
+	            if (_new[_newKeys[i]] != _old[_newKeys[i]]) {
+	                data[_newKeys[i]] = _new[_newKeys[i]];
 	            }
-	            return response;
-	        }).then(function (response) {
-	            return response.json();
-	        }).then(function (data) {
-	            return dispatch(updateAcitemSuccess(data));
-	        }).catch(function (error) {
-	            return dispatch(updateAcitemError(error));
-	        });
-	    };
-	};
+	        }
 	
-	var UPDATE_ACITEM_SUCCESS = 'UPDATE_ACITEM_SUCCESS';
-	var updateAcitemSuccess = function updateAcitemSuccess(data) {
-	    return {
-	        type: UPDATE_ACITEM_SUCCESS
+	        return function (dispatch) {
+	            var url = '/' + label;
+	            return fetch(url, {
+	                method: 'put',
+	                headers: {
+	                    'Content-Type': 'application/json',
+	                    'Accept': 'application/json',
+	                    'Authentication': document.cookie
+	                },
+	                body: JSON.stringify(data)
+	            }).then(function (response) {
+	                if (response.status < 200 || response.status >= 300) {
+	                    var error = new Error(response.statusText);
+	                    error.response = response;
+	                    throw error;
+	                }
+	                return response;
+	            }).then(function (response) {
+	                return response.json();
+	            }).then(function (data) {
+	                return dispatch(updateSuccess(data));
+	            }).catch(function (error) {
+	                return dispatch(updateError(error));
+	            });
+	        };
 	    };
-	};
 	
-	var UPDATE_ACITEM_ERROR = 'UPDATE_ACITEM_ERROR';
-	var updateAcitemError = function updateAcitemError(error) {
-	    return {
-	        type: UPDATE_ACITEM_ERROR,
-	        error: error
+	    var UPDATE_SUCCESS = 'UPDATE_SUCCESS' + label;
+	    var updateSuccess = function updateSuccess(data) {
+	        return {
+	            type: UPDATE_SUCCESS
+	        };
 	    };
-	};
 	
-	exports.getAcitems = getAcitems;
-	exports.GET_ACITEMS_SUCCESS = GET_ACITEMS_SUCCESS;
-	exports.getAcitemsSuccess = getAcitemsSuccess;
-	exports.GET_ACITEMS_ERROR = GET_ACITEMS_ERROR;
-	exports.getAcitemsError = getAcitemsError;
-	exports.createAcitem = createAcitem;
-	exports.CREATE_ACITEM_SUCCESS = CREATE_ACITEM_SUCCESS;
-	exports.createAcitemSuccess = createAcitemSuccess;
-	exports.CREATE_ACITEM_ERROR = CREATE_ACITEM_ERROR;
-	exports.createAcitemError = createAcitemError;
-	exports.deleteAcitem = deleteAcitem;
-	exports.DELETE_ACITEM_SUCCESS = DELETE_ACITEM_SUCCESS;
-	exports.deleteAcitemSuccess = deleteAcitemSuccess;
-	exports.DELETE_ACITEM_ERROR = DELETE_ACITEM_ERROR;
-	exports.deleteAcitemError = deleteAcitemError;
-	exports.updateAcitem = updateAcitem;
-	exports.UPDATE_ACITEM_SUCCESS = UPDATE_ACITEM_SUCCESS;
-	exports.updateAcitemSuccess = updateAcitemSuccess;
-	exports.UPDATE_ACITEM_ERROR = UPDATE_ACITEM_ERROR;
-	exports.updateAcitemError = updateAcitemError;
+	    var UPDATE_ERROR = 'UPDATE_ERROR' + label;
+	    var updateError = function updateError(error) {
+	        return {
+	            type: UPDATE_ERROR,
+	            error: error
+	        };
+	    };
+	
+	    var actions = {};
+	    actions.get = get;
+	    actions.GET_SUCCESS = GET_SUCCESS;
+	    actions.getSuccess = getSuccess;
+	    actions.GET_ERROR = GET_ERROR;
+	    actions.getError = getError;
+	    actions.create = create;
+	    actions.CREATE_SUCCESS = CREATE_SUCCESS;
+	    actions.createSuccess = createSuccess;
+	    actions.CREATE_ERROR = CREATE_ERROR;
+	    actions.createError = createError;
+	    actions.remove = remove;
+	    actions.REMOVE_SUCCESS = REMOVE_SUCCESS;
+	    actions.removeSuccess = removeSuccess;
+	    actions.REMOVE_ERROR = REMOVE_ERROR;
+	    actions.removeError = removeError;
+	    actions.update = update;
+	    actions.UPDATE_SUCCESS = UPDATE_SUCCESS;
+	    actions.updateSuccess = updateSuccess;
+	    actions.UPDATE_ERROR = UPDATE_ERROR;
+	    actions.updateError = updateError;
+	
+	    return actions;
+	};
+	var keys = Object.keys(interactives);
+	var _actions = {};
+	for (var i = 0; i < keys.length; i++) {
+	    var label = interactives[keys[i]];
+	    _actions[label] = actions(label);
+	}
+	module.exports = _actions;
 
 /***/ },
 /* 212 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	module.exports = {
+	    ACITEM: 'acitem',
+	    FEAT: 'feat',
+	    FEATURE: 'feature',
+	    GEAR: 'gear',
+	    SKILL: 'skill',
+	    SPELL: 'spell',
+	    WEAPON: 'weapon'
+	};
+
+/***/ },
+/* 213 */,
+/* 214 */,
+/* 215 */,
+/* 216 */,
+/* 217 */,
+/* 218 */,
+/* 219 */,
+/* 220 */,
+/* 221 */,
+/* 222 */,
+/* 223 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -25121,13 +25123,12 @@
 	var React = __webpack_require__(1),
 	    connect = __webpack_require__(172).connect,
 	    userActions = __webpack_require__(203),
-	    characterActions = __webpack_require__(207);
+	    characterActions = __webpack_require__(209);
 	
 	var App = React.createClass({
 	    displayName: 'App',
 	
 	    render: function render() {
-	        this.props.dispatch(userActions.getUserName());
 	        return React.createElement(
 	            'div',
 	            { className: 'pathfinder-character-creator' },
@@ -25141,9 +25142,7 @@
 	});
 	
 	var mapStateToProps = function mapStateToProps(state, props) {
-	    return {
-	        name: state.user.name
-	    };
+	    return {};
 	};
 	
 	var Container = connect(mapStateToProps)(App);
@@ -25151,14 +25150,14 @@
 	module.exports = Container;
 
 /***/ },
-/* 213 */
+/* 224 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(1),
 	    connect = __webpack_require__(172).connect,
-	    Nav = __webpack_require__(214);
+	    Nav = __webpack_require__(225);
 	
 	var mainPage = React.createClass({
 		displayName: 'mainPage',
@@ -25202,14 +25201,14 @@
 	module.exports = Container;
 
 /***/ },
-/* 214 */
+/* 225 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(1),
 	    connect = __webpack_require__(172).connect,
-	    Link = __webpack_require__(215).Link;
+	    Link = __webpack_require__(226).Link;
 	
 	var mainPage = React.createClass({
 		displayName: 'mainPage',
@@ -25274,7 +25273,7 @@
 	module.exports = Container;
 
 /***/ },
-/* 215 */
+/* 226 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -25282,7 +25281,7 @@
 	exports.__esModule = true;
 	exports.createMemoryHistory = exports.hashHistory = exports.browserHistory = exports.applyRouterMiddleware = exports.formatPattern = exports.useRouterHistory = exports.match = exports.routerShape = exports.locationShape = exports.PropTypes = exports.RoutingContext = exports.RouterContext = exports.createRoutes = exports.useRoutes = exports.RouteContext = exports.Lifecycle = exports.History = exports.Route = exports.Redirect = exports.IndexRoute = exports.IndexRedirect = exports.withRouter = exports.IndexLink = exports.Link = exports.Router = undefined;
 	
-	var _RouteUtils = __webpack_require__(216);
+	var _RouteUtils = __webpack_require__(227);
 	
 	Object.defineProperty(exports, 'createRoutes', {
 	  enumerable: true,
@@ -25291,7 +25290,7 @@
 	  }
 	});
 	
-	var _PropTypes2 = __webpack_require__(217);
+	var _PropTypes2 = __webpack_require__(228);
 	
 	Object.defineProperty(exports, 'locationShape', {
 	  enumerable: true,
@@ -25306,7 +25305,7 @@
 	  }
 	});
 	
-	var _PatternUtils = __webpack_require__(222);
+	var _PatternUtils = __webpack_require__(233);
 	
 	Object.defineProperty(exports, 'formatPattern', {
 	  enumerable: true,
@@ -25315,85 +25314,85 @@
 	  }
 	});
 	
-	var _Router2 = __webpack_require__(224);
+	var _Router2 = __webpack_require__(235);
 	
 	var _Router3 = _interopRequireDefault(_Router2);
 	
-	var _Link2 = __webpack_require__(255);
+	var _Link2 = __webpack_require__(266);
 	
 	var _Link3 = _interopRequireDefault(_Link2);
 	
-	var _IndexLink2 = __webpack_require__(256);
+	var _IndexLink2 = __webpack_require__(267);
 	
 	var _IndexLink3 = _interopRequireDefault(_IndexLink2);
 	
-	var _withRouter2 = __webpack_require__(257);
+	var _withRouter2 = __webpack_require__(268);
 	
 	var _withRouter3 = _interopRequireDefault(_withRouter2);
 	
-	var _IndexRedirect2 = __webpack_require__(259);
+	var _IndexRedirect2 = __webpack_require__(270);
 	
 	var _IndexRedirect3 = _interopRequireDefault(_IndexRedirect2);
 	
-	var _IndexRoute2 = __webpack_require__(261);
+	var _IndexRoute2 = __webpack_require__(272);
 	
 	var _IndexRoute3 = _interopRequireDefault(_IndexRoute2);
 	
-	var _Redirect2 = __webpack_require__(260);
+	var _Redirect2 = __webpack_require__(271);
 	
 	var _Redirect3 = _interopRequireDefault(_Redirect2);
 	
-	var _Route2 = __webpack_require__(262);
+	var _Route2 = __webpack_require__(273);
 	
 	var _Route3 = _interopRequireDefault(_Route2);
 	
-	var _History2 = __webpack_require__(263);
+	var _History2 = __webpack_require__(274);
 	
 	var _History3 = _interopRequireDefault(_History2);
 	
-	var _Lifecycle2 = __webpack_require__(264);
+	var _Lifecycle2 = __webpack_require__(275);
 	
 	var _Lifecycle3 = _interopRequireDefault(_Lifecycle2);
 	
-	var _RouteContext2 = __webpack_require__(265);
+	var _RouteContext2 = __webpack_require__(276);
 	
 	var _RouteContext3 = _interopRequireDefault(_RouteContext2);
 	
-	var _useRoutes2 = __webpack_require__(266);
+	var _useRoutes2 = __webpack_require__(277);
 	
 	var _useRoutes3 = _interopRequireDefault(_useRoutes2);
 	
-	var _RouterContext2 = __webpack_require__(252);
+	var _RouterContext2 = __webpack_require__(263);
 	
 	var _RouterContext3 = _interopRequireDefault(_RouterContext2);
 	
-	var _RoutingContext2 = __webpack_require__(267);
+	var _RoutingContext2 = __webpack_require__(278);
 	
 	var _RoutingContext3 = _interopRequireDefault(_RoutingContext2);
 	
 	var _PropTypes3 = _interopRequireDefault(_PropTypes2);
 	
-	var _match2 = __webpack_require__(268);
+	var _match2 = __webpack_require__(279);
 	
 	var _match3 = _interopRequireDefault(_match2);
 	
-	var _useRouterHistory2 = __webpack_require__(272);
+	var _useRouterHistory2 = __webpack_require__(283);
 	
 	var _useRouterHistory3 = _interopRequireDefault(_useRouterHistory2);
 	
-	var _applyRouterMiddleware2 = __webpack_require__(273);
+	var _applyRouterMiddleware2 = __webpack_require__(284);
 	
 	var _applyRouterMiddleware3 = _interopRequireDefault(_applyRouterMiddleware2);
 	
-	var _browserHistory2 = __webpack_require__(274);
+	var _browserHistory2 = __webpack_require__(285);
 	
 	var _browserHistory3 = _interopRequireDefault(_browserHistory2);
 	
-	var _hashHistory2 = __webpack_require__(277);
+	var _hashHistory2 = __webpack_require__(288);
 	
 	var _hashHistory3 = _interopRequireDefault(_hashHistory2);
 	
-	var _createMemoryHistory2 = __webpack_require__(269);
+	var _createMemoryHistory2 = __webpack_require__(280);
 	
 	var _createMemoryHistory3 = _interopRequireDefault(_createMemoryHistory2);
 	
@@ -25435,7 +25434,7 @@
 	exports.createMemoryHistory = _createMemoryHistory3.default;
 
 /***/ },
-/* 216 */
+/* 227 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -25533,7 +25532,7 @@
 	}
 
 /***/ },
-/* 217 */
+/* 228 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -25543,15 +25542,15 @@
 	
 	var _react = __webpack_require__(1);
 	
-	var _deprecateObjectProperties = __webpack_require__(218);
+	var _deprecateObjectProperties = __webpack_require__(229);
 	
 	var _deprecateObjectProperties2 = _interopRequireDefault(_deprecateObjectProperties);
 	
-	var _InternalPropTypes = __webpack_require__(221);
+	var _InternalPropTypes = __webpack_require__(232);
 	
 	var InternalPropTypes = _interopRequireWildcard(_InternalPropTypes);
 	
-	var _routerWarning = __webpack_require__(219);
+	var _routerWarning = __webpack_require__(230);
 	
 	var _routerWarning2 = _interopRequireDefault(_routerWarning);
 	
@@ -25640,7 +25639,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 218 */
+/* 229 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -25648,7 +25647,7 @@
 	exports.__esModule = true;
 	exports.canUseMembrane = undefined;
 	
-	var _routerWarning = __webpack_require__(219);
+	var _routerWarning = __webpack_require__(230);
 	
 	var _routerWarning2 = _interopRequireDefault(_routerWarning);
 	
@@ -25721,7 +25720,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 219 */
+/* 230 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -25730,7 +25729,7 @@
 	exports.default = routerWarning;
 	exports._resetWarned = _resetWarned;
 	
-	var _warning = __webpack_require__(220);
+	var _warning = __webpack_require__(231);
 	
 	var _warning2 = _interopRequireDefault(_warning);
 	
@@ -25762,7 +25761,7 @@
 	}
 
 /***/ },
-/* 220 */
+/* 231 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -25829,7 +25828,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 221 */
+/* 232 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -25866,7 +25865,7 @@
 	var routes = exports.routes = oneOfType([route, arrayOf(route)]);
 
 /***/ },
-/* 222 */
+/* 233 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -25878,7 +25877,7 @@
 	exports.getParams = getParams;
 	exports.formatPattern = formatPattern;
 	
-	var _invariant = __webpack_require__(223);
+	var _invariant = __webpack_require__(234);
 	
 	var _invariant2 = _interopRequireDefault(_invariant);
 	
@@ -26084,7 +26083,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 223 */
+/* 234 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -26142,7 +26141,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 224 */
+/* 235 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -26151,15 +26150,15 @@
 	
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 	
-	var _createHashHistory = __webpack_require__(225);
+	var _createHashHistory = __webpack_require__(236);
 	
 	var _createHashHistory2 = _interopRequireDefault(_createHashHistory);
 	
-	var _useQueries = __webpack_require__(241);
+	var _useQueries = __webpack_require__(252);
 	
 	var _useQueries2 = _interopRequireDefault(_useQueries);
 	
-	var _invariant = __webpack_require__(223);
+	var _invariant = __webpack_require__(234);
 	
 	var _invariant2 = _interopRequireDefault(_invariant);
 	
@@ -26167,21 +26166,21 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _createTransitionManager = __webpack_require__(244);
+	var _createTransitionManager = __webpack_require__(255);
 	
 	var _createTransitionManager2 = _interopRequireDefault(_createTransitionManager);
 	
-	var _InternalPropTypes = __webpack_require__(221);
+	var _InternalPropTypes = __webpack_require__(232);
 	
-	var _RouterContext = __webpack_require__(252);
+	var _RouterContext = __webpack_require__(263);
 	
 	var _RouterContext2 = _interopRequireDefault(_RouterContext);
 	
-	var _RouteUtils = __webpack_require__(216);
+	var _RouteUtils = __webpack_require__(227);
 	
-	var _RouterUtils = __webpack_require__(254);
+	var _RouterUtils = __webpack_require__(265);
 	
-	var _routerWarning = __webpack_require__(219);
+	var _routerWarning = __webpack_require__(230);
 	
 	var _routerWarning2 = _interopRequireDefault(_routerWarning);
 	
@@ -26372,7 +26371,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 225 */
+/* 236 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -26383,25 +26382,25 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
-	var _warning = __webpack_require__(226);
+	var _warning = __webpack_require__(237);
 	
 	var _warning2 = _interopRequireDefault(_warning);
 	
-	var _invariant = __webpack_require__(223);
+	var _invariant = __webpack_require__(234);
 	
 	var _invariant2 = _interopRequireDefault(_invariant);
 	
-	var _Actions = __webpack_require__(227);
+	var _Actions = __webpack_require__(238);
 	
-	var _PathUtils = __webpack_require__(228);
+	var _PathUtils = __webpack_require__(239);
 	
-	var _ExecutionEnvironment = __webpack_require__(229);
+	var _ExecutionEnvironment = __webpack_require__(240);
 	
-	var _DOMUtils = __webpack_require__(230);
+	var _DOMUtils = __webpack_require__(241);
 	
-	var _DOMStateStorage = __webpack_require__(231);
+	var _DOMStateStorage = __webpack_require__(242);
 	
-	var _createDOMHistory = __webpack_require__(232);
+	var _createDOMHistory = __webpack_require__(243);
 	
 	var _createDOMHistory2 = _interopRequireDefault(_createDOMHistory);
 	
@@ -26624,7 +26623,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 226 */
+/* 237 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -26691,7 +26690,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 227 */
+/* 238 */
 /***/ function(module, exports) {
 
 	/**
@@ -26727,7 +26726,7 @@
 	};
 
 /***/ },
-/* 228 */
+/* 239 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -26738,7 +26737,7 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
-	var _warning = __webpack_require__(226);
+	var _warning = __webpack_require__(237);
 	
 	var _warning2 = _interopRequireDefault(_warning);
 	
@@ -26780,7 +26779,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 229 */
+/* 240 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -26790,7 +26789,7 @@
 	exports.canUseDOM = canUseDOM;
 
 /***/ },
-/* 230 */
+/* 241 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -26870,7 +26869,7 @@
 	}
 
 /***/ },
-/* 231 */
+/* 242 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/*eslint-disable no-empty */
@@ -26882,7 +26881,7 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
-	var _warning = __webpack_require__(226);
+	var _warning = __webpack_require__(237);
 	
 	var _warning2 = _interopRequireDefault(_warning);
 	
@@ -26949,7 +26948,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 232 */
+/* 243 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -26960,15 +26959,15 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
-	var _invariant = __webpack_require__(223);
+	var _invariant = __webpack_require__(234);
 	
 	var _invariant2 = _interopRequireDefault(_invariant);
 	
-	var _ExecutionEnvironment = __webpack_require__(229);
+	var _ExecutionEnvironment = __webpack_require__(240);
 	
-	var _DOMUtils = __webpack_require__(230);
+	var _DOMUtils = __webpack_require__(241);
 	
-	var _createHistory = __webpack_require__(233);
+	var _createHistory = __webpack_require__(244);
 	
 	var _createHistory2 = _interopRequireDefault(_createHistory);
 	
@@ -26995,7 +26994,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 233 */
+/* 244 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -27006,29 +27005,29 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
-	var _warning = __webpack_require__(226);
+	var _warning = __webpack_require__(237);
 	
 	var _warning2 = _interopRequireDefault(_warning);
 	
-	var _deepEqual = __webpack_require__(234);
+	var _deepEqual = __webpack_require__(245);
 	
 	var _deepEqual2 = _interopRequireDefault(_deepEqual);
 	
-	var _PathUtils = __webpack_require__(228);
+	var _PathUtils = __webpack_require__(239);
 	
-	var _AsyncUtils = __webpack_require__(237);
+	var _AsyncUtils = __webpack_require__(248);
 	
-	var _Actions = __webpack_require__(227);
+	var _Actions = __webpack_require__(238);
 	
-	var _createLocation2 = __webpack_require__(238);
+	var _createLocation2 = __webpack_require__(249);
 	
 	var _createLocation3 = _interopRequireDefault(_createLocation2);
 	
-	var _runTransitionHook = __webpack_require__(239);
+	var _runTransitionHook = __webpack_require__(250);
 	
 	var _runTransitionHook2 = _interopRequireDefault(_runTransitionHook);
 	
-	var _deprecate = __webpack_require__(240);
+	var _deprecate = __webpack_require__(251);
 	
 	var _deprecate2 = _interopRequireDefault(_deprecate);
 	
@@ -27289,12 +27288,12 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 234 */
+/* 245 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var pSlice = Array.prototype.slice;
-	var objectKeys = __webpack_require__(235);
-	var isArguments = __webpack_require__(236);
+	var objectKeys = __webpack_require__(246);
+	var isArguments = __webpack_require__(247);
 	
 	var deepEqual = module.exports = function (actual, expected, opts) {
 	  if (!opts) opts = {};
@@ -27389,7 +27388,7 @@
 
 
 /***/ },
-/* 235 */
+/* 246 */
 /***/ function(module, exports) {
 
 	exports = module.exports = typeof Object.keys === 'function'
@@ -27404,7 +27403,7 @@
 
 
 /***/ },
-/* 236 */
+/* 247 */
 /***/ function(module, exports) {
 
 	var supportsArgumentsClass = (function(){
@@ -27430,7 +27429,7 @@
 
 
 /***/ },
-/* 237 */
+/* 248 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -27493,7 +27492,7 @@
 	}
 
 /***/ },
-/* 238 */
+/* 249 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -27504,13 +27503,13 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
-	var _warning = __webpack_require__(226);
+	var _warning = __webpack_require__(237);
 	
 	var _warning2 = _interopRequireDefault(_warning);
 	
-	var _Actions = __webpack_require__(227);
+	var _Actions = __webpack_require__(238);
 	
-	var _PathUtils = __webpack_require__(228);
+	var _PathUtils = __webpack_require__(239);
 	
 	function createLocation() {
 	  var location = arguments.length <= 0 || arguments[0] === undefined ? '/' : arguments[0];
@@ -27550,7 +27549,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 239 */
+/* 250 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -27559,7 +27558,7 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
-	var _warning = __webpack_require__(226);
+	var _warning = __webpack_require__(237);
 	
 	var _warning2 = _interopRequireDefault(_warning);
 	
@@ -27580,7 +27579,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 240 */
+/* 251 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -27589,7 +27588,7 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
-	var _warning = __webpack_require__(226);
+	var _warning = __webpack_require__(237);
 	
 	var _warning2 = _interopRequireDefault(_warning);
 	
@@ -27605,7 +27604,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 241 */
+/* 252 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -27616,19 +27615,19 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
-	var _warning = __webpack_require__(226);
+	var _warning = __webpack_require__(237);
 	
 	var _warning2 = _interopRequireDefault(_warning);
 	
-	var _queryString = __webpack_require__(242);
+	var _queryString = __webpack_require__(253);
 	
-	var _runTransitionHook = __webpack_require__(239);
+	var _runTransitionHook = __webpack_require__(250);
 	
 	var _runTransitionHook2 = _interopRequireDefault(_runTransitionHook);
 	
-	var _PathUtils = __webpack_require__(228);
+	var _PathUtils = __webpack_require__(239);
 	
-	var _deprecate = __webpack_require__(240);
+	var _deprecate = __webpack_require__(251);
 	
 	var _deprecate2 = _interopRequireDefault(_deprecate);
 	
@@ -27787,11 +27786,11 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 242 */
+/* 253 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
-	var strictUriEncode = __webpack_require__(243);
+	var strictUriEncode = __webpack_require__(254);
 	
 	exports.extract = function (str) {
 		return str.split('?')[1] || '';
@@ -27859,7 +27858,7 @@
 
 
 /***/ },
-/* 243 */
+/* 254 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -27871,7 +27870,7 @@
 
 
 /***/ },
-/* 244 */
+/* 255 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -27882,25 +27881,25 @@
 	
 	exports.default = createTransitionManager;
 	
-	var _routerWarning = __webpack_require__(219);
+	var _routerWarning = __webpack_require__(230);
 	
 	var _routerWarning2 = _interopRequireDefault(_routerWarning);
 	
-	var _computeChangedRoutes2 = __webpack_require__(245);
+	var _computeChangedRoutes2 = __webpack_require__(256);
 	
 	var _computeChangedRoutes3 = _interopRequireDefault(_computeChangedRoutes2);
 	
-	var _TransitionUtils = __webpack_require__(246);
+	var _TransitionUtils = __webpack_require__(257);
 	
-	var _isActive2 = __webpack_require__(248);
+	var _isActive2 = __webpack_require__(259);
 	
 	var _isActive3 = _interopRequireDefault(_isActive2);
 	
-	var _getComponents = __webpack_require__(249);
+	var _getComponents = __webpack_require__(260);
 	
 	var _getComponents2 = _interopRequireDefault(_getComponents);
 	
-	var _matchRoutes = __webpack_require__(251);
+	var _matchRoutes = __webpack_require__(262);
 	
 	var _matchRoutes2 = _interopRequireDefault(_matchRoutes);
 	
@@ -28179,14 +28178,14 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 245 */
+/* 256 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	exports.__esModule = true;
 	
-	var _PatternUtils = __webpack_require__(222);
+	var _PatternUtils = __webpack_require__(233);
 	
 	function routeParamsChanged(route, prevState, nextState) {
 	  if (!route.path) return false;
@@ -28261,7 +28260,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 246 */
+/* 257 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -28271,9 +28270,9 @@
 	exports.runChangeHooks = runChangeHooks;
 	exports.runLeaveHooks = runLeaveHooks;
 	
-	var _AsyncUtils = __webpack_require__(247);
+	var _AsyncUtils = __webpack_require__(258);
 	
-	var _routerWarning = __webpack_require__(219);
+	var _routerWarning = __webpack_require__(230);
 	
 	var _routerWarning2 = _interopRequireDefault(_routerWarning);
 	
@@ -28389,7 +28388,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 247 */
+/* 258 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -28482,7 +28481,7 @@
 	}
 
 /***/ },
-/* 248 */
+/* 259 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28493,7 +28492,7 @@
 	
 	exports.default = isActive;
 	
-	var _PatternUtils = __webpack_require__(222);
+	var _PatternUtils = __webpack_require__(233);
 	
 	function deepEqual(a, b) {
 	  if (a == b) return true;
@@ -28639,16 +28638,16 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 249 */
+/* 260 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	exports.__esModule = true;
 	
-	var _AsyncUtils = __webpack_require__(247);
+	var _AsyncUtils = __webpack_require__(258);
 	
-	var _makeStateWithLocation = __webpack_require__(250);
+	var _makeStateWithLocation = __webpack_require__(261);
 	
 	var _makeStateWithLocation2 = _interopRequireDefault(_makeStateWithLocation);
 	
@@ -28690,7 +28689,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 250 */
+/* 261 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -28701,9 +28700,9 @@
 	
 	exports.default = makeStateWithLocation;
 	
-	var _deprecateObjectProperties = __webpack_require__(218);
+	var _deprecateObjectProperties = __webpack_require__(229);
 	
-	var _routerWarning = __webpack_require__(219);
+	var _routerWarning = __webpack_require__(230);
 	
 	var _routerWarning2 = _interopRequireDefault(_routerWarning);
 	
@@ -28745,7 +28744,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 251 */
+/* 262 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -28758,19 +28757,19 @@
 	
 	exports.default = matchRoutes;
 	
-	var _AsyncUtils = __webpack_require__(247);
+	var _AsyncUtils = __webpack_require__(258);
 	
-	var _makeStateWithLocation = __webpack_require__(250);
+	var _makeStateWithLocation = __webpack_require__(261);
 	
 	var _makeStateWithLocation2 = _interopRequireDefault(_makeStateWithLocation);
 	
-	var _PatternUtils = __webpack_require__(222);
+	var _PatternUtils = __webpack_require__(233);
 	
-	var _routerWarning = __webpack_require__(219);
+	var _routerWarning = __webpack_require__(230);
 	
 	var _routerWarning2 = _interopRequireDefault(_routerWarning);
 	
-	var _RouteUtils = __webpack_require__(216);
+	var _RouteUtils = __webpack_require__(227);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -29002,7 +29001,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 252 */
+/* 263 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -29013,7 +29012,7 @@
 	
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 	
-	var _invariant = __webpack_require__(223);
+	var _invariant = __webpack_require__(234);
 	
 	var _invariant2 = _interopRequireDefault(_invariant);
 	
@@ -29021,17 +29020,17 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _deprecateObjectProperties = __webpack_require__(218);
+	var _deprecateObjectProperties = __webpack_require__(229);
 	
 	var _deprecateObjectProperties2 = _interopRequireDefault(_deprecateObjectProperties);
 	
-	var _getRouteParams = __webpack_require__(253);
+	var _getRouteParams = __webpack_require__(264);
 	
 	var _getRouteParams2 = _interopRequireDefault(_getRouteParams);
 	
-	var _RouteUtils = __webpack_require__(216);
+	var _RouteUtils = __webpack_require__(227);
 	
-	var _routerWarning = __webpack_require__(219);
+	var _routerWarning = __webpack_require__(230);
 	
 	var _routerWarning2 = _interopRequireDefault(_routerWarning);
 	
@@ -29164,14 +29163,14 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 253 */
+/* 264 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	exports.__esModule = true;
 	
-	var _PatternUtils = __webpack_require__(222);
+	var _PatternUtils = __webpack_require__(233);
 	
 	/**
 	 * Extracts an object of params the given route cares about from
@@ -29195,7 +29194,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 254 */
+/* 265 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -29207,7 +29206,7 @@
 	exports.createRouterObject = createRouterObject;
 	exports.createRoutingHistory = createRoutingHistory;
 	
-	var _deprecateObjectProperties = __webpack_require__(218);
+	var _deprecateObjectProperties = __webpack_require__(229);
 	
 	var _deprecateObjectProperties2 = _interopRequireDefault(_deprecateObjectProperties);
 	
@@ -29233,7 +29232,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 255 */
+/* 266 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -29246,15 +29245,15 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _routerWarning = __webpack_require__(219);
+	var _routerWarning = __webpack_require__(230);
 	
 	var _routerWarning2 = _interopRequireDefault(_routerWarning);
 	
-	var _invariant = __webpack_require__(223);
+	var _invariant = __webpack_require__(234);
 	
 	var _invariant2 = _interopRequireDefault(_invariant);
 	
-	var _PropTypes = __webpack_require__(217);
+	var _PropTypes = __webpack_require__(228);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -29415,7 +29414,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 256 */
+/* 267 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -29428,7 +29427,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _Link = __webpack_require__(255);
+	var _Link = __webpack_require__(266);
 	
 	var _Link2 = _interopRequireDefault(_Link);
 	
@@ -29448,7 +29447,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 257 */
+/* 268 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -29459,7 +29458,7 @@
 	
 	exports.default = withRouter;
 	
-	var _invariant = __webpack_require__(223);
+	var _invariant = __webpack_require__(234);
 	
 	var _invariant2 = _interopRequireDefault(_invariant);
 	
@@ -29467,11 +29466,11 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _hoistNonReactStatics = __webpack_require__(258);
+	var _hoistNonReactStatics = __webpack_require__(269);
 	
 	var _hoistNonReactStatics2 = _interopRequireDefault(_hoistNonReactStatics);
 	
-	var _PropTypes = __webpack_require__(217);
+	var _PropTypes = __webpack_require__(228);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -29518,7 +29517,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 258 */
+/* 269 */
 /***/ function(module, exports) {
 
 	/**
@@ -29574,7 +29573,7 @@
 
 
 /***/ },
-/* 259 */
+/* 270 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -29585,19 +29584,19 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _routerWarning = __webpack_require__(219);
+	var _routerWarning = __webpack_require__(230);
 	
 	var _routerWarning2 = _interopRequireDefault(_routerWarning);
 	
-	var _invariant = __webpack_require__(223);
+	var _invariant = __webpack_require__(234);
 	
 	var _invariant2 = _interopRequireDefault(_invariant);
 	
-	var _Redirect = __webpack_require__(260);
+	var _Redirect = __webpack_require__(271);
 	
 	var _Redirect2 = _interopRequireDefault(_Redirect);
 	
-	var _InternalPropTypes = __webpack_require__(221);
+	var _InternalPropTypes = __webpack_require__(232);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -29643,7 +29642,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 260 */
+/* 271 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -29654,15 +29653,15 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _invariant = __webpack_require__(223);
+	var _invariant = __webpack_require__(234);
 	
 	var _invariant2 = _interopRequireDefault(_invariant);
 	
-	var _RouteUtils = __webpack_require__(216);
+	var _RouteUtils = __webpack_require__(227);
 	
-	var _PatternUtils = __webpack_require__(222);
+	var _PatternUtils = __webpack_require__(233);
 	
-	var _InternalPropTypes = __webpack_require__(221);
+	var _InternalPropTypes = __webpack_require__(232);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -29751,7 +29750,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 261 */
+/* 272 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -29762,17 +29761,17 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _routerWarning = __webpack_require__(219);
+	var _routerWarning = __webpack_require__(230);
 	
 	var _routerWarning2 = _interopRequireDefault(_routerWarning);
 	
-	var _invariant = __webpack_require__(223);
+	var _invariant = __webpack_require__(234);
 	
 	var _invariant2 = _interopRequireDefault(_invariant);
 	
-	var _RouteUtils = __webpack_require__(216);
+	var _RouteUtils = __webpack_require__(227);
 	
-	var _InternalPropTypes = __webpack_require__(221);
+	var _InternalPropTypes = __webpack_require__(232);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -29817,7 +29816,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 262 */
+/* 273 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -29828,13 +29827,13 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _invariant = __webpack_require__(223);
+	var _invariant = __webpack_require__(234);
 	
 	var _invariant2 = _interopRequireDefault(_invariant);
 	
-	var _RouteUtils = __webpack_require__(216);
+	var _RouteUtils = __webpack_require__(227);
 	
-	var _InternalPropTypes = __webpack_require__(221);
+	var _InternalPropTypes = __webpack_require__(232);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -29880,18 +29879,18 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 263 */
+/* 274 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
 	
 	exports.__esModule = true;
 	
-	var _routerWarning = __webpack_require__(219);
+	var _routerWarning = __webpack_require__(230);
 	
 	var _routerWarning2 = _interopRequireDefault(_routerWarning);
 	
-	var _InternalPropTypes = __webpack_require__(221);
+	var _InternalPropTypes = __webpack_require__(232);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -29915,14 +29914,14 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 264 */
+/* 275 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
 	
 	exports.__esModule = true;
 	
-	var _routerWarning = __webpack_require__(219);
+	var _routerWarning = __webpack_require__(230);
 	
 	var _routerWarning2 = _interopRequireDefault(_routerWarning);
 	
@@ -29930,7 +29929,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _invariant = __webpack_require__(223);
+	var _invariant = __webpack_require__(234);
 	
 	var _invariant2 = _interopRequireDefault(_invariant);
 	
@@ -29989,14 +29988,14 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 265 */
+/* 276 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
 	
 	exports.__esModule = true;
 	
-	var _routerWarning = __webpack_require__(219);
+	var _routerWarning = __webpack_require__(230);
 	
 	var _routerWarning2 = _interopRequireDefault(_routerWarning);
 	
@@ -30040,7 +30039,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 266 */
+/* 277 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -30049,15 +30048,15 @@
 	
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 	
-	var _useQueries = __webpack_require__(241);
+	var _useQueries = __webpack_require__(252);
 	
 	var _useQueries2 = _interopRequireDefault(_useQueries);
 	
-	var _createTransitionManager = __webpack_require__(244);
+	var _createTransitionManager = __webpack_require__(255);
 	
 	var _createTransitionManager2 = _interopRequireDefault(_createTransitionManager);
 	
-	var _routerWarning = __webpack_require__(219);
+	var _routerWarning = __webpack_require__(230);
 	
 	var _routerWarning2 = _interopRequireDefault(_routerWarning);
 	
@@ -30097,7 +30096,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 267 */
+/* 278 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -30108,11 +30107,11 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _RouterContext = __webpack_require__(252);
+	var _RouterContext = __webpack_require__(263);
 	
 	var _RouterContext2 = _interopRequireDefault(_RouterContext);
 	
-	var _routerWarning = __webpack_require__(219);
+	var _routerWarning = __webpack_require__(230);
 	
 	var _routerWarning2 = _interopRequireDefault(_routerWarning);
 	
@@ -30133,7 +30132,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 268 */
+/* 279 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -30142,23 +30141,23 @@
 	
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 	
-	var _Actions = __webpack_require__(227);
+	var _Actions = __webpack_require__(238);
 	
-	var _invariant = __webpack_require__(223);
+	var _invariant = __webpack_require__(234);
 	
 	var _invariant2 = _interopRequireDefault(_invariant);
 	
-	var _createMemoryHistory = __webpack_require__(269);
+	var _createMemoryHistory = __webpack_require__(280);
 	
 	var _createMemoryHistory2 = _interopRequireDefault(_createMemoryHistory);
 	
-	var _createTransitionManager = __webpack_require__(244);
+	var _createTransitionManager = __webpack_require__(255);
 	
 	var _createTransitionManager2 = _interopRequireDefault(_createTransitionManager);
 	
-	var _RouteUtils = __webpack_require__(216);
+	var _RouteUtils = __webpack_require__(227);
 	
-	var _RouterUtils = __webpack_require__(254);
+	var _RouterUtils = __webpack_require__(265);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -30222,7 +30221,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 269 */
+/* 280 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -30230,15 +30229,15 @@
 	exports.__esModule = true;
 	exports.default = createMemoryHistory;
 	
-	var _useQueries = __webpack_require__(241);
+	var _useQueries = __webpack_require__(252);
 	
 	var _useQueries2 = _interopRequireDefault(_useQueries);
 	
-	var _useBasename = __webpack_require__(270);
+	var _useBasename = __webpack_require__(281);
 	
 	var _useBasename2 = _interopRequireDefault(_useBasename);
 	
-	var _createMemoryHistory = __webpack_require__(271);
+	var _createMemoryHistory = __webpack_require__(282);
 	
 	var _createMemoryHistory2 = _interopRequireDefault(_createMemoryHistory);
 	
@@ -30259,7 +30258,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 270 */
+/* 281 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -30270,19 +30269,19 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
-	var _warning = __webpack_require__(226);
+	var _warning = __webpack_require__(237);
 	
 	var _warning2 = _interopRequireDefault(_warning);
 	
-	var _ExecutionEnvironment = __webpack_require__(229);
+	var _ExecutionEnvironment = __webpack_require__(240);
 	
-	var _PathUtils = __webpack_require__(228);
+	var _PathUtils = __webpack_require__(239);
 	
-	var _runTransitionHook = __webpack_require__(239);
+	var _runTransitionHook = __webpack_require__(250);
 	
 	var _runTransitionHook2 = _interopRequireDefault(_runTransitionHook);
 	
-	var _deprecate = __webpack_require__(240);
+	var _deprecate = __webpack_require__(251);
 	
 	var _deprecate2 = _interopRequireDefault(_deprecate);
 	
@@ -30423,7 +30422,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 271 */
+/* 282 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -30434,19 +30433,19 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
-	var _warning = __webpack_require__(226);
+	var _warning = __webpack_require__(237);
 	
 	var _warning2 = _interopRequireDefault(_warning);
 	
-	var _invariant = __webpack_require__(223);
+	var _invariant = __webpack_require__(234);
 	
 	var _invariant2 = _interopRequireDefault(_invariant);
 	
-	var _PathUtils = __webpack_require__(228);
+	var _PathUtils = __webpack_require__(239);
 	
-	var _Actions = __webpack_require__(227);
+	var _Actions = __webpack_require__(238);
 	
-	var _createHistory = __webpack_require__(233);
+	var _createHistory = __webpack_require__(244);
 	
 	var _createHistory2 = _interopRequireDefault(_createHistory);
 	
@@ -30583,7 +30582,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 272 */
+/* 283 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -30591,11 +30590,11 @@
 	exports.__esModule = true;
 	exports.default = useRouterHistory;
 	
-	var _useQueries = __webpack_require__(241);
+	var _useQueries = __webpack_require__(252);
 	
 	var _useQueries2 = _interopRequireDefault(_useQueries);
 	
-	var _useBasename = __webpack_require__(270);
+	var _useBasename = __webpack_require__(281);
 	
 	var _useBasename2 = _interopRequireDefault(_useBasename);
 	
@@ -30611,7 +30610,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 273 */
+/* 284 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -30624,11 +30623,11 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _RouterContext = __webpack_require__(252);
+	var _RouterContext = __webpack_require__(263);
 	
 	var _RouterContext2 = _interopRequireDefault(_RouterContext);
 	
-	var _routerWarning = __webpack_require__(219);
+	var _routerWarning = __webpack_require__(230);
 	
 	var _routerWarning2 = _interopRequireDefault(_routerWarning);
 	
@@ -30674,18 +30673,18 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 274 */
+/* 285 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	exports.__esModule = true;
 	
-	var _createBrowserHistory = __webpack_require__(275);
+	var _createBrowserHistory = __webpack_require__(286);
 	
 	var _createBrowserHistory2 = _interopRequireDefault(_createBrowserHistory);
 	
-	var _createRouterHistory = __webpack_require__(276);
+	var _createRouterHistory = __webpack_require__(287);
 	
 	var _createRouterHistory2 = _interopRequireDefault(_createRouterHistory);
 	
@@ -30695,7 +30694,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 275 */
+/* 286 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -30706,21 +30705,21 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
-	var _invariant = __webpack_require__(223);
+	var _invariant = __webpack_require__(234);
 	
 	var _invariant2 = _interopRequireDefault(_invariant);
 	
-	var _Actions = __webpack_require__(227);
+	var _Actions = __webpack_require__(238);
 	
-	var _PathUtils = __webpack_require__(228);
+	var _PathUtils = __webpack_require__(239);
 	
-	var _ExecutionEnvironment = __webpack_require__(229);
+	var _ExecutionEnvironment = __webpack_require__(240);
 	
-	var _DOMUtils = __webpack_require__(230);
+	var _DOMUtils = __webpack_require__(241);
 	
-	var _DOMStateStorage = __webpack_require__(231);
+	var _DOMStateStorage = __webpack_require__(242);
 	
-	var _createDOMHistory = __webpack_require__(232);
+	var _createDOMHistory = __webpack_require__(243);
 	
 	var _createDOMHistory2 = _interopRequireDefault(_createDOMHistory);
 	
@@ -30881,7 +30880,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 276 */
+/* 287 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -30894,7 +30893,7 @@
 	  return history;
 	};
 	
-	var _useRouterHistory = __webpack_require__(272);
+	var _useRouterHistory = __webpack_require__(283);
 	
 	var _useRouterHistory2 = _interopRequireDefault(_useRouterHistory);
 	
@@ -30905,18 +30904,18 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 277 */
+/* 288 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	exports.__esModule = true;
 	
-	var _createHashHistory = __webpack_require__(225);
+	var _createHashHistory = __webpack_require__(236);
 	
 	var _createHashHistory2 = _interopRequireDefault(_createHashHistory);
 	
-	var _createRouterHistory = __webpack_require__(276);
+	var _createRouterHistory = __webpack_require__(287);
 	
 	var _createRouterHistory2 = _interopRequireDefault(_createRouterHistory);
 	
@@ -30926,7 +30925,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 278 */
+/* 289 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -30934,7 +30933,7 @@
 	var React = __webpack_require__(1),
 	    connect = __webpack_require__(172).connect,
 	    userActions = __webpack_require__(203),
-	    Link = __webpack_require__(215).Link;
+	    Link = __webpack_require__(226).Link;
 	
 	var mainPage = React.createClass({
 		displayName: 'mainPage',
@@ -31016,7 +31015,7 @@
 	module.exports = Container;
 
 /***/ },
-/* 279 */
+/* 290 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -31055,7 +31054,7 @@
 	module.exports = Container;
 
 /***/ },
-/* 280 */
+/* 291 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -31098,7 +31097,7 @@
 	module.exports = Container;
 
 /***/ },
-/* 281 */
+/* 292 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -31106,7 +31105,7 @@
 	var React = __webpack_require__(1),
 	    connect = __webpack_require__(172).connect,
 	    userActions = __webpack_require__(203),
-	    Link = __webpack_require__(215).Link;
+	    Link = __webpack_require__(226).Link;
 	
 	var mainPage = React.createClass({
 		displayName: 'mainPage',
@@ -31225,22 +31224,24 @@
 	module.exports = Container;
 
 /***/ },
-/* 282 */
+/* 293 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(1),
 	    connect = __webpack_require__(172).connect,
-	    characterActions = __webpack_require__(207),
-	    Nav = __webpack_require__(214),
-	    CharacterName = __webpack_require__(283),
-	    CreateCharacter = __webpack_require__(284);
+	    userActions = __webpack_require__(203),
+	    characterActions = __webpack_require__(209),
+	    Nav = __webpack_require__(225),
+	    CharacterName = __webpack_require__(294),
+	    CreateCharacter = __webpack_require__(295);
 	
 	var mainPage = React.createClass({
 		displayName: 'mainPage',
 	
 		componentDidMount: function componentDidMount() {
+			this.props.dispatch(userActions.getUserName(this.props.history));
 			this.props.dispatch(characterActions.getListOfCharacters());
 		},
 		render: function render() {
@@ -31289,14 +31290,14 @@
 	module.exports = Container;
 
 /***/ },
-/* 283 */
+/* 294 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(1),
 	    connect = __webpack_require__(172).connect,
-	    characterActions = __webpack_require__(207);
+	    characterActions = __webpack_require__(209);
 	
 	var characterName = React.createClass({
 	    displayName: 'characterName',
@@ -31326,14 +31327,14 @@
 	module.exports = Container;
 
 /***/ },
-/* 284 */
+/* 295 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(1),
 	    connect = __webpack_require__(172).connect,
-	    characterActions = __webpack_require__(207);
+	    characterActions = __webpack_require__(209);
 	
 	var character = React.createClass({
 		displayName: 'character',
@@ -31384,17 +31385,24 @@
 	module.exports = Container;
 
 /***/ },
-/* 285 */
+/* 296 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(1),
 	    connect = __webpack_require__(172).connect,
-	    characterActions = __webpack_require__(207),
-	    Nav = __webpack_require__(214),
-	    FeatContainer = __webpack_require__(286),
-	    AcitemContainer = __webpack_require__(289);
+	    characterActions = __webpack_require__(209),
+	    Nav = __webpack_require__(225),
+	    interactiveContainer = __webpack_require__(297),
+	    interactives = __webpack_require__(212),
+	    AcitemContainer = __webpack_require__(297)(interactives.ACITEM),
+	    FeatContainer = __webpack_require__(297)(interactives.FEAT),
+	    FeatureContainer = __webpack_require__(297)(interactives.FEATURE),
+	    GearContainer = __webpack_require__(297)(interactives.GEAR),
+	    SkillContainer = __webpack_require__(297)(interactives.SKILL),
+	    SpellContainer = __webpack_require__(297)(interactives.SPELL),
+	    WeaponContainer = __webpack_require__(297)(interactives.WEAPON);
 	
 	var character = React.createClass({
 		displayName: 'character',
@@ -31406,7 +31414,7 @@
 		},
 		componentDidMount: function componentDidMount() {
 			if (this.props.params._characterId) {
-				this.props.dispatch(characterActions.getCharacter(this.props.params._characterId));
+				this.props.dispatch(characterActions.getCharacter(this.props.params._characterId, this.props.history));
 			}
 		},
 		editField: function editField(that) {
@@ -31466,73 +31474,73 @@
 							null,
 							'ability_score_str:'
 						),
-						React.createElement('input', { type: 'text', name: 'ability_score_str', onChange: this.editField, value: this.state.ability_score_str }),
+						React.createElement('input', { type: 'number', name: 'ability_score_str', onChange: this.editField, value: this.state.ability_score_str }),
 						React.createElement(
 							'label',
 							null,
 							'ability_score_dex:'
 						),
-						React.createElement('input', { type: 'text', name: 'ability_score_dex', onChange: this.editField, value: this.state.ability_score_dex }),
+						React.createElement('input', { type: 'number', name: 'ability_score_dex', onChange: this.editField, value: this.state.ability_score_dex }),
 						React.createElement(
 							'label',
 							null,
 							'ability_score_con:'
 						),
-						React.createElement('input', { type: 'text', name: 'ability_score_con', onChange: this.editField, value: this.state.ability_score_con }),
+						React.createElement('input', { type: 'number', name: 'ability_score_con', onChange: this.editField, value: this.state.ability_score_con }),
 						React.createElement(
 							'label',
 							null,
 							'ability_score_int:'
 						),
-						React.createElement('input', { type: 'text', name: 'ability_score_int', onChange: this.editField, value: this.state.ability_score_int }),
+						React.createElement('input', { type: 'number', name: 'ability_score_int', onChange: this.editField, value: this.state.ability_score_int }),
 						React.createElement(
 							'label',
 							null,
 							'ability_score_wis:'
 						),
-						React.createElement('input', { type: 'text', name: 'ability_score_wis', onChange: this.editField, value: this.state.ability_score_wis }),
+						React.createElement('input', { type: 'number', name: 'ability_score_wis', onChange: this.editField, value: this.state.ability_score_wis }),
 						React.createElement(
 							'label',
 							null,
 							'ability_score_cha:'
 						),
-						React.createElement('input', { type: 'text', name: 'ability_score_cha', onChange: this.editField, value: this.state.ability_score_cha }),
+						React.createElement('input', { type: 'number', name: 'ability_score_cha', onChange: this.editField, value: this.state.ability_score_cha }),
 						React.createElement(
 							'label',
 							null,
 							'ability_score_str_temp:'
 						),
-						React.createElement('input', { type: 'text', name: 'ability_score_str_temp', onChange: this.editField, value: this.state.ability_score_str_temp }),
+						React.createElement('input', { type: 'number', name: 'ability_score_str_temp', onChange: this.editField, value: this.state.ability_score_str_temp }),
 						React.createElement(
 							'label',
 							null,
 							'ability_score_dex_temp:'
 						),
-						React.createElement('input', { type: 'text', name: 'ability_score_dex_temp', onChange: this.editField, value: this.state.ability_score_dex_temp }),
+						React.createElement('input', { type: 'number', name: 'ability_score_dex_temp', onChange: this.editField, value: this.state.ability_score_dex_temp }),
 						React.createElement(
 							'label',
 							null,
 							'ability_score_con_temp:'
 						),
-						React.createElement('input', { type: 'text', name: 'ability_score_con_temp', onChange: this.editField, value: this.state.ability_score_con_temp }),
+						React.createElement('input', { type: 'number', name: 'ability_score_con_temp', onChange: this.editField, value: this.state.ability_score_con_temp }),
 						React.createElement(
 							'label',
 							null,
 							'ability_score_int_temp:'
 						),
-						React.createElement('input', { type: 'text', name: 'ability_score_int_temp', onChange: this.editField, value: this.state.ability_score_int_temp }),
+						React.createElement('input', { type: 'number', name: 'ability_score_int_temp', onChange: this.editField, value: this.state.ability_score_int_temp }),
 						React.createElement(
 							'label',
 							null,
 							'ability_score_wis_temp:'
 						),
-						React.createElement('input', { type: 'text', name: 'ability_score_wis_temp', onChange: this.editField, value: this.state.ability_score_wis_temp }),
+						React.createElement('input', { type: 'number', name: 'ability_score_wis_temp', onChange: this.editField, value: this.state.ability_score_wis_temp }),
 						React.createElement(
 							'label',
 							null,
 							'ability_score_cha_temp:'
 						),
-						React.createElement('input', { type: 'text', name: 'ability_score_cha_temp', onChange: this.editField, value: this.state.ability_score_cha_temp }),
+						React.createElement('input', { type: 'number', name: 'ability_score_cha_temp', onChange: this.editField, value: this.state.ability_score_cha_temp }),
 						React.createElement(
 							'label',
 							null,
@@ -31556,133 +31564,133 @@
 							null,
 							'level:'
 						),
-						React.createElement('input', { type: 'text', name: 'level', onChange: this.editField, value: this.state.level }),
+						React.createElement('input', { type: 'number', name: 'level', onChange: this.editField, value: this.state.level }),
 						React.createElement(
 							'label',
 							null,
 							'base_attack_bonus:'
 						),
-						React.createElement('input', { type: 'text', name: 'base_attack_bonus', onChange: this.editField, value: this.state.base_attack_bonus }),
+						React.createElement('input', { type: 'number', name: 'base_attack_bonus', onChange: this.editField, value: this.state.base_attack_bonus }),
 						React.createElement(
 							'label',
 							null,
 							'hit_points:'
 						),
-						React.createElement('input', { type: 'text', name: 'hit_points', onChange: this.editField, value: this.state.hit_points }),
+						React.createElement('input', { type: 'number', name: 'hit_points', onChange: this.editField, value: this.state.hit_points }),
 						React.createElement(
 							'label',
 							null,
 							'land_speed:'
 						),
-						React.createElement('input', { type: 'text', name: 'land_speed', onChange: this.editField, value: this.state.land_speed }),
+						React.createElement('input', { type: 'number', name: 'land_speed', onChange: this.editField, value: this.state.land_speed }),
 						React.createElement(
 							'label',
 							null,
 							'armor_speed:'
 						),
-						React.createElement('input', { type: 'text', name: 'armor_speed', onChange: this.editField, value: this.state.armor_speed }),
+						React.createElement('input', { type: 'number', name: 'armor_speed', onChange: this.editField, value: this.state.armor_speed }),
 						React.createElement(
 							'label',
 							null,
 							'fly_speed:'
 						),
-						React.createElement('input', { type: 'text', name: 'fly_speed', onChange: this.editField, value: this.state.fly_speed }),
+						React.createElement('input', { type: 'number', name: 'fly_speed', onChange: this.editField, value: this.state.fly_speed }),
 						React.createElement(
 							'label',
 							null,
 							'climb_speed:'
 						),
-						React.createElement('input', { type: 'text', name: 'climb_speed', onChange: this.editField, value: this.state.climb_speed }),
+						React.createElement('input', { type: 'number', name: 'climb_speed', onChange: this.editField, value: this.state.climb_speed }),
 						React.createElement(
 							'label',
 							null,
 							'swim_speed:'
 						),
-						React.createElement('input', { type: 'text', name: 'swim_speed', onChange: this.editField, value: this.state.swim_speed }),
+						React.createElement('input', { type: 'number', name: 'swim_speed', onChange: this.editField, value: this.state.swim_speed }),
 						React.createElement(
 							'label',
 							null,
 							'borrow_speed:'
 						),
-						React.createElement('input', { type: 'text', name: 'borrow_speed', onChange: this.editField, value: this.state.borrow_speed }),
+						React.createElement('input', { type: 'number', name: 'borrow_speed', onChange: this.editField, value: this.state.borrow_speed }),
 						React.createElement(
 							'label',
 							null,
 							'fort_base_save:'
 						),
-						React.createElement('input', { type: 'text', name: 'fort_base_save', onChange: this.editField, value: this.state.fort_base_save }),
+						React.createElement('input', { type: 'number', name: 'fort_base_save', onChange: this.editField, value: this.state.fort_base_save }),
 						React.createElement(
 							'label',
 							null,
 							'fort_magic_mod:'
 						),
-						React.createElement('input', { type: 'text', name: 'fort_magic_mod', onChange: this.editField, value: this.state.fort_magic_mod }),
+						React.createElement('input', { type: 'number', name: 'fort_magic_mod', onChange: this.editField, value: this.state.fort_magic_mod }),
 						React.createElement(
 							'label',
 							null,
 							'fort_misc_mod:'
 						),
-						React.createElement('input', { type: 'text', name: 'fort_misc_mod', onChange: this.editField, value: this.state.fort_misc_mod }),
+						React.createElement('input', { type: 'number', name: 'fort_misc_mod', onChange: this.editField, value: this.state.fort_misc_mod }),
 						React.createElement(
 							'label',
 							null,
 							'fort_temp_mod:'
 						),
-						React.createElement('input', { type: 'text', name: 'fort_temp_mod', onChange: this.editField, value: this.state.fort_temp_mod }),
+						React.createElement('input', { type: 'number', name: 'fort_temp_mod', onChange: this.editField, value: this.state.fort_temp_mod }),
 						React.createElement(
 							'label',
 							null,
 							'ref_base_save:'
 						),
-						React.createElement('input', { type: 'text', name: 'ref_base_save', onChange: this.editField, value: this.state.ref_base_save }),
+						React.createElement('input', { type: 'number', name: 'ref_base_save', onChange: this.editField, value: this.state.ref_base_save }),
 						React.createElement(
 							'label',
 							null,
 							'ref_magic_mod:'
 						),
-						React.createElement('input', { type: 'text', name: 'ref_magic_mod', onChange: this.editField, value: this.state.ref_magic_mod }),
+						React.createElement('input', { type: 'number', name: 'ref_magic_mod', onChange: this.editField, value: this.state.ref_magic_mod }),
 						React.createElement(
 							'label',
 							null,
 							'ref_misc_mod:'
 						),
-						React.createElement('input', { type: 'text', name: 'ref_misc_mod', onChange: this.editField, value: this.state.ref_misc_mod }),
+						React.createElement('input', { type: 'number', name: 'ref_misc_mod', onChange: this.editField, value: this.state.ref_misc_mod }),
 						React.createElement(
 							'label',
 							null,
 							'ref_temp_mod:'
 						),
-						React.createElement('input', { type: 'text', name: 'ref_temp_mod', onChange: this.editField, value: this.state.ref_temp_mod }),
+						React.createElement('input', { type: 'number', name: 'ref_temp_mod', onChange: this.editField, value: this.state.ref_temp_mod }),
 						React.createElement(
 							'label',
 							null,
 							'will_base_save:'
 						),
-						React.createElement('input', { type: 'text', name: 'will_base_save', onChange: this.editField, value: this.state.will_base_save }),
+						React.createElement('input', { type: 'number', name: 'will_base_save', onChange: this.editField, value: this.state.will_base_save }),
 						React.createElement(
 							'label',
 							null,
 							'will_magic_mod:'
 						),
-						React.createElement('input', { type: 'text', name: 'will_magic_mod', onChange: this.editField, value: this.state.will_magic_mod }),
+						React.createElement('input', { type: 'number', name: 'will_magic_mod', onChange: this.editField, value: this.state.will_magic_mod }),
 						React.createElement(
 							'label',
 							null,
 							'will_misc_mod:'
 						),
-						React.createElement('input', { type: 'text', name: 'will_misc_mod', onChange: this.editField, value: this.state.will_misc_mod }),
+						React.createElement('input', { type: 'number', name: 'will_misc_mod', onChange: this.editField, value: this.state.will_misc_mod }),
 						React.createElement(
 							'label',
 							null,
 							'will_temp_mod:'
 						),
-						React.createElement('input', { type: 'text', name: 'will_temp_mod', onChange: this.editField, value: this.state.will_temp_mod }),
+						React.createElement('input', { type: 'number', name: 'will_temp_mod', onChange: this.editField, value: this.state.will_temp_mod }),
 						React.createElement(
 							'label',
 							null,
 							'init_misc_mod:'
 						),
-						React.createElement('input', { type: 'text', name: 'init_misc_mod', onChange: this.editField, value: this.state.init_misc_mod }),
+						React.createElement('input', { type: 'number', name: 'init_misc_mod', onChange: this.editField, value: this.state.init_misc_mod }),
 						React.createElement(
 							'label',
 							null,
@@ -31712,43 +31720,43 @@
 							null,
 							'size_mod:'
 						),
-						React.createElement('input', { type: 'text', name: 'size_mod', onChange: this.editField, value: this.state.size_mod }),
+						React.createElement('input', { type: 'number', name: 'size_mod', onChange: this.editField, value: this.state.size_mod }),
 						React.createElement(
 							'label',
 							null,
 							'xp_points:'
 						),
-						React.createElement('input', { type: 'text', name: 'xp_points', onChange: this.editField, value: this.state.xp_points }),
+						React.createElement('input', { type: 'number', name: 'xp_points', onChange: this.editField, value: this.state.xp_points }),
 						React.createElement(
 							'label',
 							null,
 							'next_level:'
 						),
-						React.createElement('input', { type: 'text', name: 'next_level', onChange: this.editField, value: this.state.next_level }),
+						React.createElement('input', { type: 'number', name: 'next_level', onChange: this.editField, value: this.state.next_level }),
 						React.createElement(
 							'label',
 							null,
 							'money_cp:'
 						),
-						React.createElement('input', { type: 'text', name: 'money_cp', onChange: this.editField, value: this.state.money_cp }),
+						React.createElement('input', { type: 'number', name: 'money_cp', onChange: this.editField, value: this.state.money_cp }),
 						React.createElement(
 							'label',
 							null,
 							'money_sp:'
 						),
-						React.createElement('input', { type: 'text', name: 'money_sp', onChange: this.editField, value: this.state.money_sp }),
+						React.createElement('input', { type: 'number', name: 'money_sp', onChange: this.editField, value: this.state.money_sp }),
 						React.createElement(
 							'label',
 							null,
 							'money_gp:'
 						),
-						React.createElement('input', { type: 'text', name: 'money_gp', onChange: this.editField, value: this.state.money_gp }),
+						React.createElement('input', { type: 'number', name: 'money_gp', onChange: this.editField, value: this.state.money_gp }),
 						React.createElement(
 							'label',
 							null,
 							'money_pp:'
 						),
-						React.createElement('input', { type: 'text', name: 'money_pp', onChange: this.editField, value: this.state.money_pp }),
+						React.createElement('input', { type: 'number', name: 'money_pp', onChange: this.editField, value: this.state.money_pp }),
 						React.createElement(
 							'label',
 							null,
@@ -31790,7 +31798,7 @@
 							null,
 							'age:'
 						),
-						React.createElement('input', { type: 'text', name: 'age', onChange: this.editField, value: this.state.age }),
+						React.createElement('input', { type: 'number', name: 'age', onChange: this.editField, value: this.state.age }),
 						React.createElement(
 							'label',
 							null,
@@ -31850,244 +31858,249 @@
 							null,
 							'level_0_spell_per_day:'
 						),
-						React.createElement('input', { type: 'text', name: 'level_0_spell_per_day', onChange: this.editField, value: this.state.level_0_spell_per_day }),
+						React.createElement('input', { type: 'number', name: 'level_0_spell_per_day', onChange: this.editField, value: this.state.level_0_spell_per_day }),
 						React.createElement(
 							'label',
 							null,
 							'level_0_bonus_spells:'
 						),
-						React.createElement('input', { type: 'text', name: 'level_0_bonus_spells', onChange: this.editField, value: this.state.level_0_bonus_spells }),
+						React.createElement('input', { type: 'number', name: 'level_0_bonus_spells', onChange: this.editField, value: this.state.level_0_bonus_spells }),
 						React.createElement(
 							'label',
 							null,
 							'level_0_spell_save_dc:'
 						),
-						React.createElement('input', { type: 'text', name: 'level_0_spell_save_dc', onChange: this.editField, value: this.state.level_0_spell_save_dc }),
+						React.createElement('input', { type: 'number', name: 'level_0_spell_save_dc', onChange: this.editField, value: this.state.level_0_spell_save_dc }),
 						React.createElement(
 							'label',
 							null,
 							'level_0_spells_known:'
 						),
-						React.createElement('input', { type: 'text', name: 'level_0_spells_known', onChange: this.editField, value: this.state.level_0_spells_known }),
+						React.createElement('input', { type: 'number', name: 'level_0_spells_known', onChange: this.editField, value: this.state.level_0_spells_known }),
 						React.createElement(
 							'label',
 							null,
 							'level_1_spell_per_day:'
 						),
-						React.createElement('input', { type: 'text', name: 'level_1_spell_per_day', onChange: this.editField, value: this.state.level_1_spell_per_day }),
+						React.createElement('input', { type: 'number', name: 'level_1_spell_per_day', onChange: this.editField, value: this.state.level_1_spell_per_day }),
 						React.createElement(
 							'label',
 							null,
 							'level_1_bonus_spells:'
 						),
-						React.createElement('input', { type: 'text', name: 'level_1_bonus_spells', onChange: this.editField, value: this.state.level_1_bonus_spells }),
+						React.createElement('input', { type: 'number', name: 'level_1_bonus_spells', onChange: this.editField, value: this.state.level_1_bonus_spells }),
 						React.createElement(
 							'label',
 							null,
 							'level_1_spell_save_dc:'
 						),
-						React.createElement('input', { type: 'text', name: 'level_1_spell_save_dc', onChange: this.editField, value: this.state.level_1_spell_save_dc }),
+						React.createElement('input', { type: 'number', name: 'level_1_spell_save_dc', onChange: this.editField, value: this.state.level_1_spell_save_dc }),
 						React.createElement(
 							'label',
 							null,
 							'level_1_spells_known:'
 						),
-						React.createElement('input', { type: 'text', name: 'level_1_spells_known', onChange: this.editField, value: this.state.level_1_spells_known }),
+						React.createElement('input', { type: 'number', name: 'level_1_spells_known', onChange: this.editField, value: this.state.level_1_spells_known }),
 						React.createElement(
 							'label',
 							null,
 							'level_2_spell_per_day:'
 						),
-						React.createElement('input', { type: 'text', name: 'level_2_spell_per_day', onChange: this.editField, value: this.state.level_2_spell_per_day }),
+						React.createElement('input', { type: 'number', name: 'level_2_spell_per_day', onChange: this.editField, value: this.state.level_2_spell_per_day }),
 						React.createElement(
 							'label',
 							null,
 							'level_2_bonus_spells:'
 						),
-						React.createElement('input', { type: 'text', name: 'level_2_bonus_spells', onChange: this.editField, value: this.state.level_2_bonus_spells }),
+						React.createElement('input', { type: 'number', name: 'level_2_bonus_spells', onChange: this.editField, value: this.state.level_2_bonus_spells }),
 						React.createElement(
 							'label',
 							null,
 							'level_2_spell_save_dc:'
 						),
-						React.createElement('input', { type: 'text', name: 'level_2_spell_save_dc', onChange: this.editField, value: this.state.level_2_spell_save_dc }),
+						React.createElement('input', { type: 'number', name: 'level_2_spell_save_dc', onChange: this.editField, value: this.state.level_2_spell_save_dc }),
 						React.createElement(
 							'label',
 							null,
 							'level_2_spells_known:'
 						),
-						React.createElement('input', { type: 'text', name: 'level_2_spells_known', onChange: this.editField, value: this.state.level_2_spells_known }),
+						React.createElement('input', { type: 'number', name: 'level_2_spells_known', onChange: this.editField, value: this.state.level_2_spells_known }),
 						React.createElement(
 							'label',
 							null,
 							'level_3_spell_per_day:'
 						),
-						React.createElement('input', { type: 'text', name: 'level_3_spell_per_day', onChange: this.editField, value: this.state.level_3_spell_per_day }),
+						React.createElement('input', { type: 'number', name: 'level_3_spell_per_day', onChange: this.editField, value: this.state.level_3_spell_per_day }),
 						React.createElement(
 							'label',
 							null,
 							'level_3_bonus_spells:'
 						),
-						React.createElement('input', { type: 'text', name: 'level_3_bonus_spells', onChange: this.editField, value: this.state.level_3_bonus_spells }),
+						React.createElement('input', { type: 'number', name: 'level_3_bonus_spells', onChange: this.editField, value: this.state.level_3_bonus_spells }),
 						React.createElement(
 							'label',
 							null,
 							'level_3_spell_save_dc:'
 						),
-						React.createElement('input', { type: 'text', name: 'level_3_spell_save_dc', onChange: this.editField, value: this.state.level_3_spell_save_dc }),
+						React.createElement('input', { type: 'number', name: 'level_3_spell_save_dc', onChange: this.editField, value: this.state.level_3_spell_save_dc }),
 						React.createElement(
 							'label',
 							null,
 							'level_3_spells_known:'
 						),
-						React.createElement('input', { type: 'text', name: 'level_3_spells_known', onChange: this.editField, value: this.state.level_3_spells_known }),
+						React.createElement('input', { type: 'number', name: 'level_3_spells_known', onChange: this.editField, value: this.state.level_3_spells_known }),
 						React.createElement(
 							'label',
 							null,
 							'level_4_spell_per_day:'
 						),
-						React.createElement('input', { type: 'text', name: 'level_4_spell_per_day', onChange: this.editField, value: this.state.level_4_spell_per_day }),
+						React.createElement('input', { type: 'number', name: 'level_4_spell_per_day', onChange: this.editField, value: this.state.level_4_spell_per_day }),
 						React.createElement(
 							'label',
 							null,
 							'level_4_bonus_spells:'
 						),
-						React.createElement('input', { type: 'text', name: 'level_4_bonus_spells', onChange: this.editField, value: this.state.level_4_bonus_spells }),
+						React.createElement('input', { type: 'number', name: 'level_4_bonus_spells', onChange: this.editField, value: this.state.level_4_bonus_spells }),
 						React.createElement(
 							'label',
 							null,
 							'level_4_spell_save_dc:'
 						),
-						React.createElement('input', { type: 'text', name: 'level_4_spell_save_dc', onChange: this.editField, value: this.state.level_4_spell_save_dc }),
+						React.createElement('input', { type: 'number', name: 'level_4_spell_save_dc', onChange: this.editField, value: this.state.level_4_spell_save_dc }),
 						React.createElement(
 							'label',
 							null,
 							'level_4_spells_known:'
 						),
-						React.createElement('input', { type: 'text', name: 'level_4_spells_known', onChange: this.editField, value: this.state.level_4_spells_known }),
+						React.createElement('input', { type: 'number', name: 'level_4_spells_known', onChange: this.editField, value: this.state.level_4_spells_known }),
 						React.createElement(
 							'label',
 							null,
 							'level_5_spell_per_day:'
 						),
-						React.createElement('input', { type: 'text', name: 'level_5_spell_per_day', onChange: this.editField, value: this.state.level_5_spell_per_day }),
+						React.createElement('input', { type: 'number', name: 'level_5_spell_per_day', onChange: this.editField, value: this.state.level_5_spell_per_day }),
 						React.createElement(
 							'label',
 							null,
 							'level_5_bonus_spells:'
 						),
-						React.createElement('input', { type: 'text', name: 'level_5_bonus_spells', onChange: this.editField, value: this.state.level_5_bonus_spells }),
+						React.createElement('input', { type: 'number', name: 'level_5_bonus_spells', onChange: this.editField, value: this.state.level_5_bonus_spells }),
 						React.createElement(
 							'label',
 							null,
 							'level_5_spell_save_dc:'
 						),
-						React.createElement('input', { type: 'text', name: 'level_5_spell_save_dc', onChange: this.editField, value: this.state.level_5_spell_save_dc }),
+						React.createElement('input', { type: 'number', name: 'level_5_spell_save_dc', onChange: this.editField, value: this.state.level_5_spell_save_dc }),
 						React.createElement(
 							'label',
 							null,
 							'level_5_spells_known:'
 						),
-						React.createElement('input', { type: 'text', name: 'level_5_spells_known', onChange: this.editField, value: this.state.level_5_spells_known }),
+						React.createElement('input', { type: 'number', name: 'level_5_spells_known', onChange: this.editField, value: this.state.level_5_spells_known }),
 						React.createElement(
 							'label',
 							null,
 							'level_6_spell_per_day:'
 						),
-						React.createElement('input', { type: 'text', name: 'level_6_spell_per_day', onChange: this.editField, value: this.state.level_6_spell_per_day }),
+						React.createElement('input', { type: 'number', name: 'level_6_spell_per_day', onChange: this.editField, value: this.state.level_6_spell_per_day }),
 						React.createElement(
 							'label',
 							null,
 							'level_6_bonus_spells:'
 						),
-						React.createElement('input', { type: 'text', name: 'level_6_bonus_spells', onChange: this.editField, value: this.state.level_6_bonus_spells }),
+						React.createElement('input', { type: 'number', name: 'level_6_bonus_spells', onChange: this.editField, value: this.state.level_6_bonus_spells }),
 						React.createElement(
 							'label',
 							null,
 							'level_6_spell_save_dc:'
 						),
-						React.createElement('input', { type: 'text', name: 'level_6_spell_save_dc', onChange: this.editField, value: this.state.level_6_spell_save_dc }),
+						React.createElement('input', { type: 'number', name: 'level_6_spell_save_dc', onChange: this.editField, value: this.state.level_6_spell_save_dc }),
 						React.createElement(
 							'label',
 							null,
 							'level_6_spells_known:'
 						),
-						React.createElement('input', { type: 'text', name: 'level_6_spells_known', onChange: this.editField, value: this.state.level_6_spells_known }),
+						React.createElement('input', { type: 'number', name: 'level_6_spells_known', onChange: this.editField, value: this.state.level_6_spells_known }),
 						React.createElement(
 							'label',
 							null,
 							'level_7_spell_per_day:'
 						),
-						React.createElement('input', { type: 'text', name: 'level_7_spell_per_day', onChange: this.editField, value: this.state.level_7_spell_per_day }),
+						React.createElement('input', { type: 'number', name: 'level_7_spell_per_day', onChange: this.editField, value: this.state.level_7_spell_per_day }),
 						React.createElement(
 							'label',
 							null,
 							'level_7_bonus_spells:'
 						),
-						React.createElement('input', { type: 'text', name: 'level_7_bonus_spells', onChange: this.editField, value: this.state.level_7_bonus_spells }),
+						React.createElement('input', { type: 'number', name: 'level_7_bonus_spells', onChange: this.editField, value: this.state.level_7_bonus_spells }),
 						React.createElement(
 							'label',
 							null,
 							'level_7_spell_save_dc:'
 						),
-						React.createElement('input', { type: 'text', name: 'level_7_spell_save_dc', onChange: this.editField, value: this.state.level_7_spell_save_dc }),
+						React.createElement('input', { type: 'number', name: 'level_7_spell_save_dc', onChange: this.editField, value: this.state.level_7_spell_save_dc }),
 						React.createElement(
 							'label',
 							null,
 							'level_7_spells_known:'
 						),
-						React.createElement('input', { type: 'text', name: 'level_7_spells_known', onChange: this.editField, value: this.state.level_7_spells_known }),
+						React.createElement('input', { type: 'number', name: 'level_7_spells_known', onChange: this.editField, value: this.state.level_7_spells_known }),
 						React.createElement(
 							'label',
 							null,
 							'level_8_spell_per_day:'
 						),
-						React.createElement('input', { type: 'text', name: 'level_8_spell_per_day', onChange: this.editField, value: this.state.level_8_spell_per_day }),
+						React.createElement('input', { type: 'number', name: 'level_8_spell_per_day', onChange: this.editField, value: this.state.level_8_spell_per_day }),
 						React.createElement(
 							'label',
 							null,
 							'level_8_bonus_spells:'
 						),
-						React.createElement('input', { type: 'text', name: 'level_8_bonus_spells', onChange: this.editField, value: this.state.level_8_bonus_spells }),
+						React.createElement('input', { type: 'number', name: 'level_8_bonus_spells', onChange: this.editField, value: this.state.level_8_bonus_spells }),
 						React.createElement(
 							'label',
 							null,
 							'level_8_spell_save_dc:'
 						),
-						React.createElement('input', { type: 'text', name: 'level_8_spell_save_dc', onChange: this.editField, value: this.state.level_8_spell_save_dc }),
+						React.createElement('input', { type: 'number', name: 'level_8_spell_save_dc', onChange: this.editField, value: this.state.level_8_spell_save_dc }),
 						React.createElement(
 							'label',
 							null,
 							'level_8_spells_known:'
 						),
-						React.createElement('input', { type: 'text', name: 'level_8_spells_known', onChange: this.editField, value: this.state.level_8_spells_known }),
+						React.createElement('input', { type: 'number', name: 'level_8_spells_known', onChange: this.editField, value: this.state.level_8_spells_known }),
 						React.createElement(
 							'label',
 							null,
 							'level_9_spell_per_day:'
 						),
-						React.createElement('input', { type: 'text', name: 'level_9_spell_per_day', onChange: this.editField, value: this.state.level_9_spell_per_day }),
+						React.createElement('input', { type: 'number', name: 'level_9_spell_per_day', onChange: this.editField, value: this.state.level_9_spell_per_day }),
 						React.createElement(
 							'label',
 							null,
 							'level_9_bonus_spells:'
 						),
-						React.createElement('input', { type: 'text', name: 'level_9_bonus_spells', onChange: this.editField, value: this.state.level_9_bonus_spells }),
+						React.createElement('input', { type: 'number', name: 'level_9_bonus_spells', onChange: this.editField, value: this.state.level_9_bonus_spells }),
 						React.createElement(
 							'label',
 							null,
 							'level_9_spell_save_dc:'
 						),
-						React.createElement('input', { type: 'text', name: 'level_9_spell_save_dc', onChange: this.editField, value: this.state.level_9_spell_save_dc }),
+						React.createElement('input', { type: 'number', name: 'level_9_spell_save_dc', onChange: this.editField, value: this.state.level_9_spell_save_dc }),
 						React.createElement(
 							'label',
 							null,
 							'level_9_spells_known:'
 						),
-						React.createElement('input', { type: 'text', name: 'level_9_spells_known', onChange: this.editField, value: this.state.level_9_spells_known })
+						React.createElement('input', { type: 'number', name: 'level_9_spells_known', onChange: this.editField, value: this.state.level_9_spells_known })
 					),
 					React.createElement(FeatContainer, { _characterId: this.props.params._characterId }),
 					React.createElement(AcitemContainer, { _characterId: this.props.params._characterId }),
+					React.createElement(FeatureContainer, { _characterId: this.props.params._characterId }),
+					React.createElement(GearContainer, { _characterId: this.props.params._characterId }),
+					React.createElement(SkillContainer, { _characterId: this.props.params._characterId }),
+					React.createElement(SpellContainer, { _characterId: this.props.params._characterId }),
+					React.createElement(WeaponContainer, { _characterId: this.props.params._characterId }),
 					React.createElement(
 						'div',
 						null,
@@ -32110,291 +32123,149 @@
 	module.exports = Container;
 
 /***/ },
-/* 286 */
+/* 297 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var React = __webpack_require__(1),
-	    connect = __webpack_require__(172).connect,
-	    featActions = __webpack_require__(209),
-	    FeatList = __webpack_require__(287);
+	module.exports = function (label) {
+	    var React = __webpack_require__(1),
+	        connect = __webpack_require__(172).connect,
+	        interactiveActions = __webpack_require__(211)[label],
+	        InteractiveList = __webpack_require__(298)(label);
 	
-	var FeatContainer = React.createClass({
-	    displayName: 'FeatContainer',
+	    var InteractiveContainer = React.createClass({
+	        displayName: 'InteractiveContainer',
 	
-	    componentDidMount: function componentDidMount() {
-	        this.props.dispatch(featActions.getFeats(this.props._characterId));
-	    },
-	    render: function render() {
-	        if (this.props.updated) {
-	            this.props.dispatch(featActions.getFeats(this.props._characterId));
-	        }
-	        return React.createElement(
-	            'div',
-	            { className: 'feat-container' },
-	            React.createElement(FeatList, { _characterId: this.props._characterId })
-	        );
-	    }
-	});
-	
-	var mapStateToProps = function mapStateToProps(state, props) {
-	    return {
-	        updated: state.feat.updated
-	    };
-	};
-	
-	var Container = connect(mapStateToProps)(FeatContainer);
-	
-	module.exports = Container;
-
-/***/ },
-/* 287 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var React = __webpack_require__(1),
-	    connect = __webpack_require__(172).connect,
-	    featActions = __webpack_require__(209),
-	    Feat = __webpack_require__(288);
-	
-	var FeatList = React.createClass({
-	    displayName: 'FeatList',
-	
-	    addFeat: function addFeat() {
-	        if (this.refs.featname.value) {
-	            this.props.dispatch(featActions.createFeat(this.props._characterId, this.refs.featname.value));
-	            this.refs.featname.value = '';
-	        }
-	    },
-	    render: function render() {
-	        console.log(this);
-	        var feats = [];
-	        for (var i = 0; i < this.props.feats.length; i++) {
-	            feats.push(React.createElement(Feat, { feat: this.props.feats[i] }));
-	        }
-	        feats.push(React.createElement(
-	            'li',
-	            null,
-	            React.createElement('input', { type: 'text', onBlur: this.addFeat, name: 'featname', ref: 'featname', placeholder: 'NEW FEAT' })
-	        ));
-	        return React.createElement(
-	            'ul',
-	            { className: 'feat-list' },
-	            feats
-	        );
-	    }
-	});
-	
-	var mapStateToProps = function mapStateToProps(state, props) {
-	    return {
-	        feats: state.feat.feats
-	    };
-	};
-	
-	var Container = connect(mapStateToProps)(FeatList);
-	
-	module.exports = Container;
-
-/***/ },
-/* 288 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var React = __webpack_require__(1),
-	    connect = __webpack_require__(172).connect,
-	    featActions = __webpack_require__(209);
-	
-	var Feat = React.createClass({
-	    displayName: 'Feat',
-	
-	    getInitialState: function getInitialState() {
-	        var state = {};
-	        state._id = false;
-	        return state;
-	    },
-	    editField: function editField(that) {
-	        var state = this.state;
-	        state[that.target.name] = that.target.value;
-	        this.setState(state);
-	    },
-	    saveFeat: function saveFeat() {
-	        if (this.state.name == '') {
-	            this.props.dispatch(featActions.deleteFeat(this.props.feat._id, this.props.feat._characterId));
-	        } else {
-	            this.props.dispatch(featActions.updateFeat(this.state, this.props.feat));
-	        }
-	    },
-	    render: function render() {
-	        if (!this.state._id) {
-	            if (this.props.feat.name) {
-	                this.setState(this.props.feat);
+	        componentDidMount: function componentDidMount() {
+	            this.props.dispatch(interactiveActions.get(this.props._characterId));
+	        },
+	        render: function render() {
+	            if (this.props.updated) {
+	                this.props.dispatch(interactiveActions.get(this.props._characterId));
 	            }
+	            var className = label + '-container';
+	            return React.createElement(
+	                'div',
+	                { className: className },
+	                React.createElement(InteractiveList, { _characterId: this.props._characterId })
+	            );
 	        }
-	        return React.createElement(
-	            'li',
-	            { className: 'feat' },
-	            React.createElement('input', { type: 'text', onChange: this.editField, onBlur: this.saveFeat, name: 'name', value: this.state.name })
-	        );
-	    }
-	});
+	    });
 	
-	var mapStateToProps = function mapStateToProps(state, props) {
-	    return {
-	        feats: state.feat.feats
+	    var mapStateToProps = function mapStateToProps(state, props) {
+	        return {
+	            updated: state[label].updated
+	        };
 	    };
+	
+	    var Container = connect(mapStateToProps)(InteractiveContainer);
+	
+	    return Container;
 	};
-	
-	var Container = connect(mapStateToProps)(Feat);
-	
-	module.exports = Container;
 
 /***/ },
-/* 289 */
+/* 298 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var React = __webpack_require__(1),
-	    connect = __webpack_require__(172).connect,
-	    acitemActions = __webpack_require__(211),
-	    AcitemList = __webpack_require__(290);
+	module.exports = function (label) {
+	    var React = __webpack_require__(1),
+	        connect = __webpack_require__(172).connect,
+	        interactiveActions = __webpack_require__(211)[label],
+	        Interactive = __webpack_require__(299)(label);
 	
-	var AcitemContainer = React.createClass({
-	    displayName: 'AcitemContainer',
+	    var InteractiveList = React.createClass({
+	        displayName: 'InteractiveList',
 	
-	    componentDidMount: function componentDidMount() {
-	        this.props.dispatch(acitemActions.getAcitems(this.props._characterId));
-	    },
-	    render: function render() {
-	        if (this.props.updated) {
-	            console.log('asdf');
-	            this.props.dispatch(acitemActions.getAcitems(this.props._characterId));
-	        }
-	        return React.createElement(
-	            'div',
-	            { className: 'acitem-container' },
-	            React.createElement(AcitemList, { _characterId: this.props._characterId })
-	        );
-	    }
-	});
-	
-	var mapStateToProps = function mapStateToProps(state, props) {
-	    return {
-	        updated: state.acitem.updated
-	    };
-	};
-	
-	var Container = connect(mapStateToProps)(AcitemContainer);
-	
-	module.exports = Container;
-
-/***/ },
-/* 290 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var React = __webpack_require__(1),
-	    connect = __webpack_require__(172).connect,
-	    acitemActions = __webpack_require__(211),
-	    Acitem = __webpack_require__(291);
-	
-	var AcitemList = React.createClass({
-	    displayName: 'AcitemList',
-	
-	    addAcitem: function addAcitem() {
-	        if (this.refs.acitemname.value) {
-	            console.log(this.props._characterId, this.refs.acitemname.value);
-	            this.props.dispatch(acitemActions.createAcitem(this.props._characterId, this.refs.acitemname.value));
-	            this.refs.acitemname.value = '';
-	        }
-	    },
-	    render: function render() {
-	        console.log(this);
-	        var acitems = [];
-	        for (var i = 0; i < this.props.acitems.length; i++) {
-	            acitems.push(React.createElement(Acitem, { acitem: this.props.acitems[i] }));
-	        }
-	        acitems.push(React.createElement(
-	            'li',
-	            null,
-	            React.createElement('input', { type: 'text', onBlur: this.addAcitem, name: 'acitemname', ref: 'acitemname', placeholder: 'NEW AC ITEM' })
-	        ));
-	        return React.createElement(
-	            'ul',
-	            { className: 'acitem-list' },
-	            acitems
-	        );
-	    }
-	});
-	
-	var mapStateToProps = function mapStateToProps(state, props) {
-	    return {
-	        acitems: state.acitem.acitems
-	    };
-	};
-	
-	var Container = connect(mapStateToProps)(AcitemList);
-	
-	module.exports = Container;
-
-/***/ },
-/* 291 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var React = __webpack_require__(1),
-	    connect = __webpack_require__(172).connect,
-	    acitemActions = __webpack_require__(211);
-	
-	var Acitem = React.createClass({
-	    displayName: 'Acitem',
-	
-	    getInitialState: function getInitialState() {
-	        var state = {};
-	        state._id = false;
-	        return state;
-	    },
-	    editField: function editField(that) {
-	        var state = this.state;
-	        state[that.target.name] = that.target.value;
-	        this.setState(state);
-	    },
-	    saveAcitem: function saveAcitem() {
-	        if (this.state.name == '') {
-	            this.props.dispatch(acitemActions.deleteAcitem(this.props.acitem._id, this.props.acitem._characterId));
-	        } else {
-	            this.props.dispatch(acitemActions.updateAcitem(this.state, this.props.acitem));
-	        }
-	    },
-	    render: function render() {
-	        if (!this.state._id) {
-	            if (this.props.acitem.name) {
-	                this.setState(this.props.acitem);
+	        addInteractive: function addInteractive() {
+	            if (this.refs.newItem.value) {
+	                this.props.dispatch(interactiveActions.create(this.props._characterId, this.refs.newItem.value));
+	                this.refs.newItem.value = '';
 	            }
+	        },
+	        render: function render() {
+	            var interactives = [];
+	            for (var i = 0; i < this.props.interactives.length; i++) {
+	                interactives.push(React.createElement(Interactive, { key: i, interactive: this.props.interactives[i] }));
+	            }
+	            interactives.push(React.createElement(
+	                'li',
+	                null,
+	                React.createElement('input', { type: 'text', onBlur: this.addInteractive, name: 'newItem', ref: 'newItem', placeholder: 'ADD NEW' })
+	            ));
+	            var className = label + '-list';
+	            return React.createElement(
+	                'ul',
+	                { className: className },
+	                interactives
+	            );
 	        }
-	        return React.createElement(
-	            'li',
-	            { className: 'acitem' },
-	            React.createElement('input', { type: 'text', onChange: this.editField, onBlur: this.saveAcitem, name: 'name', value: this.state.name }),
-	            React.createElement('input', { type: 'text', onChange: this.editField, onBlur: this.saveAcitem, name: 'bonus', value: this.state.bonus }),
-	            React.createElement('input', { type: 'text', onChange: this.editField, onBlur: this.saveAcitem, name: 'type', value: this.state.type }),
-	            React.createElement('input', { type: 'text', onChange: this.editField, onBlur: this.saveAcitem, name: 'check_penalty', value: this.state.check_penalty }),
-	            React.createElement('input', { type: 'text', onChange: this.editField, onBlur: this.saveAcitem, name: 'spell_failure', value: this.state.spell_failure }),
-	            React.createElement('input', { type: 'text', onChange: this.editField, onBlur: this.saveAcitem, name: 'weight', value: this.state.weight }),
-	            React.createElement('input', { type: 'text', onChange: this.editField, onBlur: this.saveAcitem, name: 'properties', value: this.state.properties }),
-	            React.createElement('input', { type: 'text', onChange: this.editField, onBlur: this.saveAcitem, name: 'max_dex_bonus', value: this.state.max_dex_bonus })
-	        );
-	    }
-	});
+	    });
 	
-	var Container = connect()(Acitem);
+	    var mapStateToProps = function mapStateToProps(state, props) {
+	        return {
+	            interactives: state[label][label]
+	        };
+	    };
 	
-	module.exports = Container;
+	    var Container = connect(mapStateToProps)(InteractiveList);
+	
+	    return Container;
+	};
+
+/***/ },
+/* 299 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	module.exports = function (label) {
+	    var React = __webpack_require__(1),
+	        connect = __webpack_require__(172).connect,
+	        interactiveActions = __webpack_require__(211)[label];
+	
+	    var Interactive = React.createClass({
+	        displayName: 'Interactive',
+	
+	        editField: function editField(that) {
+	            var state = this.state;
+	            state[that.target.name] = that.target.value;
+	            this.setState(state);
+	        },
+	        saveInteractive: function saveInteractive() {
+	            if (this.state.name == '') {
+	                this.props.dispatch(interactiveActions.remove(this.props.interactive._id, this.props.interactive._characterId));
+	            } else {
+	                this.props.dispatch(interactiveActions.update(this.state, this.props.interactive));
+	            }
+	        },
+	        componentWillMount: function componentWillMount() {
+	            this.setState(this.props.interactive);
+	        },
+	        render: function render() {
+	            var state = this.state;
+	            var keys = Object.keys(state);
+	            var items = [];
+	            for (var i = 0; i < keys.length; i++) {
+	                if (keys[i] != '_id' && keys[i] != '_characterId' && keys[i] != '_userId' && keys[i] != '__v') {
+	                    keys[i];
+	                    items.push(React.createElement('input', { type: 'text', onChange: this.editField, onBlur: this.saveInteractive, name: keys[i], value: this.state[keys[i]] }));
+	                }
+	            }
+	            return React.createElement(
+	                'li',
+	                { className: label },
+	                items
+	            );
+	        }
+	    });
+	
+	    var Container = connect()(Interactive);
+	
+	    return Container;
+	};
 
 /***/ }
 /******/ ]);

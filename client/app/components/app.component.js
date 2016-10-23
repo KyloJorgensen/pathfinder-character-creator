@@ -8,7 +8,6 @@ var React = require('react'),
 
 var App = React.createClass({
     render: function() {
-        this.props.dispatch(userActions.getUserName());
         return (
             <div className="pathfinder-character-creator">
                 <div className="pathfinder-character-creator-body">
@@ -20,9 +19,7 @@ var App = React.createClass({
 });
 
 var mapStateToProps = function(state, props) {
-    return {
-        name: state.user.name
-    };
+    return {};
 };
 
 var Container = connect(mapStateToProps)(App);

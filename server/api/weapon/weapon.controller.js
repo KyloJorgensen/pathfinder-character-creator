@@ -9,6 +9,7 @@ function WeaponController() {};
 WeaponController.prototype.getWeapons = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
 		Weapon.find({
+			_userId: req._userId,
 			_characterId: req.params._characterId
 		}, function(error, weapons) {
 			if (error) {
@@ -28,6 +29,7 @@ WeaponController.prototype.getWeapons = function(req, res, next) {
 WeaponController.prototype.getWeapon = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
 		Weapon.findOne({
+			_userId: req._userId,
 			_characterId: req.params._characterId,
 			_id: req.params._weaponId
 		}, function(error, weapon) {
@@ -55,6 +57,7 @@ WeaponController.prototype.createWeapon = function(req, res, next) {
 				reject(error);
 			} else {
 				Weapon.create({
+					_userId: req._userId,
 					_characterId: character._id,
 					name: req.body.name
 				}, {
@@ -107,6 +110,7 @@ WeaponController.prototype.updateWeapon = function(req, res, next) {
 	}
 	return new Promise(function(resolve, reject) {
 		Weapon.findOneAndUpdate({
+			_userId: req._userId,
 			_characterId: req.body._characterId,
 			_id: req.body._id
 		}, {
@@ -131,6 +135,7 @@ WeaponController.prototype.updateWeapon = function(req, res, next) {
 WeaponController.prototype.deleteWeapon = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
 		Weapon.findOneAndRemove({
+			_userId: req._userId,
 			_id: req.body._id,
 			_characterId: req.body._characterId
 		}, function(error, weapon) {

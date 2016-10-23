@@ -9,6 +9,7 @@ function FeatController() {};
 FeatController.prototype.getFeats = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
 		Feat.find({
+			_userId: req._userId,
 			_characterId: req.params._characterId
 		}, function(error, feats) {
 			if (error) {
@@ -28,6 +29,7 @@ FeatController.prototype.getFeats = function(req, res, next) {
 FeatController.prototype.getFeat = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
 		Feat.findOne({
+			_userId: req._userId,
 			_characterId: req.params._characterId,
 			_id: req.params._featId
 		}, function(error, feat) {
@@ -48,6 +50,7 @@ FeatController.prototype.getFeat = function(req, res, next) {
 FeatController.prototype.createFeat = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
 		Character.findOne({
+			_userId: req._userId,
 			_id: req.body._characterId,
 			_userId: req._userId
 		}, function(error, character) {
@@ -55,6 +58,7 @@ FeatController.prototype.createFeat = function(req, res, next) {
 				reject(error);
 			} else {
 				Feat.create({
+					_userId: req._userId,
 					_characterId: character._id,
 					name: req.body.name
 				}, {
@@ -92,6 +96,7 @@ FeatController.prototype.updateFeat = function(req, res, next) {
 	}
 	return new Promise(function(resolve, reject) {
 		Feat.findOneAndUpdate({
+			_userId: req._userId,
 			_characterId: req.body._characterId,
 			_id: req.body._id
 		}, {
@@ -116,6 +121,7 @@ FeatController.prototype.updateFeat = function(req, res, next) {
 FeatController.prototype.deleteFeat = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
 		Feat.findOneAndRemove({
+			_userId: req._userId,
 			_id: req.body._id,
 			_characterId: req.body._characterId
 		}, function(error, feat) {

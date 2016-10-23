@@ -71,9 +71,10 @@ var getListOfCharactersError = function(error) {
     };
 };
 
-var getCharacter = function(_id) {
+var getCharacter = function(_id, link) {
     if (!'cookie' in document) {
         var error = new Error('cookie is missing');
+        link.replace('/user');
         return {
             type: GET_CHARACTER_ERROR,
             error: error
@@ -82,6 +83,7 @@ var getCharacter = function(_id) {
     var userKey = document.cookie.split('=');
     if (userKey[0] != 'UserKey') {
         var error = new Error('UserKey cookie is missing');
+        link.replace('/user');
         return {
             type: GET_CHARACTER_ERROR,
             error: error
@@ -89,11 +91,13 @@ var getCharacter = function(_id) {
     }
     if (userKey[1] == 'null') {
         var error = new Error('UserKey cookie is null');
+        link.replace('/user');
         return {
             type: GET_CHARACTER_ERROR,
             error: error
         };
     }    
+    redirect = link;
     return function(dispatch) {
         var url = '/character/' + _id;
         return fetch(url, {
@@ -125,6 +129,7 @@ var getCharacter = function(_id) {
 
 var GET_CHARACTER_SUCCESS = 'GET_CHARACTER_SUCCESS';
 var getCharacterSuccess = function(data) {
+    redirect = false;
     return {
         type: GET_CHARACTER_SUCCESS,
         character: data
@@ -133,6 +138,8 @@ var getCharacterSuccess = function(data) {
 
 var GET_CHARACTER_ERROR = 'GET_CHARACTER_ERROR';
 var getCharacterError = function(error) {
+    redirect.replace('/user');
+    redirect = false;
     return {
         type: GET_CHARACTER_ERROR,
         error: error

@@ -9,6 +9,7 @@ function FeatureController() {};
 FeatureController.prototype.getFeatures = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
 		Feature.find({
+			_userId: req._userId,
 			_characterId: req.params._characterId
 		}, function(error, features) {
 			if (error) {
@@ -28,6 +29,7 @@ FeatureController.prototype.getFeatures = function(req, res, next) {
 FeatureController.prototype.getFeature = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
 		Feature.findOne({
+			_userId: req._userId,
 			_characterId: req.params._characterId,
 			_id: req.params._featureId
 		}, function(error, feature) {
@@ -48,6 +50,7 @@ FeatureController.prototype.getFeature = function(req, res, next) {
 FeatureController.prototype.createFeature = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
 		Character.findOne({
+			_userId: req._userId,
 			_id: req.body._characterId,
 			_userId: req._userId
 		}, function(error, character) {
@@ -55,6 +58,7 @@ FeatureController.prototype.createFeature = function(req, res, next) {
 				reject(error);
 			} else {
 				Feature.create({
+					_userId: req._userId,
 					_characterId: character._id,
 					name: req.body.name,
 					key_ability: req.body.key_ability
@@ -90,6 +94,7 @@ FeatureController.prototype.updateFeature = function(req, res, next) {
 	}
 	return new Promise(function(resolve, reject) {
 		Feature.findOneAndUpdate({
+			_userId: req._userId,
 			_characterId: req.body._characterId,
 			_id: req.body._id
 		}, {
@@ -114,6 +119,7 @@ FeatureController.prototype.updateFeature = function(req, res, next) {
 FeatureController.prototype.deleteFeature = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
 		Feature.findOneAndRemove({
+			_userId: req._userId,
 			_id: req.body._id,
 			_characterId: req.body._characterId
 		}, function(error, feature) {

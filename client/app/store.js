@@ -1,24 +1,27 @@
 'use strict';
 
-var redux = require('redux');
-var createStore = redux.createStore;
-var applyMiddleware = redux.applyMiddleware;
-var thunk = require('redux-thunk').default;
-var userReducer = require('./reducers/user.reducer');
-var characterReducer = require('./reducers/character.reducer');
-var featReducer = require('./reducers/feat.reducer');
-var acitemReducer = require('./reducers/acitem.reducer');
+var redux = require('redux'),
+	createStore = redux.createStore,
+	applyMiddleware = redux.applyMiddleware,
+	thunk = require('redux-thunk').default,
+	userReducer = require('./reducers/user.reducer'),
+	characterReducer = require('./reducers/character.reducer'),
+	interactiveReducer = require('./reducers/interactive.reducer'),
+	interactives = require('./interactives');
 
 var initialState = {};
 
 var reducers = function(state, action) {
     state = state || initialState;
-    return {
-    	user: userReducer(state.user, action),
-    	character: characterReducer(state.character, action),
-    	feat: featReducer(state.feat, action),
-    	acitem: acitemReducer(state.acitem, action)
-    };
+    var _state = {};
+	_state.user = userReducer(state.user, action);
+	_state.character = characterReducer(state.character, action);
+	var keys = Object.keys(interactives);
+	for (var i = 0; i < keys.length; i++) {
+		var label = interactives[keys[i]];
+		_state[label] = interactiveReducer(state[label], action, label);
+	}
+    return _state;
 };
 
 var store = createStore(reducers, applyMiddleware(thunk));

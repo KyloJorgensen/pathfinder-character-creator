@@ -9,6 +9,7 @@ function SkillController() {};
 SkillController.prototype.getSkills = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
 		Skill.find({
+			_userId: req._userId,
 			_characterId: req.params._characterId
 		}, function(error, skills) {
 			if (error) {
@@ -28,6 +29,7 @@ SkillController.prototype.getSkills = function(req, res, next) {
 SkillController.prototype.getSkill = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
 		Skill.findOne({
+			_userId: req._userId,
 			_characterId: req.params._characterId,
 			_id: req.params._skillId
 		}, function(error, skill) {
@@ -49,12 +51,12 @@ SkillController.prototype.createSkill = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
 		Character.findOne({
 			_id: req.body._characterId,
-			_userId: req._userId
-		}, function(error, character) {
+			_userId: req._userId,		}, function(error, character) {
 			if (error) {
 				reject(error);
 			} else {
 				Skill.create({
+					_userId: req._userId,
 					_characterId: character._id,
 					name: req.body.name,
 					key_ability: req.body.key_ability
@@ -108,6 +110,7 @@ SkillController.prototype.updateSkill = function(req, res, next) {
 	}
 	return new Promise(function(resolve, reject) {
 		Skill.findOneAndUpdate({
+			_userId: req._userId,
 			_characterId: req.body._characterId,
 			_id: req.body._id
 		}, {
@@ -132,6 +135,7 @@ SkillController.prototype.updateSkill = function(req, res, next) {
 SkillController.prototype.deleteSkill = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
 		Skill.findOneAndRemove({
+			_userId: req._userId,
 			_id: req.body._id,
 			_characterId: req.body._characterId
 		}, function(error, skill) {

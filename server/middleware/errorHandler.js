@@ -16,6 +16,11 @@ module.exports = function(app) {
 		}
 
 		if (error.name == 'AuthenticationError') {
+			if ('user' in error) {
+				if (!error.user) {
+					return res.status(444).json(error.message);					
+				}
+			}
 			return res.status(401).json(error.message);
 		}
 

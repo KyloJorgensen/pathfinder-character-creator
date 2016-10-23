@@ -9,6 +9,7 @@ function AcitemController() {};
 AcitemController.prototype.getAcitems = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
 		Acitem.find({
+			_userId: req._userId,
 			_characterId: req.params._characterId
 		}, function(error, acitems) {
 			if (error) {
@@ -28,6 +29,7 @@ AcitemController.prototype.getAcitems = function(req, res, next) {
 AcitemController.prototype.getAcitem = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
 		Acitem.findOne({
+			_userId: req._userId,
 			_characterId: req.params._characterId,
 			_id: req.params._acitemId
 		}, function(error, acitem) {
@@ -48,6 +50,7 @@ AcitemController.prototype.getAcitem = function(req, res, next) {
 AcitemController.prototype.createAcitem = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
 		Character.findOne({
+			_userId: req._userId,
 			_id: req.body._characterId,
 			_userId: req._userId
 		}, function(error, character) {
@@ -55,6 +58,7 @@ AcitemController.prototype.createAcitem = function(req, res, next) {
 				reject(error);
 			} else {
 				Acitem.create({
+					_userId: req._userId,
 					_characterId: character._id,
 					name: req.body.name
 				}, {
@@ -110,6 +114,7 @@ AcitemController.prototype.updateAcitem = function(req, res, next) {
 	}	
 	return new Promise(function(resolve, reject) {
 		Acitem.findOneAndUpdate({
+			_userId: req._userId,
 			_characterId: req.body._characterId,
 			_id: req.body._id
 		}, {
@@ -134,6 +139,7 @@ AcitemController.prototype.updateAcitem = function(req, res, next) {
 AcitemController.prototype.deleteAcitem = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
 		Acitem.findOneAndRemove({
+			_userId: req._userId,
 			_id: req.body._id,
 			_characterId: req.body._characterId
 		}, function(error, acitem) {

@@ -9,6 +9,7 @@ function GearController() {};
 GearController.prototype.getAllGear = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
 		Gear.find({
+			_userId: req._userId,
 			_characterId: req.params._characterId
 		}, function(error, gear) {
 			if (error) {
@@ -28,6 +29,7 @@ GearController.prototype.getAllGear = function(req, res, next) {
 GearController.prototype.getGear = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
 		Gear.findOne({
+			_userId: req._userId,
 			_characterId: req.params._characterId,
 			_id: req.params._gearId
 		}, function(error, gear) {
@@ -48,6 +50,7 @@ GearController.prototype.getGear = function(req, res, next) {
 GearController.prototype.createGear = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
 		Character.findOne({
+			_userId: req._userId,
 			_id: req.body._characterId,
 			_userId: req._userId
 		}, function(error, character) {
@@ -55,6 +58,7 @@ GearController.prototype.createGear = function(req, res, next) {
 				reject(error);
 			} else {
 				Gear.create({
+					_userId: req._userId,
 					_characterId: character._id,
 					name: req.body.name,
 					key_ability: req.body.key_ability
@@ -93,6 +97,7 @@ GearController.prototype.updateGear = function(req, res, next) {
 	}
 	return new Promise(function(resolve, reject) {
 		Gear.findOneAndUpdate({
+			_userId: req._userId,
 			_characterId: req.body._characterId,
 			_id: req.body._id
 		}, {
@@ -117,6 +122,7 @@ GearController.prototype.updateGear = function(req, res, next) {
 GearController.prototype.deleteGear = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
 		Gear.findOneAndRemove({
+			_userId: req._userId,
 			_id: req.body._id,
 			_characterId: req.body._characterId
 		}, function(error, gear) {
