@@ -84,10 +84,10 @@ module.exports = function() {
                         res.body.will_misc_mod.should.equal(0);
                         res.body.will_temp_mod.should.equal(0);
                         res.body.init_misc_mod.should.equal(0);
-                        res.body.weight.should.equal(0);
-                        res.body.height.should.equal(0);
-                        res.body.damage_reduction.should.equal(0);
-                        res.body.spell_resistance.should.equal(0);
+                        res.body.weight.should.equal('0');
+                        res.body.height.should.equal('0');
+                        res.body.damage_reduction.should.equal('0');
+                        res.body.spell_resistance.should.equal('0');
                         res.body.size_mod.should.equal(0);
                         res.body.xp_points.should.equal(0);
                         res.body.next_level.should.equal(0);
@@ -95,12 +95,12 @@ module.exports = function() {
                         res.body.money_sp.should.equal(0);
                         res.body.money_gp.should.equal(0);
                         res.body.money_pp.should.equal(0);
-                        res.body.light_load.should.equal(0);
-                        res.body.medium_load.should.equal(0);
-                        res.body.heavy_load.should.equal(0);
-                        res.body.lift_over_head.should.equal(0);
-                        res.body.lift_off_ground.should.equal(0);
-                        res.body.drag_or_push.should.equal(0);
+                        res.body.light_load.should.equal('0');
+                        res.body.medium_load.should.equal('0');
+                        res.body.heavy_load.should.equal('0');
+                        res.body.lift_over_head.should.equal('0');
+                        res.body.lift_off_ground.should.equal('0');
+                        res.body.drag_or_push.should.equal('0');
                         res.body.age.should.equal(0);
                         res.body.gender.should.equal('GENDER');
                         res.body.hair.should.equal('HAIR');
@@ -225,10 +225,10 @@ module.exports = function() {
                         res.body[0].will_misc_mod.should.be.a('number');
                         res.body[0].will_temp_mod.should.be.a('number');
                         res.body[0].init_misc_mod.should.be.a('number');
-                        res.body[0].weight.should.be.a('number');
-                        res.body[0].height.should.be.a('number');
-                        res.body[0].damage_reduction.should.be.a('number');
-                        res.body[0].spell_resistance.should.be.a('number');
+                        res.body[0].weight.should.be.a('string');
+                        res.body[0].height.should.be.a('string');
+                        res.body[0].damage_reduction.should.be.a('string');
+                        res.body[0].spell_resistance.should.be.a('string');
                         res.body[0].size_mod.should.be.a('number');
                         res.body[0].xp_points.should.be.a('number');
                         res.body[0].next_level.should.be.a('number');
@@ -236,12 +236,12 @@ module.exports = function() {
                         res.body[0].money_sp.should.be.a('number');
                         res.body[0].money_gp.should.be.a('number');
                         res.body[0].money_pp.should.be.a('number');
-                        res.body[0].light_load.should.be.a('number');
-                        res.body[0].medium_load.should.be.a('number');
-                        res.body[0].heavy_load.should.be.a('number');
-                        res.body[0].lift_over_head.should.be.a('number');
-                        res.body[0].lift_off_ground.should.be.a('number');
-                        res.body[0].drag_or_push.should.be.a('number');
+                        res.body[0].light_load.should.be.a('string');
+                        res.body[0].medium_load.should.be.a('string');
+                        res.body[0].heavy_load.should.be.a('string');
+                        res.body[0].lift_over_head.should.be.a('string');
+                        res.body[0].lift_off_ground.should.be.a('string');
+                        res.body[0].drag_or_push.should.be.a('string');
                         res.body[0].age.should.be.a('number');
                         res.body[0].gender.should.be.a('string');
                         res.body[0].hair.should.be.a('string');
@@ -252,46 +252,46 @@ module.exports = function() {
                         res.body[0].background_stories.should.be.a('string');
                         res.body[0].languages.should.be.a('string');
                         res.body[0].domain_and_specialty_school.should.equal('Domain and/or Specialty School');
-                        res.body[0].level_0_spell_per_day.should.equal(0);
-                        res.body[0].level_0_bonus_spells.should.equal(0);
-                        res.body[0].level_0_spell_save_dc.should.equal(0);
-                        res.body[0].level_0_spells_known.should.equal(0);
-                        res.body[0].level_1_spell_per_day.should.equal(0);
-                        res.body[0].level_1_bonus_spells.should.equal(0);
-                        res.body[0].level_1_spell_save_dc.should.equal(0);
-                        res.body[0].level_1_spells_known.should.equal(0);
-                        res.body[0].level_2_spell_per_day.should.equal(0);
-                        res.body[0].level_2_bonus_spells.should.equal(0);
-                        res.body[0].level_2_spell_save_dc.should.equal(0);
-                        res.body[0].level_2_spells_known.should.equal(0);
-                        res.body[0].level_3_spell_per_day.should.equal(0);
-                        res.body[0].level_3_bonus_spells.should.equal(0);
-                        res.body[0].level_3_spell_save_dc.should.equal(0);
-                        res.body[0].level_3_spells_known.should.equal(0);
-                        res.body[0].level_4_spell_per_day.should.equal(0);
-                        res.body[0].level_4_bonus_spells.should.equal(0);
-                        res.body[0].level_4_spell_save_dc.should.equal(0);
-                        res.body[0].level_4_spells_known.should.equal(0);
-                        res.body[0].level_5_spell_per_day.should.equal(0);
-                        res.body[0].level_5_bonus_spells.should.equal(0);
-                        res.body[0].level_5_spell_save_dc.should.equal(0);
-                        res.body[0].level_5_spells_known.should.equal(0);
-                        res.body[0].level_6_spell_per_day.should.equal(0);
-                        res.body[0].level_6_bonus_spells.should.equal(0);
-                        res.body[0].level_6_spell_save_dc.should.equal(0);
-                        res.body[0].level_6_spells_known.should.equal(0);
-                        res.body[0].level_7_spell_per_day.should.equal(0);
-                        res.body[0].level_7_bonus_spells.should.equal(0);
-                        res.body[0].level_7_spell_save_dc.should.equal(0);
-                        res.body[0].level_7_spells_known.should.equal(0);
-                        res.body[0].level_8_spell_per_day.should.equal(0);
-                        res.body[0].level_8_bonus_spells.should.equal(0);
-                        res.body[0].level_8_spell_save_dc.should.equal(0);
-                        res.body[0].level_8_spells_known.should.equal(0);
-                        res.body[0].level_9_spell_per_day.should.equal(0);
-                        res.body[0].level_9_bonus_spells.should.equal(0);
-                        res.body[0].level_9_spell_save_dc.should.equal(0);
-                        res.body[0].level_9_spells_known.should.equal(0);
+                        res.body[0].level_0_spell_per_day.should.be.a('number');
+                        res.body[0].level_0_bonus_spells.should.be.a('number');
+                        res.body[0].level_0_spell_save_dc.should.be.a('number');
+                        res.body[0].level_0_spells_known.should.be.a('number');
+                        res.body[0].level_1_spell_per_day.should.be.a('number');
+                        res.body[0].level_1_bonus_spells.should.be.a('number');
+                        res.body[0].level_1_spell_save_dc.should.be.a('number');
+                        res.body[0].level_1_spells_known.should.be.a('number');
+                        res.body[0].level_2_spell_per_day.should.be.a('number');
+                        res.body[0].level_2_bonus_spells.should.be.a('number');
+                        res.body[0].level_2_spell_save_dc.should.be.a('number');
+                        res.body[0].level_2_spells_known.should.be.a('number');
+                        res.body[0].level_3_spell_per_day.should.be.a('number');
+                        res.body[0].level_3_bonus_spells.should.be.a('number');
+                        res.body[0].level_3_spell_save_dc.should.be.a('number');
+                        res.body[0].level_3_spells_known.should.be.a('number');
+                        res.body[0].level_4_spell_per_day.should.be.a('number');
+                        res.body[0].level_4_bonus_spells.should.be.a('number');
+                        res.body[0].level_4_spell_save_dc.should.be.a('number');
+                        res.body[0].level_4_spells_known.should.be.a('number');
+                        res.body[0].level_5_spell_per_day.should.be.a('number');
+                        res.body[0].level_5_bonus_spells.should.be.a('number');
+                        res.body[0].level_5_spell_save_dc.should.be.a('number');
+                        res.body[0].level_5_spells_known.should.be.a('number');
+                        res.body[0].level_6_spell_per_day.should.be.a('number');
+                        res.body[0].level_6_bonus_spells.should.be.a('number');
+                        res.body[0].level_6_spell_save_dc.should.be.a('number');
+                        res.body[0].level_6_spells_known.should.be.a('number');
+                        res.body[0].level_7_spell_per_day.should.be.a('number');
+                        res.body[0].level_7_bonus_spells.should.be.a('number');
+                        res.body[0].level_7_spell_save_dc.should.be.a('number');
+                        res.body[0].level_7_spells_known.should.be.a('number');
+                        res.body[0].level_8_spell_per_day.should.be.a('number');
+                        res.body[0].level_8_bonus_spells.should.be.a('number');
+                        res.body[0].level_8_spell_save_dc.should.be.a('number');
+                        res.body[0].level_8_spells_known.should.be.a('number');
+                        res.body[0].level_9_spell_per_day.should.be.a('number');
+                        res.body[0].level_9_bonus_spells.should.be.a('number');
+                        res.body[0].level_9_spell_save_dc.should.be.a('number');
+                        res.body[0].level_9_spells_known.should.be.a('number');
                         done();
                     });
                 }).catch(function(error) {
@@ -364,10 +364,10 @@ module.exports = function() {
                         res.body.will_misc_mod.should.equal(0);
                         res.body.will_temp_mod.should.equal(0);
                         res.body.init_misc_mod.should.equal(0);
-                        res.body.weight.should.equal(0);
-                        res.body.height.should.equal(0);
-                        res.body.damage_reduction.should.equal(0);
-                        res.body.spell_resistance.should.equal(0);
+                        res.body.weight.should.equal('0');
+                        res.body.height.should.equal('0');
+                        res.body.damage_reduction.should.equal('0');
+                        res.body.spell_resistance.should.equal('0');
                         res.body.size_mod.should.equal(0);
                         res.body.xp_points.should.equal(0);
                         res.body.next_level.should.equal(0);
@@ -375,12 +375,12 @@ module.exports = function() {
                         res.body.money_sp.should.equal(0);
                         res.body.money_gp.should.equal(0);
                         res.body.money_pp.should.equal(0);
-                        res.body.light_load.should.equal(0);
-                        res.body.medium_load.should.equal(0);
-                        res.body.heavy_load.should.equal(0);
-                        res.body.lift_over_head.should.equal(0);
-                        res.body.lift_off_ground.should.equal(0);
-                        res.body.drag_or_push.should.equal(0);
+                        res.body.light_load.should.equal('0');
+                        res.body.medium_load.should.equal('0');
+                        res.body.heavy_load.should.equal('0');
+                        res.body.lift_over_head.should.equal('0');
+                        res.body.lift_off_ground.should.equal('0');
+                        res.body.drag_or_push.should.equal('0');
                         res.body.age.should.equal(0);
                         res.body.gender.should.equal('GENDER');
                         res.body.hair.should.equal('HAIR');
@@ -500,10 +500,10 @@ module.exports = function() {
                         will_misc_mod: 0,
                         will_temp_mod: 0,
                         init_misc_mod: 0,
-                        weight: 0,
-                        height: 0,
-                        damage_reduction: 0,
-                        spell_resistance: 0,
+                        weight: '0',
+                        height: '0',
+                        damage_reduction: '0',
+                        spell_resistance: '0',
                         size_mod: 0,
                         xp_points: 0,
                         next_level: 0,
@@ -511,12 +511,12 @@ module.exports = function() {
                         money_sp: 0,
                         money_gp: 0,
                         money_pp: 0,
-                        light_load: 0,
-                        medium_load: 0,
-                        heavy_load: 0,
-                        lift_over_head: 0,
-                        lift_off_ground: 0,
-                        drag_or_push: 0,
+                        light_load: '0',
+                        medium_load: '0',
+                        heavy_load: '0',
+                        lift_over_head: '0',
+                        lift_off_ground: '0',
+                        drag_or_push: '0',
                         age: 100,
                         gender: 'male',
                         hair: 'black',
