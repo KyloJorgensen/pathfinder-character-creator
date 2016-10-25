@@ -85,16 +85,14 @@ module.exports = function () {
                     .set('Authentication', cookie.serialize('UserKey', btoa(SECRET + ':' + user._id)))
                     .send({
                         _characterId: _characterId,
-                        name: skillName,
-                        key_ability: skillAbility
+                        name: skillName
                     })
                     .end(function (error, res) {
                         if (error) {return done(error)}
                         res.should.have.status(200);
                         res.body._characterId.should.equal(_characterId);
                         res.body.name.should.equal(skillName);
-                        res.body.should.not.have.property('specialties');
-                        res.body.key_ability.should.equal(skillAbility);
+                        res.body.key_ability.should.equal('Key Ability');
                         res.body.misc_bonus.should.equal(0);
                         res.body.trained.should.equal(false);
                         res.body.train_only.should.equal(false);
@@ -137,8 +135,7 @@ module.exports = function () {
                         res.body._id.should.equal(_skillId);
                         res.body._characterId.should.equal(_characterId);
                         res.body.name.should.equal(skillName);
-                        res.body.should.not.have.property('specialties');
-                        res.body.key_ability.should.equal(skillAbility);
+                        res.body.key_ability.should.equal('Key Ability');
                         res.body.misc_bonus.should.equal(0);
                         res.body.trained.should.equal(false);
                         res.body.train_only.should.equal(false);
@@ -181,8 +178,7 @@ module.exports = function () {
                         res.body[0]._id.should.equal(_skillId);
                         res.body[0]._characterId.should.equal(_characterId);
                         res.body[0].name.should.equal(skillName);
-                        res.body[0].should.not.have.property('specialties');
-                        res.body[0].key_ability.should.equal(skillAbility);
+                        res.body[0].key_ability.should.equal('Key Ability');
                         res.body[0].misc_bonus.should.equal(0);
                         res.body[0].trained.should.equal(false);
                         res.body[0].train_only.should.equal(false);
@@ -220,7 +216,6 @@ module.exports = function () {
                         _id: _skillId,
                         _characterId: _characterId,
                         name: 'Jump',
-                        specialties: 'up',
                         key_ability: 'dex',
                         misc_bonus: 3,
                         trained: true,
@@ -236,7 +231,6 @@ module.exports = function () {
                         res.body._id.should.equal(_skillId);
                         res.body._characterId.should.equal(_characterId);
                         res.body.name.should.equal(data.name);
-                        res.body.specialties.should.equal(data.specialties);
                         res.body.key_ability.should.equal(data.key_ability);
                         res.body.misc_bonus.should.equal(data.misc_bonus);
                         res.body.trained.should.equal(data.trained);

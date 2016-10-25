@@ -46,7 +46,7 @@ SpellController.prototype.getSpell = function(req, res, next) {
 	});
 };
 
-// create Spell create: _characterId, name used returns: new Spell
+// create Spell create: _characterId, name returns: new Spell
 SpellController.prototype.createSpell = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
 		Character.findOne({

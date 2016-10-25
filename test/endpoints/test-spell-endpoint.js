@@ -87,17 +87,15 @@ module.exports = function () {
                     .set('Authentication', cookie.serialize('UserKey', btoa(SECRET + ':' + user._id)))
                     .send({
                         _characterId: _characterId,
-                        name: spellName,
-                        level: spellLevel,
-                        school: spellSchool
+                        name: spellName
                     })
                     .end(function (error, res) {
                         if (error) {return done(error)}
                         res.should.have.status(200);
                         res.body._characterId.should.equal(_characterId);
                         res.body.name.should.equal(spellName);
-                        res.body.level.should.equal(spellLevel);
-                        res.body.school.should.equal(spellSchool);
+                        res.body.level.should.equal(0);
+                        res.body.school.should.equal('School');
                         res.body.perpared.should.equal(0);
                         res.body.used.should.equal(0);
                         _spellId = res.body._id;
@@ -138,8 +136,8 @@ module.exports = function () {
                         res.body._id.should.equal(_spellId);
                         res.body._characterId.should.equal(_characterId);
                         res.body.name.should.equal(spellName);
-                        res.body.level.should.equal(spellLevel);
-                        res.body.school.should.equal(spellSchool);
+                        res.body.level.should.equal(0);
+                        res.body.school.should.equal('School');
                         res.body.perpared.should.equal(0);
                         res.body.used.should.equal(0);
                         done();
@@ -180,8 +178,8 @@ module.exports = function () {
                         res.body[0]._id.should.equal(_spellId);
                         res.body[0]._characterId.should.equal(_characterId);
                         res.body[0].name.should.equal(spellName);
-                        res.body[0].level.should.equal(spellLevel);
-                        res.body[0].school.should.equal(spellSchool);
+                        res.body[0].level.should.equal(0);
+                        res.body[0].school.should.equal('School');
                         res.body[0].perpared.should.equal(0);
                         res.body[0].used.should.equal(0);
                         done();

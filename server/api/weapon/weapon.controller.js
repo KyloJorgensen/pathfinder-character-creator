@@ -78,7 +78,7 @@ WeaponController.prototype.createWeapon = function(req, res, next) {
 	});
 };
 
-// Update Weapon queries: _characterId and _id update: name, specialties returns: new Weapon 
+// Update Weapon queries: _characterId and _id update: name, dameage_type, renage, crit, attack_bonus, damage_bonus, and/or dice returns: new Weapon 
 WeaponController.prototype.updateWeapon = function(req, res, next) {
 	var changes = {};
 	if ('body' in req) {
