@@ -79,15 +79,12 @@ FeatController.prototype.createFeat = function(req, res, next) {
 	});
 };
 
-// Update Feat queries: _characterId and _id update: name, specialties returns: new Feat 
+// Update Feat queries: _characterId and _id update: name returns: new Feat 
 FeatController.prototype.updateFeat = function(req, res, next) {
 	var changes = {};
 	if ('body' in req) {
 		if ('name' in req.body) {
 			changes.name = req.body.name;
-		}
-		if ('specialties' in req.body) {
-			changes.specialties = req.body.specialties;
 		}
 	} else {
 		var error = new Error('missing Body');

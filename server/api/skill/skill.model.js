@@ -18,7 +18,6 @@ var skillSchema = mongoose.Schema({
 		type: String,
 		require: true
 	},
-    specialties: String,
     key_ability: {
         type: String,
         require: true,

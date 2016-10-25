@@ -79,7 +79,7 @@ AcitemController.prototype.createAcitem = function(req, res, next) {
 	});
 };
 
-// Update Acitem queries: _characterId and _id update: name, specialties returns: new Acitem 
+// Update Acitem queries: _characterId and _id update: name, type, check_penalty, spell_failure, weight, properties, max_dex_bonus returns: new Acitem 
 AcitemController.prototype.updateAcitem = function(req, res, next) {
 	var changes = {};
 	if ('body' in req) {

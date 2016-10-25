@@ -46,7 +46,7 @@ SkillController.prototype.getSkill = function(req, res, next) {
 	});
 };
 
-// create skill create: _characterId, name, and key_ability returns: new skill
+// create skill create: _characterId, name returns: new skill
 SkillController.prototype.createSkill = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
 		Character.findOne({
@@ -58,8 +58,7 @@ SkillController.prototype.createSkill = function(req, res, next) {
 				Skill.create({
 					_userId: req._userId,
 					_characterId: character._id,
-					name: req.body.name,
-					key_ability: req.body.key_ability
+					name: req.body.name
 				}, {
 					new: true
 				}, function(error, skill) {
@@ -85,24 +84,21 @@ SkillController.prototype.updateSkill = function(req, res, next) {
 		if ('name' in req.body) {
 			changes.name = req.body.name;
 		}
-		if ('specialties' in req.body) {
-			changes.specialties = req.body.specialties;
-		}
-           if('key_ability' in req.body) {
-           	changes.key_ability = req.body.key_ability;
-           }
-           if('misc_bonus' in req.body) {
-           	changes.misc_bonus = req.body.misc_bonus;
-           }
-           if('trained' in req.body) {
-           	changes.trained = req.body.trained;
-           }
-           if('train_only' in req.body) {
-           	changes.train_only = req.body.train_only;
-           }
-           if('rank' in req.body) {
-           	changes.rank = req.body.rank;
-           }
+        if('key_ability' in req.body) {
+        	changes.key_ability = req.body.key_ability;
+        }
+        if('misc_bonus' in req.body) {
+        	changes.misc_bonus = req.body.misc_bonus;
+        }
+        if('trained' in req.body) {
+        	changes.trained = req.body.trained;
+        }
+        if('train_only' in req.body) {
+        	changes.train_only = req.body.train_only;
+        }
+        if('rank' in req.body) {
+        	changes.rank = req.body.rank;
+        }
 	} else {
 		var error = new Error('missing Body');
 		error.name = 'BadRequest'

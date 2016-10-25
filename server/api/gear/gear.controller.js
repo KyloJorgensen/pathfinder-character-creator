@@ -80,15 +80,15 @@ GearController.prototype.createGear = function(req, res, next) {
 	});
 };
 
-// Update Gear queries: _characterId and _id update: name, specialties returns: new Gear 
+// Update Gear queries: _characterId and _id update: name, and/or weight returns: new Gear 
 GearController.prototype.updateGear = function(req, res, next) {
 	var changes = {};
 	if ('body' in req) {
 		if ('name' in req.body) {
 			changes.name = req.body.name;
 		}
-		if ('specialties' in req.body) {
-			changes.specialties = req.body.specialties;
+		if ('weight' in req.body) {
+			changes.weight = req.body.weight;
 		}
 	} else {
 		var error = new Error('missing Body');

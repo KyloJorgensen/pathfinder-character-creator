@@ -46,7 +46,7 @@ FeatureController.prototype.getFeature = function(req, res, next) {
 	});
 };
 
-// create Feature create: _characterId, name, and key_ability returns: new Feature
+// create Feature create: _characterId, name returns: new Feature
 FeatureController.prototype.createFeature = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
 		Character.findOne({
@@ -60,8 +60,7 @@ FeatureController.prototype.createFeature = function(req, res, next) {
 				Feature.create({
 					_userId: req._userId,
 					_characterId: character._id,
-					name: req.body.name,
-					key_ability: req.body.key_ability
+					name: req.body.name
 				}, {
 					new: true
 				}, function(error, feature) {

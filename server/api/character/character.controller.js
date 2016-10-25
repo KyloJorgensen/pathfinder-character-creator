@@ -5,6 +5,7 @@ var User = require('../user/user.model');
 
 function CharacterController() {};
 
+// get Characters returns: Characters
 CharacterController.prototype.getCharacters = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
 		Character.find({_userId: req._userId}, function(error, characters) {
@@ -21,6 +22,7 @@ CharacterController.prototype.getCharacters = function(req, res, next) {
 	});
 };
 
+// get a Character queries: _characterId returns: Character
 CharacterController.prototype.getCharacter = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
 		Character.findOne({
@@ -40,6 +42,7 @@ CharacterController.prototype.getCharacter = function(req, res, next) {
 	});
 };
 
+// create Character create: name returns: new Character
 CharacterController.prototype.createCharacter = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
 		User.findOne({
@@ -67,6 +70,7 @@ CharacterController.prototype.createCharacter = function(req, res, next) {
 	});
 };
 
+// delete Character queries: _characterId 
 CharacterController.prototype.deleteCharacter = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
 		Character.findOneAndRemove({
@@ -86,28 +90,50 @@ CharacterController.prototype.deleteCharacter = function(req, res, next) {
 	});
 };
 
+// Update Character queries: _characterId update: name, ability_score_str, ability_score_dex, 
+// ability_score_con, ability_score_int, ability_score_wis, ability_score_cha, ability_score_str_temp, 
+// ability_score_dex_temp, ability_score_con_temp, ability_score_int_temp, ability_score_wis_temp, 
+// ability_score_cha_temp, race, size, class , level, base_attack_bonus, hit_points, current_hit_points, 
+// land_speed, armor_speed, climb_speed, swim_speed, borrow_speed, fort_base_save, fort_magic_mod, 
+// fort_misc_mod, fort_temp_mod, ref_base_save, ref_magic_mod, ref_misc_mod, ref_temp_mod, will_base_save, 
+// will_magic_mod, will_misc_mod, will_temp_mod, init_misc_mod, weight, height, damage_reduction, 
+// spell_resistance, size_mod, xp_points, next_level, money_cp, money_gp, money_pp, light_load, 
+// medium_load, heavy_load, lift_over_head, lift_off_ground, drag_or_push, age, gender, hair, eyes, deity,
+ // alignment, homeland, background_stories, languages, domain_and_specialty_school, 
+ // level_0_spell_per_day, level_0_bonus_spells, level_0_spell_save_dc, level_0_spells_known, 
+ // level_1_spell_per_day, level_1_bonus_spells, level_1_spell_save_dc, level_1_spells_known, 
+ // level_2_spell_per_day, level_2_bonus_spells, level_2_spell_save_dc, level_2_spells_known, 
+ // level_3_spell_per_day, level_3_bonus_spells, level_3_spell_save_dc, level_3_spells_known, 
+ // level_4_spell_per_day, level_4_bonus_spells, level_4_spell_save_dc, level_4_spells_known, 
+ // level_5_spell_per_day, level_5_bonus_spells, level_5_spell_save_dc, level_5_spells_known, 
+ // level_6_spell_per_day, level_6_bonus_spells, level_6_spell_save_dc, level_6_spells_known, 
+ // level_7_spell_per_day, level_7_bonus_spells, level_7_spell_save_dc, level_7_spells_known, 
+ // level_8_spell_per_day, level_8_bonus_spells, level_8_spell_save_dc, level_8_spells_known, 
+ // level_9_spell_per_day, level_9_bonus_spells, level_9_spell_save_dc, level_9_spells_known, ac_armor_bonus, 
+ // ac_shild_bonus, ac_natural_armor, ac_defelection_mod, and/or ac_misc_mod  returns: new 
+
 CharacterController.prototype.updateCharacter = function(req, res, next) {
 	var changes = {};
 	if ('body' in req) {
 		if ('name' in req.body) {
 			changes.name = req.body.name;
 		}
-	    if('ability_score_str' in req.body) {
+	    if ('ability_score_str' in req.body) {
 	    	changes.ability_score_str = req.body.ability_score_str;
 	    }
-	    if('ability_score_dex' in req.body) {
+	    if ('ability_score_dex' in req.body) {
 	    	changes.ability_score_dex = req.body.ability_score_dex;
 	    }
-	    if('ability_score_con' in req.body) {
+	    if ('ability_score_con' in req.body) {
 	    	changes.ability_score_con = req.body.ability_score_con;
 	    }
-	    if('ability_score_int' in req.body) {
+	    if ('ability_score_int' in req.body) {
 	    	changes.ability_score_int = req.body.ability_score_int;
 	    }
-	    if('ability_score_wis' in req.body) {
+	    if ('ability_score_wis' in req.body) {
 	    	changes.ability_score_wis = req.body.ability_score_wis;
 	    }
-	    if('ability_score_cha' in req.body) {
+	    if ('ability_score_cha' in req.body) {
 	    	changes.ability_score_cha = req.body.ability_score_cha;
 	    }
 		if ('ability_score_str_temp' in req.body) {

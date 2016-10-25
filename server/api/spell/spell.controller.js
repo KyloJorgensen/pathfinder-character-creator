@@ -46,7 +46,7 @@ SpellController.prototype.getSpell = function(req, res, next) {
 	});
 };
 
-// create Spell create: _characterId, name, level, school, perpared, used returns: new Spell
+// create Spell create: _characterId, name used returns: new Spell
 SpellController.prototype.createSpell = function(req, res, next) {
 	return new Promise(function(resolve, reject) {
 		Character.findOne({
@@ -60,9 +60,7 @@ SpellController.prototype.createSpell = function(req, res, next) {
 				Spell.create({
 					_userId: req._userId,
 					_characterId: character._id,
-					name: req.body.name,
-					level: req.body.level,
-					school: req.body.school
+					name: req.body.name
 				}, {
 					new: true
 				}, function(error, spell) {
