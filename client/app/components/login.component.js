@@ -6,8 +6,7 @@ var React = require('react'),
 	Link = require('react-router').Link;
 
 var mainPage = React.createClass({
-	handleSubmit: function(event) {
-		event.preventDefault();
+	handleSubmit: function() {
 		if (this.refs.username.value == '') {
 			return alert('Username Field Required');
 		}
@@ -22,6 +21,12 @@ var mainPage = React.createClass({
 		this.refs.username.value = '';
     	this.refs.password.value = '';
 	},
+	hitKey: function(event) {
+		console.log('here')
+		if (event.key == 'Enter') {
+            this.handleSubmit();
+        }
+	},
 	render: function() {
 		if (this.props.loginFailed) {
 			alert('Invaild Username and Password')
@@ -29,20 +34,18 @@ var mainPage = React.createClass({
 		return (
 			<div className="login">
 		   		<h1>Login</h1>
-				<form onSubmit={this.handleSubmit}>
+				<div>
 				    <div>
 				        <label>Username:</label>
-				        <input type="text" ref="username" name="username"/>
+				        <input type="text" onKeyPress={this.hitkey} ref="username" name="username"/>
 				    </div>
 				    <div>
 				        <label>Password:</label>
-				        <input type="password" ref="password" name="password"/>
+				        <input type="password" onKeyPress={this.hitkey} ref="password" name="password"/>
 				    </div>
-				    <div>
-				        <input type="submit" value="LOGIN"/>
-				        <Link to={'/signup'}>SIGNUP</Link>
-				    </div>
-				</form>
+            		<a onClick={this.handleSubmit} >LOGIN</a>
+				    <Link to={'/signup'}>SIGNUP</Link>
+				</div>
 		    </div>
 		);
 	}

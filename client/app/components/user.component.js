@@ -17,7 +17,7 @@ var mainPage = React.createClass({
 		var characters = [];
 		for (var i = 0; i < this.props.listOfCharacters.length; i++) {
 			this.props.listOfCharacters[i]
-			characters.push(<CharacterName link={this.props.history} name={this.props.listOfCharacters[i].name} _id={this.props.listOfCharacters[i]._id} />);
+			characters.push(<CharacterName link={this.props.history} character={this.props.listOfCharacters[i]} />);
 		}
 		if (!'cookie' in document) {
 			this.props.history.replace('/');
@@ -30,18 +30,33 @@ var mainPage = React.createClass({
 			this.props.history.replace('/');
 	    }
 		return (
-		    <div className="user-page">
+		    <div className="user-page-wrapper">
 		    	<Nav />
-		    	<h1>Characters</h1>
-		    	<ul>
-					{characters}
-		    	</ul>
-		    	<CreateCharacter link={this.props.history} />
+		    	<div className="user-page">
+		    		<div id="header">
+			    		<div className="container">
+			    			<div>
+				    			<h1>Characters</h1>
+					    	</div>
+				    	</div>
+				    </div>
+				    <div id="user">
+			    		<div className="container">
+			    			<div>
+			    				<div>
+						          	<ul>
+										{characters}
+							    	</ul>
+							    	<CreateCharacter link={this.props.history} />
+				        		</div>
+				        	</div>
+				        </div>
+				    </div>
+				</div>
 		    </div>
 		);
 	}
 });
-
 
 var mapStateToProps = function(state, props) {
     return {

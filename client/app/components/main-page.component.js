@@ -16,10 +16,27 @@ var mainPage = React.createClass({
         }
   		
 		return (
-		    <div className="main-page">
+		    <div className="main-page-wrapper">
 		    	<Nav />
-		        <h1>Welcome to Pathfinder Character Creator.</h1>
-		        <p>Pathfinder Character Creator is a place to make, edit, and save your characters for pathfinder.</p>
+		    	<div className="main-page">
+		    		<div id="banner">
+			    		<div className="container">
+			    			<div>
+				    			<img src="/871506.jpg" />
+					    	</div>
+				    	</div>
+				    </div>
+				    <div id="main">
+			    		<div className="container">
+			    			<div>
+			    				<div>
+						        	<h1>Welcome to Pathfinder Character Creator.</h1>
+						        	<p>Pathfinder Character Creator is a place to make, edit, and save your characters for pathfinder.</p>
+				        		</div>
+				        	</div>
+				        </div>
+				    </div>
+				</div>
 		    </div>
 		);
 	}

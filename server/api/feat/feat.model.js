@@ -17,8 +17,7 @@ var featSchema = mongoose.Schema({
     name: {
 		type: String,
 		require: true
-	},
-    specialties: String
+	}
 
 });
 

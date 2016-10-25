@@ -17,11 +17,12 @@ module.exports = function(label) {
             }
         },
         saveInteractive: function() {
-            if (this.state.name == '') {
-                this.props.dispatch(interactiveActions.remove(this.props.interactive._id, this.props.interactive._characterId));
-            } else {
+            if (this.state.name != '') {
                 this.props.dispatch(interactiveActions.update(this.state, this.props.interactive));
             }
+        },
+        deleteItem: function() {
+            this.props.dispatch(interactiveActions.remove(this.props.interactive._id, this.props.interactive._characterId));
         },
         componentWillMount: function() {
             this.setState(this.props.interactive);
@@ -33,13 +34,14 @@ module.exports = function(label) {
             for (var i = 0; i < keys.length; i++) {
                 if (keys[i] != '_id' && keys[i] != '_characterId' && keys[i] != '_userId' && keys[i] != '__v') {
                     keys[i]
-                    items.push(<input type="text" onKeyPress={this.hitkey} onChange={this.editField} onBlur={this.saveInteractive} name={keys[i]} value={this.state[keys[i]]} />)
+                    items.push(<td><input type="text" onKeyPress={this.hitkey} onChange={this.editField} onBlur={this.saveInteractive} name={keys[i]} value={this.state[keys[i]]} /></td>)
                 }
             }
+            items.push(<button onClick={this.deleteItem} >DELETE</button>);
             return (
-                <li className={label}>
+                <tr className={label}>
                     {items}
-                </li>
+                </tr>
             );
         }
     });

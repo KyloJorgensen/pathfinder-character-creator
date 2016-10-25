@@ -20,11 +20,13 @@ var spellSchema = mongoose.Schema({
 	},
     level: {
         type: Number,
-        require: true
+        require: true,
+        default: 0
     },
     school: {
         type: String,
-        require: true
+        require: true,
+        default: 'School'
     },
     perpared: {
         type: Number,

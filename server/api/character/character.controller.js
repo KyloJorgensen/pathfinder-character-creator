@@ -146,6 +146,9 @@ CharacterController.prototype.updateCharacter = function(req, res, next) {
 	    if ('hit_points' in req.body) {
 	    	changes.hit_points = req.body.hit_points;
 	    }
+	    if ('current_hit_points' in req.body) {
+	    	changes.current_hit_points = req.body.current_hit_points;
+	    }
 	    if ('land_speed' in req.body) {
 	    	changes.land_speed = req.body.land_speed;
 	    }
@@ -403,6 +406,21 @@ CharacterController.prototype.updateCharacter = function(req, res, next) {
 		}
 		if ('level_9_spells_known' in req.body) {
 			changes.level_9_spells_known = req.body.level_9_spells_known;
+		}
+		if ('ac_armor_bonus' in req.body) {
+			changes.ac_armor_bonus = req.body.ac_armor_bonus;
+		}
+		if ('ac_shild_bonus' in req.body) {
+			changes.ac_shild_bonus = req.body.ac_shild_bonus;
+		}
+		if ('ac_natural_armor' in req.body) {
+			changes.ac_natural_armor = req.body.ac_natural_armor;
+		}
+		if ('ac_defelection_mod' in req.body) {
+			changes.ac_defelection_mod = req.body.ac_defelection_mod;
+		}
+		if ('ac_misc_mod' in req.body) {
+			changes.ac_misc_mod = req.body.ac_misc_mod;
 		}
 	} else {
 		var error = new Error('missing Body');

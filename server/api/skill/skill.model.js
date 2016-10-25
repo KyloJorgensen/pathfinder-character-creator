@@ -21,7 +21,8 @@ var skillSchema = mongoose.Schema({
     specialties: String,
     key_ability: {
         type: String,
-        require: true
+        require: true,
+        default: 'Key Ability'
     },
     rank: {
         type: Number,

@@ -65,6 +65,7 @@ module.exports = function() {
                         res.body.level.should.equal(0);
                         res.body.base_attack_bonus.should.equal(0);
                         res.body.hit_points.should.equal(0);
+                        res.body.current_hit_points.should.equal(0);
                         res.body.land_speed.should.equal(0);
                         res.body.armor_speed.should.equal(0);
                         res.body.fly_speed.should.equal(0);
@@ -151,6 +152,11 @@ module.exports = function() {
                         res.body.level_9_bonus_spells.should.equal(0);
                         res.body.level_9_spell_save_dc.should.equal(0);
                         res.body.level_9_spells_known.should.equal(0);
+                        res.body.ac_armor_bonus.should.equal(0);
+                        res.body.ac_shild_bonus.should.equal(0);
+                        res.body.ac_natural_armor.should.equal(0);
+                        res.body.ac_defelection_mod.should.equal(0);
+                        res.body.ac_misc_mod.should.equal(0);
                         characterId = res.body._id;
                         done();
                     });
@@ -206,6 +212,7 @@ module.exports = function() {
                         res.body[0].level.should.be.a('number');
                         res.body[0].base_attack_bonus.should.be.a('number');
                         res.body[0].hit_points.should.be.a('number');
+                        res.body[0].current_hit_points.should.be.a('number');
                         res.body[0].land_speed.should.be.a('number');
                         res.body[0].armor_speed.should.be.a('number');
                         res.body[0].fly_speed.should.be.a('number');
@@ -292,6 +299,11 @@ module.exports = function() {
                         res.body[0].level_9_bonus_spells.should.be.a('number');
                         res.body[0].level_9_spell_save_dc.should.be.a('number');
                         res.body[0].level_9_spells_known.should.be.a('number');
+                        res.body[0].ac_armor_bonus.should.be.a('number');
+                        res.body[0].ac_shild_bonus.should.be.a('number');
+                        res.body[0].ac_natural_armor.should.be.a('number');
+                        res.body[0].ac_defelection_mod.should.be.a('number');
+                        res.body[0].ac_misc_mod.should.be.a('number');
                         done();
                     });
                 }).catch(function(error) {
@@ -345,6 +357,7 @@ module.exports = function() {
                         res.body.level.should.equal(0);
                         res.body.base_attack_bonus.should.equal(0);
                         res.body.hit_points.should.equal(0);
+                        res.body.current_hit_points.should.equal(0);
                         res.body.land_speed.should.equal(0);
                         res.body.armor_speed.should.equal(0);
                         res.body.fly_speed.should.equal(0);
@@ -431,6 +444,11 @@ module.exports = function() {
                         res.body.level_9_bonus_spells.should.equal(0);
                         res.body.level_9_spell_save_dc.should.equal(0);
                         res.body.level_9_spells_known.should.equal(0);
+                        res.body.ac_armor_bonus.should.equal(0);
+                        res.body.ac_shild_bonus.should.equal(0);
+                        res.body.ac_natural_armor.should.equal(0);
+                        res.body.ac_defelection_mod.should.equal(0);
+                        res.body.ac_misc_mod.should.equal(0);
                         done();
                     });
                 }).catch(function(error) {
@@ -481,6 +499,7 @@ module.exports = function() {
                         level: 5,
                         base_attack_bonus: 5,
                         hit_points: 50,
+                        current_hit_points: 50,
                         land_speed: 0,
                         armor_speed: 0,
                         fly_speed: 0,
@@ -566,7 +585,12 @@ module.exports = function() {
                         level_9_spell_per_day: 2,
                         level_9_bonus_spells: 2,
                         level_9_spell_save_dc: 2,
-                        level_9_spells_known: 2
+                        level_9_spells_known: 2,
+                        ac_armor_bonus: 2,
+                        ac_shild_bonus: 2,
+                        ac_natural_armor: 2,
+                        ac_defelection_mod: 2,
+                        ac_misc_mod: 2
                     };
                     agent.put('/character')
                     .set('Authentication', cookie.serialize('UserKey', btoa(SECRET + ':' + user._id)))
@@ -593,6 +617,7 @@ module.exports = function() {
                         res.body.level.should.equal(changes.level);
                         res.body.base_attack_bonus.should.equal(changes.base_attack_bonus);
                         res.body.hit_points.should.equal(changes.hit_points);
+                        res.body.current_hit_points.should.equal(changes.current_hit_points);
                         res.body.land_speed.should.equal(changes.land_speed);
                         res.body.armor_speed.should.equal(changes.armor_speed);
                         res.body.fly_speed.should.equal(changes.fly_speed);
@@ -679,6 +704,11 @@ module.exports = function() {
                         res.body.level_9_bonus_spells.should.equal(changes.level_9_bonus_spells);
                         res.body.level_9_spell_save_dc.should.equal(changes.level_9_spell_save_dc);
                         res.body.level_9_spells_known.should.equal(changes.level_9_spells_known);
+                        res.body.ac_armor_bonus.should.equal(changes.ac_armor_bonus);
+                        res.body.ac_shild_bonus.should.equal(changes.ac_shild_bonus);
+                        res.body.ac_natural_armor.should.equal(changes.ac_natural_armor);
+                        res.body.ac_defelection_mod.should.equal(changes.ac_defelection_mod);
+                        res.body.ac_misc_mod.should.equal(changes.ac_misc_mod);
                         done();
                     });
                 }).catch(function(error) {

@@ -20,15 +20,26 @@ module.exports = function(label) {
         },
         render: function() {
             var interactives = [];
+            if (this.props.interactives[0]) {
+                var keys = Object.keys(this.props.interactives[0]);
+                var items = [];
+                for (var i = 0; i < keys.length; i++) {
+                    if (keys[i] != '_id' && keys[i] != '_characterId' && keys[i] != '_userId' && keys[i] != '__v') {
+                        keys[i]
+                        items.push(<th>{keys[i]}</th>);
+                    }
+                }
+                interactives.push(items);
+            }
             for (var i = 0; i < this.props.interactives.length; i++) {
                 interactives.push(<Interactive key={i} interactive={this.props.interactives[i]} />);
             }
-            interactives.push(<li><input type="text" onKeyPress={this.hitkey} onBlur={this.addInteractive} name="newItem" ref="newItem" placeholder="ADD NEW" /></li>);
+            interactives.push(<tr><td><input type="text" onKeyPress={this.hitkey} onBlur={this.addInteractive} name="newItem" ref="newItem" placeholder="ADD NEW" /></td></tr>);
             var className = label + '-list';
             return (
-                <ul className={className}>
+                <table className={className}>
                     {interactives}
-                </ul>
+                </table>
             );
         }
     });

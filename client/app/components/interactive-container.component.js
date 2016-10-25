@@ -17,6 +17,7 @@ module.exports =function(label) {
             var className = label + '-container'
             return (
                 <div className={className}>
+                    <p>{label}</p>
                     <InteractiveList _characterId={this.props._characterId}/>
                 </div>
             );

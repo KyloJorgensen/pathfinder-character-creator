@@ -6,12 +6,12 @@ var React = require('react'),
 
 var characterName = React.createClass({
     onCharacter: function() {
-        this.props.link.replace('/character/' + this.props._id);
+        this.props.link.replace('/character/' + this.props.character._id);
     },
     render: function() {
         return (
             <li className="character-name">
-                <button onClick={this.onCharacter} >{this.props.name}</button>
+                <a onClick={this.onCharacter} >{this.props.character.name} - {this.props.character.class} {this.props.character.race} {this.props.character.level} </a>
             </li>
         );
     }

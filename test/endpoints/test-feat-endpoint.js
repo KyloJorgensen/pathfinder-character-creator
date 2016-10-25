@@ -14,7 +14,6 @@ var chai = require('chai'),
     characterName = 'bob',
     _characterId,
     featName = 'Swim',
-    featAbility = 'str',
     _featId;
 chai.use(chaiHttp);
 
@@ -85,15 +84,13 @@ module.exports = function () {
                     .set('Authentication', cookie.serialize('UserKey', btoa(SECRET + ':' + user._id)))
                     .send({
                         _characterId: _characterId,
-                        name: featName,
-                        key_ability: featAbility
+                        name: featName
                     })
                     .end(function (error, res) {
                         if (error) {return done(error)}
                         res.should.have.status(200);
                         res.body._characterId.should.equal(_characterId);
                         res.body.name.should.equal(featName);
-                        res.body.should.not.have.property('specialties');
                         _featId = res.body._id;
                         done();
                     });
@@ -132,7 +129,6 @@ module.exports = function () {
                         res.body._id.should.equal(_featId);
                         res.body._characterId.should.equal(_characterId);
                         res.body.name.should.equal(featName);
-                        res.body.should.not.have.property('specialties');
                         done();
                     });
                 }).catch(function(error) {
@@ -171,7 +167,6 @@ module.exports = function () {
                         res.body[0]._id.should.equal(_featId);
                         res.body[0]._characterId.should.equal(_characterId);
                         res.body[0].name.should.equal(featName);
-                        res.body[0].should.not.have.property('specialties');
                         done();
                     });
                 }).catch(function(error) {
@@ -204,8 +199,7 @@ module.exports = function () {
                     var data = {
                         _id: _featId,
                         _characterId: _characterId,
-                        name: 'Jump',
-                        specialties: 'up'
+                        name: 'Jump'
                     };
                     agent.put('/feat')
                     .set('Authentication', cookie.serialize('UserKey', btoa(SECRET + ':' + user._id)))
@@ -216,7 +210,6 @@ module.exports = function () {
                         res.body._id.should.equal(_featId);
                         res.body._characterId.should.equal(_characterId);
                         res.body.name.should.equal(data.name);
-                        res.body.specialties.should.equal(data.specialties);
                         done();
                     });
                 }).catch(function(error) {

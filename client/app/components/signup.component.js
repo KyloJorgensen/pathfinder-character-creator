@@ -31,6 +31,11 @@ var mainPage = React.createClass({
 			alert('Passwords must match');
 		}
 	},
+	hitKey: function(event) {
+		if (event.key == 'Enter') {
+            this.handleSubmit();
+        }
+	},
 	componentWillUnmount: function() {
 		this.refs.name.value = '';
 		this.refs.username.value = '';
@@ -44,28 +49,26 @@ var mainPage = React.createClass({
 		var component = (
 			<div className="signup">
 		   		<h1>Signup</h1>
-				<form onSubmit={this.handleSubmit}>
+				<div>
 					<div>
 				        <label>Name:</label>
-				        <input type="text" ref="name" name="name"/>
+				        <input type="text" onKeyPress={this.hitkey} ref="name" name="name"/>
 				    </div>
 				    <div>
 				        <label>Username:</label>
-				        <input type="text" ref="username" name="username"/>
+				        <input type="text" onKeyPress={this.hitkey} ref="username" name="username"/>
 				    </div>
 				    <div>
 				        <label>Password:</label>
-				        <input type="password" ref="password" name="password"/>
+				        <input type="password" onKeyPress={this.hitkey} ref="password" name="password"/>
 				    </div>
 				    <div>
-				        <label>Confrimed Password:</label>
-				        <input type="password" ref="confrimedPassword" name="confrimedPassword"/>
+				        <label>Confrim:</label>
+				        <input type="password" onKeyPress={this.hitkey} ref="confrimedPassword" name="confrimedPassword"/>
 				    </div>
-				    <div>
-				        <input type="submit" value="SIGNUP"/>
-				        <Link to={'/login'}>LOGIN</Link>
-				    </div>
-				</form>
+				    <a onClick={this.handleSubmit} >SIGNUP</a>
+				    <Link to={'/login'}>LOGIN</Link>
+				</div>
 		    </div>					
 		);
 		

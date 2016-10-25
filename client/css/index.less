@@ -1,3 +1,337 @@
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro');
+
 body {
-	background-color: pink;
+	background-color: #e5e5e5;
+	margin: 0;
+	font-family: "Source Sans Pro",arial,sans-serif;
+    font-weight: 300;
+    font-size: 13pt;
+    line-height: 1.5em;
+    color: #b3b3b3;
+}
+
+ol, ul {
+    list-style: none;
+    padding: 0;
+}
+.container {
+    width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.main-page {
+	color: black;
+	img {
+		width: 100%;
+	}
+	.container > div {
+    	padding: 50px 3em;
+	    background-color: #fff;
+	    position: static;
+	    text-align: center;
+    }
+}
+
+.user-page {
+	color: black;
+	#header {
+		.container {
+			> div {
+		   	    padding: 10px 4em 1px 3em;
+			    background-color: #fff;
+			    position: static;
+			}
+		}
+	}
+	#user {
+		.container {
+			> div {
+		   	    padding: 10px 4em 120px 3em;
+			    background-color: #fff;
+			    position: static;
+		    	ul {
+		    		margin-left: 15px;
+		    	}
+			    .create-character {
+			    	> div {
+			    		> label {
+			    			margin-right: 5px;
+			    		}
+			    		> input {
+			    			margin-right: 25px;
+			    		}
+			    		> a {
+    						background-color: #4499dc;
+						    text-decoration: none;
+						    text-transform: uppercase;
+						    line-height: 45px;
+						    font-size: 13pt;
+						    color: white;
+						    border: 0px solid red;
+    						border-radius: 5px;
+    						padding: 6px;
+			    		}
+			    	}
+			    }
+			}
+		}
+	}
+}
+
+.character-page {
+	color: black;
+	text-transform: uppercase;
+	input {
+		text-align: center;
+	}
+	table {
+		width: 100%;
+		th {
+			font-size: 12px;
+		}
+		th, td {
+		    border-bottom: 1px solid #ddd;
+		    text-align: center;
+		}
+		input {
+			width: 90%;
+		}
+    }
+    .character-menu {
+	    > div {
+			display: inline-block;
+			width: 50%;
+			> div {
+				float: right;
+				a {
+					margin-left: 32px;
+					background-color: #4499dc;
+					text-decoration: none;
+					text-transform: uppercase;
+					line-height: 45px;
+					font-size: 13pt;
+					color: white;
+					border: 0px solid red;
+    				border-radius: 5px;
+    				padding: 6px;
+				}
+			}
+    	}
+    }
+	.container {
+		> div {
+	   	    padding: 10px 4em 50px 3em;
+		    background-color: #fff;
+		    position: static;
+	    }
+
+    	.character {
+    		.character-header {
+    			padding-bottom: 15px;
+	    		div {
+	    			display: inline-block;
+	    			width: 150px;
+	    		}
+	    	}
+	    	main {
+		    	.column-left {
+					display: inline-block;
+					width: 50%;
+					vertical-align: top;
+
+		    	}
+		    	.column-right {
+		    		display: inline-block;
+					vertical-align: top;
+		    		width: 50%;
+		    	}
+		    	section {
+		    		.health {
+		    			> div {
+		    				display: inline-block;
+		    				width: 50%;
+		    				label {
+		    					padding-right: 10px;
+		    				}
+		    			}
+		    		}
+		    		.AC-wrapper {
+						table {
+							th {
+								font-size: 10px;
+							}
+							th, td {
+							    width: 50px;
+							}
+						}
+		    		}
+		    		.initaitive, .AC-wrapper, .CMB, .CMD {
+						th, td {
+						    border-bottom: 0px solid #ddd;
+						}
+		    		}
+		    		.initaitive-wrapper, .CMB-wrapper, .CMD-wrapper {
+		    			div {
+		    				display: inline-block;
+		    				width: 15%;
+		    				float: left;
+		    			}
+		    			table {
+		    				display: inline-block;
+		    				width: 85%;
+		    				th, td {
+		    					padding: 0;
+		    					width: 150px;
+		    				}
+		    			}
+		    		}
+		    		.babdrsr {
+		    			div {
+		    				padding-right: 20px;
+		    				display: inline-block;
+		    			}
+		    			label {
+		    				padding-right: 15px;
+		    			}
+		    			input {
+		    				width: 50px;
+		    			}
+		    		}
+		    		.speed, .carrying-capacity {
+		    			div {
+		    				display: inline-block;
+		    				width: 50%;
+		    				label {
+		    					padding-left: 10px;
+		    				}
+		    				> input {
+		    					width: 40%;
+		    					float: right;
+		    				}
+
+		    			}
+		    		}
+		    		.languages {
+		    			textarea {
+		    				width: 100%;
+		    			}
+		    		}
+		    	}
+				div {
+					.stuff {
+						> div {
+				    		display: inline-block;
+							vertical-align: top;
+				    		width: 75%;
+						}
+						.gear-container {
+
+				    		display: inline-block;
+							vertical-align: top;
+				    		width: 25%;
+						}
+					}
+					.background {
+						textarea {
+							width: 100%;
+							height: 200px;
+						}
+			    	}
+				}
+	    	}
+    	}
+	}
+}
+
+.login-page, .signup-page {
+    text-align: center;
+    width: 250px;
+    margin: 50px auto;
+    background-color: #4499dc;
+    border-radius: 25px;
+    padding: 27px;
+	h1 {
+		display: block;
+		letter-spacing: -1px;
+		text-align: center;
+		text-decoration: none;
+		text-shadow: -1px -1px 0px #2C7485;
+		text-transform: uppercase;
+		font-size: 44pt;
+		font-weight: 200;
+		color: #FFFFFF;
+	}
+	.login, .signup {
+	    > div > div {
+	    	float: right;
+	    	> label {
+			    padding: 30px 0px 0px 0px;
+			    letter-spacing: -1px;
+			    text-align: center;
+			    text-decoration: none;
+			    text-shadow: -1px -1px 0px #2C7485;
+			    text-transform: uppercase;
+			    font-weight: 200;
+			    color: #FFFFFF;
+	    	}
+	    }
+	}
+
+    input, a {
+    	margin: 10px;
+    }
+
+    > input, a {
+	    text-decoration: none;
+	    text-transform: uppercase;
+	    line-height: 45px;
+	    font-size: 13pt;
+	    color: #16576B;
+    }
+}
+
+.nav-bar {
+	padding-top: 3em;
+	background-color: #4499dc;
+	#logo {
+	    overflow: hidden;
+	    text-align: center;
+	    height: 100px;
+	    h1 {
+	    	display: block;
+		    padding: 30px 0px 0px 0px;
+		    letter-spacing: -1px;
+		    text-align: center;
+		    text-decoration: none;
+		    text-shadow: -1px -1px 0px #2C7485;
+		    text-transform: uppercase;
+		    font-size: 44pt;
+		    font-weight: 200;
+		    color: #FFFFFF;
+	    }
+	}
+	#menu {
+		    height: 90px;
+		ul {
+			text-align: center;
+			li {
+				display: inline-block;
+    			padding: 0px 20px;
+	    		a {
+		    		display: block;
+				    float: left;
+				    margin-right: 2px;
+				    text-decoration: none;
+				    text-transform: uppercase;
+				    line-height: 45px;
+				    font-size: 13pt;
+				    color: #16576B;
+		    	}
+		    }
+		}
+	}
+	h1 {
+		padding: 0.83em;
+    	margin: 0;
+	}
 }

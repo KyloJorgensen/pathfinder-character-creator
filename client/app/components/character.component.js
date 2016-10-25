@@ -14,7 +14,16 @@ var React = require('react'),
 	SkillContainer = require('./interactive-container.component')(interactives.SKILL),
 	SpellContainer = require('./interactive-container.component')(interactives.SPELL),
 	WeaponContainer = require('./interactive-container.component')(interactives.WEAPON);
-	
+
+var modifer = function(ability, temp) {
+	var mod = Number(ability) + Number(temp || 0) - 10;
+	if (Math.abs(mod) % 2 == 1) {
+		mod--;
+	} 
+	mod /= 2;
+	return mod;
+};
+
 var character = React.createClass({
 	getInitialState: function() {
 		var state = {};
@@ -32,12 +41,16 @@ var character = React.createClass({
 		state[that.target.name] = that.target.value;
 		this.setState(state);
 	},
-	saveCharacter: function(event) {
-		event.preventDefault();
+	saveCharacter: function() {
 		this.props.dispatch(characterActions.updateCharacter(this.state, this.props.character));
 	},
 	deleteCharacter: function() {
 		this.props.dispatch(characterActions.deleteCharacter(this.props.character._id, this.props.history));
+	},
+	hitKey: function(event) {
+		if (event.key == 'Enter') {
+            this.saveCharacter();
+        }
 	},
 	render: function() {
 		if (Object.keys(this.props.params).length == 0) {
@@ -48,235 +61,477 @@ var character = React.createClass({
 				this.setState(this.props.character);
 			}
 		}
+
+
 		return (
-		    <div className="character-page">
+			<div className="character-page-wrapper">
 		    	<Nav />
-		    	<h1>Character</h1>
-		    	<p>{this.props.character.name}</p>
-		    	<p>{this.state.name}</p>
-				<div createClass="character" >
-				    <div>
-				        <label>Name:</label>
-						<input type="text" name="name" onChange={this.editField} value={this.state.name} />
-						<label>ability_score_str:</label>
-						<input type="number" name="ability_score_str" onChange={this.editField} value={this.state.ability_score_str} />
-						<label>ability_score_dex:</label>
-						<input type="number" name="ability_score_dex" onChange={this.editField} value={this.state.ability_score_dex} />
-						<label>ability_score_con:</label>
-						<input type="number" name="ability_score_con" onChange={this.editField} value={this.state.ability_score_con} />
-						<label>ability_score_int:</label>
-						<input type="number" name="ability_score_int" onChange={this.editField} value={this.state.ability_score_int} />
-						<label>ability_score_wis:</label>
-						<input type="number" name="ability_score_wis" onChange={this.editField} value={this.state.ability_score_wis} />
-						<label>ability_score_cha:</label>
-						<input type="number" name="ability_score_cha" onChange={this.editField} value={this.state.ability_score_cha} />
-						<label>ability_score_str_temp:</label>
-						<input type="number" name="ability_score_str_temp" onChange={this.editField} value={this.state.ability_score_str_temp} />
-						<label>ability_score_dex_temp:</label>
-						<input type="number" name="ability_score_dex_temp" onChange={this.editField} value={this.state.ability_score_dex_temp} />
-						<label>ability_score_con_temp:</label>
-						<input type="number" name="ability_score_con_temp" onChange={this.editField} value={this.state.ability_score_con_temp} />
-						<label>ability_score_int_temp:</label>
-						<input type="number" name="ability_score_int_temp" onChange={this.editField} value={this.state.ability_score_int_temp} />
-						<label>ability_score_wis_temp:</label>
-						<input type="number" name="ability_score_wis_temp" onChange={this.editField} value={this.state.ability_score_wis_temp} />
-						<label>ability_score_cha_temp:</label>
-						<input type="number" name="ability_score_cha_temp" onChange={this.editField} value={this.state.ability_score_cha_temp} />
-						<label>race:</label>
-						<input type="text" name="race" onChange={this.editField} value={this.state.race} />
-						<label>size:</label>
-						<input type="text" name="size" onChange={this.editField} value={this.state.size} />
-						<label>class:</label>
-						<input type="text" name="class" onChange={this.editField} value={this.state.class} />
-						<label>level:</label>
-						<input type="number" name="level" onChange={this.editField} value={this.state.level} />
-						<label>base_attack_bonus:</label>
-						<input type="number" name="base_attack_bonus" onChange={this.editField} value={this.state.base_attack_bonus} />
-						<label>hit_points:</label>
-						<input type="number" name="hit_points" onChange={this.editField} value={this.state.hit_points} />
-						<label>land_speed:</label>
-						<input type="number" name="land_speed" onChange={this.editField} value={this.state.land_speed} />
-						<label>armor_speed:</label>
-						<input type="number" name="armor_speed" onChange={this.editField} value={this.state.armor_speed} />
-						<label>fly_speed:</label>
-						<input type="number" name="fly_speed" onChange={this.editField} value={this.state.fly_speed} />
-						<label>climb_speed:</label>
-						<input type="number" name="climb_speed" onChange={this.editField} value={this.state.climb_speed} />
-						<label>swim_speed:</label>
-						<input type="number" name="swim_speed" onChange={this.editField} value={this.state.swim_speed} />
-						<label>borrow_speed:</label>
-						<input type="number" name="borrow_speed" onChange={this.editField} value={this.state.borrow_speed} />
-						<label>fort_base_save:</label>
-						<input type="number" name="fort_base_save" onChange={this.editField} value={this.state.fort_base_save} />
-						<label>fort_magic_mod:</label>
-						<input type="number" name="fort_magic_mod" onChange={this.editField} value={this.state.fort_magic_mod} />
-						<label>fort_misc_mod:</label>
-						<input type="number" name="fort_misc_mod" onChange={this.editField} value={this.state.fort_misc_mod} />
-						<label>fort_temp_mod:</label>
-						<input type="number" name="fort_temp_mod" onChange={this.editField} value={this.state.fort_temp_mod} />
-						<label>ref_base_save:</label>
-						<input type="number" name="ref_base_save" onChange={this.editField} value={this.state.ref_base_save} />
-						<label>ref_magic_mod:</label>
-						<input type="number" name="ref_magic_mod" onChange={this.editField} value={this.state.ref_magic_mod} />
-						<label>ref_misc_mod:</label>
-						<input type="number" name="ref_misc_mod" onChange={this.editField} value={this.state.ref_misc_mod} />
-						<label>ref_temp_mod:</label>
-						<input type="number" name="ref_temp_mod" onChange={this.editField} value={this.state.ref_temp_mod} />
-						<label>will_base_save:</label>
-						<input type="number" name="will_base_save" onChange={this.editField} value={this.state.will_base_save} />
-						<label>will_magic_mod:</label>
-						<input type="number" name="will_magic_mod" onChange={this.editField} value={this.state.will_magic_mod} />
-						<label>will_misc_mod:</label>
-						<input type="number" name="will_misc_mod" onChange={this.editField} value={this.state.will_misc_mod} />
-						<label>will_temp_mod:</label>
-						<input type="number" name="will_temp_mod" onChange={this.editField} value={this.state.will_temp_mod} />
-						<label>init_misc_mod:</label>
-						<input type="number" name="init_misc_mod" onChange={this.editField} value={this.state.init_misc_mod} />
-						<label>weight:</label>
-						<input type="text" name="weight" onChange={this.editField} value={this.state.weight} />
-						<label>height:</label>
-						<input type="text" name="height" onChange={this.editField} value={this.state.height} />
-						<label>damage_reduction:</label>
-						<input type="text" name="damage_reduction" onChange={this.editField} value={this.state.damage_reduction} />
-						<label>spell_resistance:</label>
-						<input type="text" name="spell_resistance" onChange={this.editField} value={this.state.spell_resistance} />
-						<label>size_mod:</label>
-						<input type="number" name="size_mod" onChange={this.editField} value={this.state.size_mod} />
-						<label>xp_points:</label>
-						<input type="number" name="xp_points" onChange={this.editField} value={this.state.xp_points} />
-						<label>next_level:</label>
-						<input type="number" name="next_level" onChange={this.editField} value={this.state.next_level} />
-						<label>money_cp:</label>
-						<input type="number" name="money_cp" onChange={this.editField} value={this.state.money_cp} />
-						<label>money_sp:</label>
-						<input type="number" name="money_sp" onChange={this.editField} value={this.state.money_sp} />
-						<label>money_gp:</label>
-						<input type="number" name="money_gp" onChange={this.editField} value={this.state.money_gp} />
-						<label>money_pp:</label>
-						<input type="number" name="money_pp" onChange={this.editField} value={this.state.money_pp} />
-						<label>light_load:</label>
-						<input type="text" name="light_load" onChange={this.editField} value={this.state.light_load} />
-						<label>medium_load:</label>
-						<input type="text" name="medium_load" onChange={this.editField} value={this.state.medium_load} />
-						<label>heavy_load:</label>
-						<input type="text" name="heavy_load" onChange={this.editField} value={this.state.heavy_load} />
-						<label>lift_over_head:</label>
-						<input type="text" name="lift_over_head" onChange={this.editField} value={this.state.lift_over_head} />
-						<label>lift_off_ground:</label>
-						<input type="text" name="lift_off_ground" onChange={this.editField} value={this.state.lift_off_ground} />
-						<label>drag_or_push:</label>
-						<input type="text" name="drag_or_push" onChange={this.editField} value={this.state.drag_or_push} />
-						<label>age:</label>
-						<input type="number" name="age" onChange={this.editField} value={this.state.age} />
-						<label>gender:</label>
-						<input type="text" name="gender" onChange={this.editField} value={this.state.gender} />
-						<label>hair:</label>
-						<input type="text" name="hair" onChange={this.editField} value={this.state.hair} />
-						<label>eyes:</label>
-						<input type="text" name="eyes" onChange={this.editField} value={this.state.eyes} />
-						<label>deity:</label>
-						<input type="text" name="deity" onChange={this.editField} value={this.state.deity} />
-						<label>alignment:</label>
-						<input type="text" name="alignment" onChange={this.editField} value={this.state.alignment} />
-						<label>homeland:</label>
-						<input type="text" name="homeland" onChange={this.editField} value={this.state.homeland} />
-						<label>background_stories:</label>
-						<input type="text" name="background_stories" onChange={this.editField} value={this.state.background_stories} />
-						<label>languages:</label>
-						<input type="text" name="languages" onChange={this.editField} value={this.state.languages} />
-						<label>domain_and_specialty_school:</label>
-						<input type="text" name="domain_and_specialty_school" onChange={this.editField} value={this.state.domain_and_specialty_school} />
-						<label>level_0_spell_per_day:</label>
-						<input type="number" name="level_0_spell_per_day" onChange={this.editField} value={this.state.level_0_spell_per_day} />
-						<label>level_0_bonus_spells:</label>
-						<input type="number" name="level_0_bonus_spells" onChange={this.editField} value={this.state.level_0_bonus_spells} />
-						<label>level_0_spell_save_dc:</label>
-						<input type="number" name="level_0_spell_save_dc" onChange={this.editField} value={this.state.level_0_spell_save_dc} />
-						<label>level_0_spells_known:</label>
-						<input type="number" name="level_0_spells_known" onChange={this.editField} value={this.state.level_0_spells_known} />
-						<label>level_1_spell_per_day:</label>
-						<input type="number" name="level_1_spell_per_day" onChange={this.editField} value={this.state.level_1_spell_per_day} />
-						<label>level_1_bonus_spells:</label>
-						<input type="number" name="level_1_bonus_spells" onChange={this.editField} value={this.state.level_1_bonus_spells} />
-						<label>level_1_spell_save_dc:</label>
-						<input type="number" name="level_1_spell_save_dc" onChange={this.editField} value={this.state.level_1_spell_save_dc} />
-						<label>level_1_spells_known:</label>
-						<input type="number" name="level_1_spells_known" onChange={this.editField} value={this.state.level_1_spells_known} />
-						<label>level_2_spell_per_day:</label>
-						<input type="number" name="level_2_spell_per_day" onChange={this.editField} value={this.state.level_2_spell_per_day} />
-						<label>level_2_bonus_spells:</label>
-						<input type="number" name="level_2_bonus_spells" onChange={this.editField} value={this.state.level_2_bonus_spells} />
-						<label>level_2_spell_save_dc:</label>
-						<input type="number" name="level_2_spell_save_dc" onChange={this.editField} value={this.state.level_2_spell_save_dc} />
-						<label>level_2_spells_known:</label>
-						<input type="number" name="level_2_spells_known" onChange={this.editField} value={this.state.level_2_spells_known} />
-						<label>level_3_spell_per_day:</label>
-						<input type="number" name="level_3_spell_per_day" onChange={this.editField} value={this.state.level_3_spell_per_day} />
-						<label>level_3_bonus_spells:</label>
-						<input type="number" name="level_3_bonus_spells" onChange={this.editField} value={this.state.level_3_bonus_spells} />
-						<label>level_3_spell_save_dc:</label>
-						<input type="number" name="level_3_spell_save_dc" onChange={this.editField} value={this.state.level_3_spell_save_dc} />
-						<label>level_3_spells_known:</label>
-						<input type="number" name="level_3_spells_known" onChange={this.editField} value={this.state.level_3_spells_known} />
-						<label>level_4_spell_per_day:</label>
-						<input type="number" name="level_4_spell_per_day" onChange={this.editField} value={this.state.level_4_spell_per_day} />
-						<label>level_4_bonus_spells:</label>
-						<input type="number" name="level_4_bonus_spells" onChange={this.editField} value={this.state.level_4_bonus_spells} />
-						<label>level_4_spell_save_dc:</label>
-						<input type="number" name="level_4_spell_save_dc" onChange={this.editField} value={this.state.level_4_spell_save_dc} />
-						<label>level_4_spells_known:</label>
-						<input type="number" name="level_4_spells_known" onChange={this.editField} value={this.state.level_4_spells_known} />
-						<label>level_5_spell_per_day:</label>
-						<input type="number" name="level_5_spell_per_day" onChange={this.editField} value={this.state.level_5_spell_per_day} />
-						<label>level_5_bonus_spells:</label>
-						<input type="number" name="level_5_bonus_spells" onChange={this.editField} value={this.state.level_5_bonus_spells} />
-						<label>level_5_spell_save_dc:</label>
-						<input type="number" name="level_5_spell_save_dc" onChange={this.editField} value={this.state.level_5_spell_save_dc} />
-						<label>level_5_spells_known:</label>
-						<input type="number" name="level_5_spells_known" onChange={this.editField} value={this.state.level_5_spells_known} />
-						<label>level_6_spell_per_day:</label>
-						<input type="number" name="level_6_spell_per_day" onChange={this.editField} value={this.state.level_6_spell_per_day} />
-						<label>level_6_bonus_spells:</label>
-						<input type="number" name="level_6_bonus_spells" onChange={this.editField} value={this.state.level_6_bonus_spells} />
-						<label>level_6_spell_save_dc:</label>
-						<input type="number" name="level_6_spell_save_dc" onChange={this.editField} value={this.state.level_6_spell_save_dc} />
-						<label>level_6_spells_known:</label>
-						<input type="number" name="level_6_spells_known" onChange={this.editField} value={this.state.level_6_spells_known} />
-						<label>level_7_spell_per_day:</label>
-						<input type="number" name="level_7_spell_per_day" onChange={this.editField} value={this.state.level_7_spell_per_day} />
-						<label>level_7_bonus_spells:</label>
-						<input type="number" name="level_7_bonus_spells" onChange={this.editField} value={this.state.level_7_bonus_spells} />
-						<label>level_7_spell_save_dc:</label>
-						<input type="number" name="level_7_spell_save_dc" onChange={this.editField} value={this.state.level_7_spell_save_dc} />
-						<label>level_7_spells_known:</label>
-						<input type="number" name="level_7_spells_known" onChange={this.editField} value={this.state.level_7_spells_known} />
-						<label>level_8_spell_per_day:</label>
-						<input type="number" name="level_8_spell_per_day" onChange={this.editField} value={this.state.level_8_spell_per_day} />
-						<label>level_8_bonus_spells:</label>
-						<input type="number" name="level_8_bonus_spells" onChange={this.editField} value={this.state.level_8_bonus_spells} />
-						<label>level_8_spell_save_dc:</label>
-						<input type="number" name="level_8_spell_save_dc" onChange={this.editField} value={this.state.level_8_spell_save_dc} />
-						<label>level_8_spells_known:</label>
-						<input type="number" name="level_8_spells_known" onChange={this.editField} value={this.state.level_8_spells_known} />
-						<label>level_9_spell_per_day:</label>
-						<input type="number" name="level_9_spell_per_day" onChange={this.editField} value={this.state.level_9_spell_per_day} />
-						<label>level_9_bonus_spells:</label>
-						<input type="number" name="level_9_bonus_spells" onChange={this.editField} value={this.state.level_9_bonus_spells} />
-						<label>level_9_spell_save_dc:</label>
-						<input type="number" name="level_9_spell_save_dc" onChange={this.editField} value={this.state.level_9_spell_save_dc} />
-						<label>level_9_spells_known:</label>
-						<input type="number" name="level_9_spells_known" onChange={this.editField} value={this.state.level_9_spells_known} />
+		    	<div className="character-page">
+		    		<div id="banner">
+			    		<div className="container">
+			    			<div className="character-menu">
+				    			<div>
+					    			<h1>Character {this.props.character.name} - {this.props.character.class} {this.props.character.race} {this.props.character.level} </h1>
+						    	</div>
+								<div>
+									<div>
+										<a onClick={this.saveCharacter}>SAVE</a>
+										<a onClick={this.deleteCharacter}>DELETE</a>
+									</div>
+								</div>
+				    		</div>
+				    	</div>
 				    </div>
-				    <FeatContainer _characterId={this.props.params._characterId} />
-				    <AcitemContainer _characterId={this.props.params._characterId} />
-					<FeatureContainer _characterId={this.props.params._characterId} />
-					<GearContainer _characterId={this.props.params._characterId} />
-					<SkillContainer _characterId={this.props.params._characterId} />
-					<SpellContainer _characterId={this.props.params._characterId} />
-					<WeaponContainer _characterId={this.props.params._characterId} />
-				    <div>
-				        <input type="button" onClick={this.saveCharacter} value="SAVE"/>
-				        <input type="button" value="DELETE" onClick={this.deleteCharacter} />
+				    <div id="character">
+			    		<div className="container">
+							<div className="character" >
+							    <header className="character-header">
+							        <div>
+							        	<label>Name:</label>
+										<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="name" onChange={this.editField} value={this.state.name} />
+									</div>
+									<div>
+										<label>Class:</label>
+										<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="class" onChange={this.editField} value={this.state.class} />
+									</div>
+									<div>
+										<label>Level:</label>
+										<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level" onChange={this.editField} value={this.state.level} />
+									</div>
+									<div>
+										<label>Race:</label>
+										<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="race" onChange={this.editField} value={this.state.race} />
+									</div>
+									<div>
+										<label>Alignment:</label>
+										<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="alignment" onChange={this.editField} value={this.state.alignment} />
+									</div>
+									<div>
+										<label>Deity:</label>
+										<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="deity" onChange={this.editField} value={this.state.deity} />
+									</div>
+									<div>
+										<label>Homeland:</label>
+										<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="homeland" onChange={this.editField} value={this.state.homeland} />
+									</div>
+									<div>
+										<label>Size:</label>
+										<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="size" onChange={this.editField} value={this.state.size} />
+									</div>
+									<div>
+										<label>Gender:</label>
+										<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="gender" onChange={this.editField} value={this.state.gender} />
+									</div>
+									<div>
+										<label>Age:</label>
+										<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="age" onChange={this.editField} value={this.state.age} />
+									</div>
+									<div>
+										<label>Weight:</label>
+										<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="weight" onChange={this.editField} value={this.state.weight} />
+									</div>
+									<div>
+										<label>Height:</label>
+										<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="height" onChange={this.editField} value={this.state.height} />
+									</div>
+									<div>
+										<label>Hair:</label>
+										<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="hair" onChange={this.editField} value={this.state.hair} />
+									</div>
+									<div>
+										<label>Eyes:</label>
+										<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="eyes" onChange={this.editField} value={this.state.eyes} />
+									</div>
+								</header>
+								<main>
+									<section className="column-left">
+										<div className="health">
+											<div>
+												<label>hit points:</label>
+												<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="hit_points" onChange={this.editField} value={this.state.hit_points} />
+											</div>
+											<div>
+												<label>current:</label>
+												<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="current_hit_points" onChange={this.editField} value={this.state.current_hit_points} />
+											</div>
+										</div>
+										<table className="ability-scores">
+											<tr>
+												<th>Ability Name</th>
+												<th>Ability Score</th>
+												<th>Ability Modifier</th>
+												<th>Temp Adjustment</th>
+												<th>Temp Modifier</th>
+											</tr>
+											<tr>
+												<td>STR</td>
+												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="ability_score_str" onChange={this.editField} value={this.state.ability_score_str} /></td>
+												<td><input type="text" value={modifer(this.state.ability_score_str)} readOnly /></td>
+												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="ability_score_str_temp" onChange={this.editField} value={this.state.ability_score_str_temp} /></td>
+												<td><input type="text" value={modifer(this.state.ability_score_str, this.state.ability_score_str_temp)} readOnly /></td>
+											</tr>
+											<tr>
+												<td>DEX</td>
+												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="ability_score_dex" onChange={this.editField} value={this.state.ability_score_dex} /></td>
+												<td><input type="text" value={modifer(this.state.ability_score_dex)} readOnly /></td>
+												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="ability_score_dex_temp" onChange={this.editField} value={this.state.ability_score_dex_temp} /></td>
+												<td><input type="text" value={modifer(this.state.ability_score_dex, this.state.ability_score_dex_temp)} readOnly /></td>
+											</tr>
+											<tr>
+												<td>CON</td>
+												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="ability_score_con" onChange={this.editField} value={this.state.ability_score_con} /></td>
+												<td><input type="text" value={modifer(this.state.ability_score_con)} readOnly /></td>
+												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="ability_score_con_temp" onChange={this.editField} value={this.state.ability_score_con_temp} /></td>
+												<td><input type="text" value={modifer(this.state.ability_score_con, this.state.ability_score_con_temp)} readOnly /></td>
+											</tr>
+											<tr>
+												<td>INT</td>
+												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="ability_score_int" onChange={this.editField} value={this.state.ability_score_int} /></td>
+												<td><input type="text" value={modifer(this.state.ability_score_int)} readOnly /></td>
+												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="ability_score_int_temp" onChange={this.editField} value={this.state.ability_score_int_temp} /></td>
+												<td><input type="text" value={modifer(this.state.ability_score_int, this.state.ability_score_int_temp)} readOnly /></td>
+											</tr>
+											<tr>
+												<td>WIS</td>
+												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="ability_score_wis" onChange={this.editField} value={this.state.ability_score_wis} /></td>
+												<td><input type="text" value={modifer(this.state.ability_score_wis)} readOnly /></td>
+												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="ability_score_wis_temp" onChange={this.editField} value={this.state.ability_score_wis_temp} /></td>
+												<td><input type="text" value={modifer(this.state.ability_score_wis, this.state.ability_score_wis_temp)} readOnly /></td>
+											</tr>
+											<tr>
+												<td>CHA</td>
+												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="ability_score_cha" onChange={this.editField} value={this.state.ability_score_cha} /></td>
+												<td><input type="text" value={modifer(this.state.ability_score_cha)} readOnly /></td>
+												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="ability_score_cha_temp" onChange={this.editField} value={this.state.ability_score_cha_temp} /></td>
+												<td><input type="text" value={modifer(this.state.ability_score_cha, this.state.ability_score_cha_temp)} readOnly /></td>
+											</tr>
+										</table>
+										<div className="AC-wrapper">
+											<label>armor class</label>
+											<table className="AC">
+												<tr>
+													<th>total ac</th>
+													<th>armor bonus</th>
+													<th>shild bonus</th>
+													<th>dex mod</th>
+													<th>size mod</th>
+													<th>natural armor</th>
+													<th>defelection mod</th>
+													<th>misc mod</th>
+												</tr>
+												<tr>
+													<td><input type="text" value={(Number(this.state.size_mod) + modifer(this.state.ability_score_dex, this.state.ability_score_dex_temp) + Number(this.state.ac_armor_bonus) + Number(this.state.ac_shild_bonus) + Number(this.state.ac_natural_armor) + Number(this.state.ac_defelection_mod) + Number(this.state.ac_misc_mod)+ 10)} readOnly /></td>
+													<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="ac_armor_bonus" onChange={this.editField} value={this.state.ac_armor_bonus} /></td>
+													<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="ac_shild_bonus" onChange={this.editField} value={this.state.ac_shild_bonus} /></td>
+													<td><input type="text" value={modifer(this.state.ability_score_dex, this.state.ability_score_dex_temp)} readOnly /></td>
+													<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="size_mod" onChange={this.editField} value={this.state.size_mod} /></td>
+													<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="ac_natural_armor" onChange={this.editField} value={this.state.ac_natural_armor} /></td>
+													<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="ac_defelection_mod" onChange={this.editField} value={this.state.ac_defelection_mod} /></td>
+													<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="ac_misc_mod" onChange={this.editField} value={this.state.ac_misc_mod} /></td>
+													<td> + 10 </td>
+												</tr>
+											</table>
+										</div>
+										<div className="babdrsr">
+											<div>
+												<label>BAB:</label>
+												<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="base_attack_bonus" onChange={this.editField} value={this.state.base_attack_bonus} />
+											</div>
+											<div>
+												<label>DR:</label>
+												<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="damage_reduction" onChange={this.editField} value={this.state.damage_reduction} />
+											</div>
+											<div>
+												<label>spell resistance:</label>
+												<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="spell_resistance" onChange={this.editField} value={this.state.spell_resistance} />
+											</div>
+										</div>										
+										<table className="saving-throws">
+											<tr>
+												<th>Saving Throws</th>
+												<th>total</th>
+												<th>Base Save</th>
+												<th>Ability Modifier</th>
+												<th>Magic Modifier</th>
+												<th>Misc Modifier</th>
+												<th>Temp Modifier</th>
+											</tr>
+											<tr>
+												<td>Fortitude</td>
+												<td>{(Number(this.state.fort_base_save) + modifer(this.state.ability_score_con, this.state.ability_score_con_temp) + Number(this.state.fort_magic_mod) + Number(this.state.fort_misc_mod) + Number(this.state.fort_temp_mod))}</td>
+												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="fort_base_save" onChange={this.editField} value={this.state.fort_base_save} /></td>
+												<td><input type="text" value={modifer(this.state.ability_score_con, this.state.ability_score_con_temp)} readOnly /></td>
+												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="fort_magic_mod" onChange={this.editField} value={this.state.fort_magic_mod} /></td>
+												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="fort_misc_mod" onChange={this.editField} value={this.state.fort_misc_mod} /></td>
+												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="fort_temp_mod" onChange={this.editField} value={this.state.fort_temp_mod} /></td>
+											</tr>
+											<tr>
+												<td>Reflex</td>
+												<td>{(Number(this.state.ref_base_save) + modifer(this.state.ability_score_dex, this.state.ability_score_dex_temp) + Number(this.state.ref_magic_mod) + Number(this.state.ref_misc_mod) + Number(this.state.ref_temp_mod))}</td>
+												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="ref_base_save" onChange={this.editField} value={this.state.ref_base_save} /></td>
+												<td><input type="text" value={modifer(this.state.ability_score_dex, this.state.ability_score_dex_temp)} readOnly /></td>
+												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="ref_magic_mod" onChange={this.editField} value={this.state.ref_magic_mod} /></td>
+												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="ref_misc_mod" onChange={this.editField} value={this.state.ref_misc_mod} /></td>
+												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="ref_temp_mod" onChange={this.editField} value={this.state.ref_temp_mod} /></td>
+											</tr>
+											<tr>
+												<td>Will</td>
+												<td>{(Number(this.state.will_base_save) + modifer(this.state.ability_score_wis, this.state.ability_score_wis_temp) + Number(this.state.will_magic_mod) + Number(this.state.will_misc_mod) + Number(this.state.will_temp_mod))}</td>
+												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="will_base_save" onChange={this.editField} value={this.state.will_base_save} /></td>
+												<td><input type="text" value={modifer(this.state.ability_score_wis, this.state.ability_score_wis_temp)} readOnly /></td>
+												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="will_magic_mod" onChange={this.editField} value={this.state.will_magic_mod} /></td>
+												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="will_misc_mod" onChange={this.editField} value={this.state.will_misc_mod} /></td>
+												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="will_temp_mod" onChange={this.editField} value={this.state.will_temp_mod} /></td>
+											</tr>
+										</table>
+										<div className="initaitive-wrapper">
+											<div>
+												<p>initaitive</p>
+											</div>
+											<table className="initaitive">
+												<tr>
+													<th>total</th>
+													<th>dex mod</th>
+													<th>misc mod</th>
+												</tr>
+												<tr>
+													<td>
+														<input type="text" value={(modifer(this.state.ability_score_dex, this.state.ability_score_dex_temp) + Number(this.state.init_misc_mod))} readOnly />
+													</td>
+													<td>
+														<input type="text" value={modifer(this.state.ability_score_dex, this.state.ability_score_dex_temp)} readOnly />
+													</td>
+													<td>
+														<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="init_misc_mod" onChange={this.editField} value={this.state.init_misc_mod} />
+													</td>
+												</tr>
+											</table>
+										</div>
+										<div className="CMB-wrapper">
+											<div>
+												<p>CMB</p>
+											</div>
+											<table className="CMB">
+												<tr>
+													<th>total</th>
+													<th>bab</th>
+													<th>str mod</th>
+													<th>size mod</th>
+												</tr>
+												<tr>
+													<td><input type="text" value={(Number(this.state.base_attack_bonus) + modifer(this.state.ability_score_str, this.state.ability_score_str_temp) + Number(this.state.size_mod))} readOnly /></td>
+													<td><input type="text" value={this.state.base_attack_bonus} readOnly /></td>
+													<td><input type="text" value={modifer(this.state.ability_score_str, this.state.ability_score_str_temp)} readOnly /></td>
+													<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="size_mod" onChange={this.editField} value={this.state.size_mod} /></td>
+												</tr>
+											</table>
+										</div>
+										<div className="CMD-wrapper">
+											<div>
+												<p>CMD</p>
+											</div>
+											<table className="CMB">
+												<tr>
+													<th>total</th>
+													<th>BAB</th>
+													<th>str mod</th>
+													<th>dex mod</th>
+													<th>size mod</th>
+												</tr>
+												<tr>
+													<td><input type="text" value={(Number(this.state.base_attack_bonus) + modifer(this.state.ability_score_str, this.state.ability_score_str_temp) + modifer(this.state.ability_score_dex, this.state.ability_score_dex_temp) + Number(this.state.size_mod) + 10)} readOnly /></td>
+													<td><input type="text" value={this.state.base_attack_bonus} readOnly /></td>
+													<td><input type="text" value={modifer(this.state.ability_score_str, this.state.ability_score_str_temp)} readOnly /></td>
+													<td><input type="text" value={modifer(this.state.ability_score_dex, this.state.ability_score_dex_temp)} readOnly /></td>
+													<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="size_mod" onChange={this.editField} value={this.state.size_mod} /></td>
+													<td> + 10 </td>
+												</tr>
+											</table>
+										</div>
+										<div className="carrying-capacity">
+											<div>
+												<label>light load:</label>
+												<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="light_load" onChange={this.editField} value={this.state.light_load} />
+											</div>
+											<div>	
+												<label>medium load:</label>
+												<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="medium_load" onChange={this.editField} value={this.state.medium_load} />
+											</div>
+											<div>
+												<label>heavy load:</label>
+												<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="heavy_load" onChange={this.editField} value={this.state.heavy_load} />
+											</div>
+											<div>
+												<label>lift over head:</label>
+												<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="lift_over_head" onChange={this.editField} value={this.state.lift_over_head} />
+											</div>
+											<div>
+												<label>lift off ground:</label>
+												<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="lift_off_ground" onChange={this.editField} value={this.state.lift_off_ground} />
+											</div>
+											<div>
+												<label>drag or push:</label>
+												<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="drag_or_push" onChange={this.editField} value={this.state.drag_or_push} />
+											</div>
+											<div>
+												<label>copper:</label>
+												<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="money_cp" onChange={this.editField} value={this.state.money_cp} />
+											</div>
+											<div>
+												<label>silver:</label>
+												<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="money_sp" onChange={this.editField} value={this.state.money_sp} />
+											</div>
+											<div>
+												<label>gold:</label>
+												<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="money_gp" onChange={this.editField} value={this.state.money_gp} />
+											</div>
+											<div>
+												<label>platinum:</label>
+												<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="money_pp" onChange={this.editField} value={this.state.money_pp} />
+											</div>
+											<FeatContainer _characterId={this.props.params._characterId} />
+											<FeatureContainer _characterId={this.props.params._characterId} />
+										</div>
+									</section>
+									<section className="column-right">
+										<div className="speed">
+											<div>
+												<label>xp_points:</label>
+												<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="xp_points" onChange={this.editField} value={this.state.xp_points} />
+											</div>
+											<div>
+												<label>next_level:</label>
+												<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="next_level" onChange={this.editField} value={this.state.next_level} />
+											</div>
+											<div>
+												<label>land speed:</label>
+												<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="land_speed" onChange={this.editField} value={this.state.land_speed} />
+											</div>
+											<div>
+												<label>armor speed:</label>
+												<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="armor_speed" onChange={this.editField} value={this.state.armor_speed} />
+											</div>
+											<div>
+												<label>fly speed:</label>
+												<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="fly_speed" onChange={this.editField} value={this.state.fly_speed} />
+											</div>
+											<div>
+												<label>climb speed:</label>
+												<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="climb_speed" onChange={this.editField} value={this.state.climb_speed} />
+											</div>
+											<div>
+												<label>swim speed:</label>
+												<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="swim_speed" onChange={this.editField} value={this.state.swim_speed} />
+											</div>
+											<div>
+												<label>borrow speed:</label>
+												<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="borrow_speed" onChange={this.editField} value={this.state.borrow_speed} />
+											</div>
+										</div>
+										<SkillContainer _characterId={this.props.params._characterId} />
+										<table className="spell-stats">
+											<tr>
+												<th>Spells Known</th>
+												<th>Spell Save DC</th>
+												<th>Level</th>
+												<th>Spells Per Day</th>
+												<th>Bonus Spells</th>
+											</tr>
+											<tr>
+												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_0_spells_known" onChange={this.editField} value={this.state.level_0_spells_known} /></td>
+												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_0_spell_save_dc" onChange={this.editField} value={this.state.level_0_spell_save_dc} /></td>
+												<td>0</td>
+												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_0_spell_per_day" onChange={this.editField} value={this.state.level_0_spell_per_day} /></td>
+												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_0_bonus_spells" onChange={this.editField} value={this.state.level_0_bonus_spells} /></td>
+											</tr>
+											<tr>
+												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_1_spells_known" onChange={this.editField} value={this.state.level_1_spells_known} /></td>
+												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_1_spell_save_dc" onChange={this.editField} value={this.state.level_1_spell_save_dc} /></td>
+												<td>1</td>
+												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_1_spell_per_day" onChange={this.editField} value={this.state.level_1_spell_per_day} /></td>
+												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_1_bonus_spells" onChange={this.editField} value={this.state.level_1_bonus_spells} /></td>
+											</tr>
+											<tr>
+												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_2_spells_known" onChange={this.editField} value={this.state.level_2_spells_known} /></td>
+												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_2_spell_save_dc" onChange={this.editField} value={this.state.level_2_spell_save_dc} /></td>
+												<td>2</td>
+												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_2_spell_per_day" onChange={this.editField} value={this.state.level_2_spell_per_day} /></td>
+												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_2_bonus_spells" onChange={this.editField} value={this.state.level_2_bonus_spells} /></td>
+											</tr>
+											<tr>
+												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_3_spells_known" onChange={this.editField} value={this.state.level_3_spells_known} /></td>
+												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_3_spell_save_dc" onChange={this.editField} value={this.state.level_3_spell_save_dc} /></td>
+												<td>3</td>
+												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_3_spell_per_day" onChange={this.editField} value={this.state.level_3_spell_per_day} /></td>
+												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_3_bonus_spells" onChange={this.editField} value={this.state.level_3_bonus_spells} /></td>
+											</tr>
+											<tr>
+												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_4_spells_known" onChange={this.editField} value={this.state.level_4_spells_known} /></td>
+												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_4_spell_save_dc" onChange={this.editField} value={this.state.level_4_spell_save_dc} /></td>
+												<td>4</td>
+												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_4_spell_per_day" onChange={this.editField} value={this.state.level_4_spell_per_day} /></td>
+												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_4_bonus_spells" onChange={this.editField} value={this.state.level_4_bonus_spells} /></td>
+											</tr>
+											<tr>
+												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_5_spells_known" onChange={this.editField} value={this.state.level_5_spells_known} /></td>
+												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_5_spell_save_dc" onChange={this.editField} value={this.state.level_5_spell_save_dc} /></td>
+												<td>5</td>
+												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_5_spell_per_day" onChange={this.editField} value={this.state.level_5_spell_per_day} /></td>
+												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_5_bonus_spells" onChange={this.editField} value={this.state.level_5_bonus_spells} /></td>
+											</tr>
+											<tr>
+												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_6_spells_known" onChange={this.editField} value={this.state.level_6_spells_known} /></td>
+												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_6_spell_save_dc" onChange={this.editField} value={this.state.level_6_spell_save_dc} /></td>
+												<td>6</td>
+												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_6_spell_per_day" onChange={this.editField} value={this.state.level_6_spell_per_day} /></td>
+												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_6_bonus_spells" onChange={this.editField} value={this.state.level_6_bonus_spells} /></td>
+											</tr>
+											<tr>
+												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_7_spells_known" onChange={this.editField} value={this.state.level_7_spells_known} /></td>
+												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_7_spell_save_dc" onChange={this.editField} value={this.state.level_7_spell_save_dc} /></td>
+												<td>7</td>
+												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_7_spell_per_day" onChange={this.editField} value={this.state.level_7_spell_per_day} /></td>
+												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_7_bonus_spells" onChange={this.editField} value={this.state.level_7_bonus_spells} /></td>
+											</tr>
+											<tr>
+												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_8_spells_known" onChange={this.editField} value={this.state.level_8_spells_known} /></td>
+												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_8_spell_save_dc" onChange={this.editField} value={this.state.level_8_spell_save_dc} /></td>
+												<td>8</td>
+												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_8_spell_per_day" onChange={this.editField} value={this.state.level_8_spell_per_day} /></td>
+												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_8_bonus_spells" onChange={this.editField} value={this.state.level_8_bonus_spells} /></td>
+											</tr>
+											<tr>
+												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_9_spells_known" onChange={this.editField} value={this.state.level_9_spells_known} /></td>
+												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_9_spell_save_dc" onChange={this.editField} value={this.state.level_9_spell_save_dc} /></td>
+												<td>9</td>
+												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_9_spell_per_day" onChange={this.editField} value={this.state.level_9_spell_per_day} /></td>
+												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_9_bonus_spells" onChange={this.editField} value={this.state.level_9_bonus_spells} /></td>
+											</tr>							
+								    	</table>
+								    	<label>domain and specialty school:</label>
+										<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="domain_and_specialty_school" onChange={this.editField} value={this.state.domain_and_specialty_school} />
+										<SpellContainer _characterId={this.props.params._characterId} />
+										<div className="languages">
+									    	<p>languages:</p>
+											<textarea rows="4" cols="50" onBlur={this.saveCharacter} onKeyPress={this.hitKey} name="languages" onChange={this.editField} value={this.state.languages} />
+										</div>										
+									</section>
+									<div>
+										<div className="stuff">
+											<GearContainer _characterId={this.props.params._characterId} />
+											<div>
+												<WeaponContainer _characterId={this.props.params._characterId} /> 
+												<AcitemContainer _characterId={this.props.params._characterId} />
+											</div>
+										</div>
+										<div className="background">
+											<p>background:</p>
+											<textarea rows="4" cols="50" onBlur={this.saveCharacter} onKeyPress={this.hitKey} name="background_stories" onChange={this.editField} value={this.state.background_stories} />
+										</div>
+									</div>	
+								</main>
+							</div>
+				        </div>
 				    </div>
 				</div>
 		    </div>
