@@ -32641,7 +32641,7 @@
 												React.createElement(
 													'label',
 													null,
-													'xp_points:'
+													'xp points:'
 												),
 												React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'xp_points', onChange: this.editField, value: this.state.xp_points })
 											),
@@ -32651,7 +32651,7 @@
 												React.createElement(
 													'label',
 													null,
-													'next_level:'
+													'next level:'
 												),
 												React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'next_level', onChange: this.editField, value: this.state.next_level })
 											),

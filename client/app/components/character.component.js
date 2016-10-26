@@ -396,11 +396,11 @@ var character = React.createClass({
 									<section className="column-right">
 										<div className="speed">
 											<div>
-												<label>xp_points:</label>
+												<label>xp points:</label>
 												<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="xp_points" onChange={this.editField} value={this.state.xp_points} />
 											</div>
 											<div>
-												<label>next_level:</label>
+												<label>next level:</label>
 												<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="next_level" onChange={this.editField} value={this.state.next_level} />
 											</div>
 											<div>
