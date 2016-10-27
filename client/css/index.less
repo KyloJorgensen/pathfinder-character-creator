@@ -15,7 +15,6 @@ ol, ul {
     padding: 0;
 }
 .container {
-    width: 1200px;
     margin-left: auto;
     margin-right: auto;
 }
@@ -343,7 +342,7 @@ ol, ul {
 		    text-decoration: none;
 		    text-shadow: -1px -1px 0px #2C7485;
 		    text-transform: uppercase;
-		    font-size: 44pt;
+		    font-size: 36pt;
 		    font-weight: 200;
 		    color: #FFFFFF;
 	    }
@@ -371,5 +370,15 @@ ol, ul {
 	h1 {
 		padding: 0.83em;
     	margin: 0;
+	}
+}
+
+@media screen and (min-width: 1200px) {
+	.contatiner{
+		width: 1200px;
+	}
+
+	.nav-bar #logo h1 {
+		font-size: 44pt;
 	}
 }
