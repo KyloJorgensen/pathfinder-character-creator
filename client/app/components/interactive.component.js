@@ -1,5 +1,5 @@
 'use strict';
-
+var focus = false;
 module.exports = function(label) {
     var React = require('react'),
         connect = require('react-redux').connect,
@@ -17,8 +17,10 @@ module.exports = function(label) {
             }
         },
         saveInteractive: function() {
-            if (this.state.name != '') {
+            if (this.state.name != '' && !focus) {
                 this.props.dispatch(interactiveActions.update(this.state, this.props.interactive));
+            } else {
+                setTimeout(this.saveInteractive, 3000);
             }
         },
         deleteItem: function() {
@@ -27,14 +29,26 @@ module.exports = function(label) {
         componentWillMount: function() {
             this.setState(this.props.interactive);
         },
+        focus: false,
+        focusOn: function(event) {
+            event.target.select();
+            focus = true;
+        },
+        focusOff: function() {
+            setTimeout(this.saveInteractive, 1000);
+            focus = false;
+        },
         render: function() {
             var state = this.state;
             var keys = Object.keys(state);
             var items = [];
             for (var i = 0; i < keys.length; i++) {
                 if (keys[i] != '_id' && keys[i] != '_characterId' && keys[i] != '_userId' && keys[i] != '__v') {
-                    keys[i]
-                    items.push(<td><input type="text" onKeyPress={this.hitkey} onChange={this.editField} onBlur={this.saveInteractive} name={keys[i]} value={this.state[keys[i]]} /></td>)
+                    var type = 'text';
+                    if (typeof this.props.interactive[keys[i]] == 'number') {
+                        type = 'number'
+                    }
+                    items.push(<td><input type={type} onFocus={this.focusOn} onKeyPress={this.hitkey} onChange={this.editField} onBlur={this.focusOff} name={keys[i]} value={this.state[keys[i]]} /></td>)
                 }
             }
             items.push(<button onClick={this.deleteItem} >DELETE</button>);
@@ -46,7 +60,15 @@ module.exports = function(label) {
         }
     });
 
-    var Container = connect()(Interactive);
+var mapStateToProps = function(state, props) {
+    // console.log(state, props, label)
+    // console.log(state[label][label][props.interactiveNumber])
+    return {
+        interactive: state[label][label][props.interactiveNumber]
+    };
+};
+
+    var Container = connect(mapStateToProps)(Interactive);
 
     return Container;
 };

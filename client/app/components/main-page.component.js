@@ -32,6 +32,7 @@ var mainPage = React.createClass({
 			    				<div>
 						        	<h1>Welcome to Pathfinder Character Creator.</h1>
 						        	<p>Pathfinder Character Creator is a place to make, edit, and save your characters for pathfinder.</p>
+						        	<p>Login or Signup to start using creating today.</p>
 				        		</div>
 				        	</div>
 				        </div>

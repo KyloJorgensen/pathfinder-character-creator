@@ -52,6 +52,9 @@ var character = React.createClass({
             this.saveCharacter();
         }
 	},
+	select: function(event) {
+		event.target.select();
+	},
 	render: function() {
 		if (Object.keys(this.props.params).length == 0) {
 			this.props.history.replace('/user');
@@ -71,7 +74,9 @@ var character = React.createClass({
 			    		<div className="container">
 			    			<div className="character-menu">
 				    			<div>
-					    			<h1>Character {this.props.character.name} - {this.props.character.class} {this.props.character.race} {this.props.character.level} </h1>
+					    			<h1>Character</h1>
+					    			<h2>{this.props.character.name} - {this.props.character.class} {this.props.character.race} {this.props.character.level} </h2>
+					    			<p>Click on any field you want to edit.</p>
 						    	</div>
 								<div>
 									<div>
@@ -88,59 +93,59 @@ var character = React.createClass({
 							    <header className="character-header">
 							        <div>
 							        	<label>Name:</label>
-										<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="name" onChange={this.editField} value={this.state.name} />
+										<input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="name" onChange={this.editField} value={this.state.name} />
 									</div>
 									<div>
 										<label>Class:</label>
-										<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="class" onChange={this.editField} value={this.state.class} />
+										<input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="class" onChange={this.editField} value={this.state.class} />
 									</div>
 									<div>
 										<label>Level:</label>
-										<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level" onChange={this.editField} value={this.state.level} />
+										<input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level" onChange={this.editField} value={this.state.level} />
 									</div>
 									<div>
 										<label>Race:</label>
-										<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="race" onChange={this.editField} value={this.state.race} />
+										<input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="race" onChange={this.editField} value={this.state.race} />
 									</div>
 									<div>
 										<label>Alignment:</label>
-										<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="alignment" onChange={this.editField} value={this.state.alignment} />
+										<input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="alignment" onChange={this.editField} value={this.state.alignment} />
 									</div>
 									<div>
 										<label>Deity:</label>
-										<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="deity" onChange={this.editField} value={this.state.deity} />
+										<input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="deity" onChange={this.editField} value={this.state.deity} />
 									</div>
 									<div>
 										<label>Homeland:</label>
-										<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="homeland" onChange={this.editField} value={this.state.homeland} />
+										<input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="homeland" onChange={this.editField} value={this.state.homeland} />
 									</div>
 									<div>
 										<label>Size:</label>
-										<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="size" onChange={this.editField} value={this.state.size} />
+										<input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="size" onChange={this.editField} value={this.state.size} />
 									</div>
 									<div>
 										<label>Gender:</label>
-										<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="gender" onChange={this.editField} value={this.state.gender} />
+										<input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="gender" onChange={this.editField} value={this.state.gender} />
 									</div>
 									<div>
 										<label>Age:</label>
-										<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="age" onChange={this.editField} value={this.state.age} />
+										<input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="age" onChange={this.editField} value={this.state.age} />
 									</div>
 									<div>
 										<label>Weight:</label>
-										<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="weight" onChange={this.editField} value={this.state.weight} />
+										<input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="weight" onChange={this.editField} value={this.state.weight} />
 									</div>
 									<div>
 										<label>Height:</label>
-										<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="height" onChange={this.editField} value={this.state.height} />
+										<input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="height" onChange={this.editField} value={this.state.height} />
 									</div>
 									<div>
 										<label>Hair:</label>
-										<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="hair" onChange={this.editField} value={this.state.hair} />
+										<input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="hair" onChange={this.editField} value={this.state.hair} />
 									</div>
 									<div>
 										<label>Eyes:</label>
-										<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="eyes" onChange={this.editField} value={this.state.eyes} />
+										<input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="eyes" onChange={this.editField} value={this.state.eyes} />
 									</div>
 								</header>
 								<main>
@@ -148,11 +153,11 @@ var character = React.createClass({
 										<div className="health">
 											<div>
 												<label>hit points:</label>
-												<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="hit_points" onChange={this.editField} value={this.state.hit_points} />
+												<input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="hit_points" onChange={this.editField} value={this.state.hit_points} />
 											</div>
 											<div>
 												<label>current:</label>
-												<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="current_hit_points" onChange={this.editField} value={this.state.current_hit_points} />
+												<input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="current_hit_points" onChange={this.editField} value={this.state.current_hit_points} />
 											</div>
 										</div>
 										<table className="ability-scores">
@@ -165,45 +170,45 @@ var character = React.createClass({
 											</tr>
 											<tr>
 												<td>STR</td>
-												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="ability_score_str" onChange={this.editField} value={this.state.ability_score_str} /></td>
-												<td><input type="text" value={modifer(this.state.ability_score_str)} readOnly /></td>
-												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="ability_score_str_temp" onChange={this.editField} value={this.state.ability_score_str_temp} /></td>
-												<td><input type="text" value={modifer(this.state.ability_score_str, this.state.ability_score_str_temp)} readOnly /></td>
+												<td><input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="ability_score_str" onChange={this.editField} value={this.state.ability_score_str} /></td>
+												<td><input onFocus={this.select} type="text" value={modifer(this.state.ability_score_str)} readOnly /></td>
+												<td><input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="ability_score_str_temp" onChange={this.editField} value={this.state.ability_score_str_temp} /></td>
+												<td><input onFocus={this.select} type="text" value={modifer(this.state.ability_score_str, this.state.ability_score_str_temp)} readOnly /></td>
 											</tr>
 											<tr>
 												<td>DEX</td>
-												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="ability_score_dex" onChange={this.editField} value={this.state.ability_score_dex} /></td>
-												<td><input type="text" value={modifer(this.state.ability_score_dex)} readOnly /></td>
-												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="ability_score_dex_temp" onChange={this.editField} value={this.state.ability_score_dex_temp} /></td>
-												<td><input type="text" value={modifer(this.state.ability_score_dex, this.state.ability_score_dex_temp)} readOnly /></td>
+												<td><input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="ability_score_dex" onChange={this.editField} value={this.state.ability_score_dex} /></td>
+												<td><input onFocus={this.select} type="text" value={modifer(this.state.ability_score_dex)} readOnly /></td>
+												<td><input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="ability_score_dex_temp" onChange={this.editField} value={this.state.ability_score_dex_temp} /></td>
+												<td><input onFocus={this.select} type="text" value={modifer(this.state.ability_score_dex, this.state.ability_score_dex_temp)} readOnly /></td>
 											</tr>
 											<tr>
 												<td>CON</td>
-												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="ability_score_con" onChange={this.editField} value={this.state.ability_score_con} /></td>
-												<td><input type="text" value={modifer(this.state.ability_score_con)} readOnly /></td>
-												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="ability_score_con_temp" onChange={this.editField} value={this.state.ability_score_con_temp} /></td>
-												<td><input type="text" value={modifer(this.state.ability_score_con, this.state.ability_score_con_temp)} readOnly /></td>
+												<td><input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="ability_score_con" onChange={this.editField} value={this.state.ability_score_con} /></td>
+												<td><input onFocus={this.select} type="text" value={modifer(this.state.ability_score_con)} readOnly /></td>
+												<td><input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="ability_score_con_temp" onChange={this.editField} value={this.state.ability_score_con_temp} /></td>
+												<td><input onFocus={this.select} type="text" value={modifer(this.state.ability_score_con, this.state.ability_score_con_temp)} readOnly /></td>
 											</tr>
 											<tr>
 												<td>INT</td>
-												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="ability_score_int" onChange={this.editField} value={this.state.ability_score_int} /></td>
-												<td><input type="text" value={modifer(this.state.ability_score_int)} readOnly /></td>
-												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="ability_score_int_temp" onChange={this.editField} value={this.state.ability_score_int_temp} /></td>
-												<td><input type="text" value={modifer(this.state.ability_score_int, this.state.ability_score_int_temp)} readOnly /></td>
+												<td><input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="ability_score_int" onChange={this.editField} value={this.state.ability_score_int} /></td>
+												<td><input onFocus={this.select} type="text" value={modifer(this.state.ability_score_int)} readOnly /></td>
+												<td><input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="ability_score_int_temp" onChange={this.editField} value={this.state.ability_score_int_temp} /></td>
+												<td><input onFocus={this.select} type="text" value={modifer(this.state.ability_score_int, this.state.ability_score_int_temp)} readOnly /></td>
 											</tr>
 											<tr>
 												<td>WIS</td>
-												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="ability_score_wis" onChange={this.editField} value={this.state.ability_score_wis} /></td>
-												<td><input type="text" value={modifer(this.state.ability_score_wis)} readOnly /></td>
-												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="ability_score_wis_temp" onChange={this.editField} value={this.state.ability_score_wis_temp} /></td>
-												<td><input type="text" value={modifer(this.state.ability_score_wis, this.state.ability_score_wis_temp)} readOnly /></td>
+												<td><input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="ability_score_wis" onChange={this.editField} value={this.state.ability_score_wis} /></td>
+												<td><input onFocus={this.select} type="text" value={modifer(this.state.ability_score_wis)} readOnly /></td>
+												<td><input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="ability_score_wis_temp" onChange={this.editField} value={this.state.ability_score_wis_temp} /></td>
+												<td><input onFocus={this.select} type="text" value={modifer(this.state.ability_score_wis, this.state.ability_score_wis_temp)} readOnly /></td>
 											</tr>
 											<tr>
 												<td>CHA</td>
-												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="ability_score_cha" onChange={this.editField} value={this.state.ability_score_cha} /></td>
-												<td><input type="text" value={modifer(this.state.ability_score_cha)} readOnly /></td>
-												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="ability_score_cha_temp" onChange={this.editField} value={this.state.ability_score_cha_temp} /></td>
-												<td><input type="text" value={modifer(this.state.ability_score_cha, this.state.ability_score_cha_temp)} readOnly /></td>
+												<td><input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="ability_score_cha" onChange={this.editField} value={this.state.ability_score_cha} /></td>
+												<td><input onFocus={this.select} type="text" value={modifer(this.state.ability_score_cha)} readOnly /></td>
+												<td><input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="ability_score_cha_temp" onChange={this.editField} value={this.state.ability_score_cha_temp} /></td>
+												<td><input onFocus={this.select} type="text" value={modifer(this.state.ability_score_cha, this.state.ability_score_cha_temp)} readOnly /></td>
 											</tr>
 										</table>
 										<div className="AC-wrapper">
@@ -220,14 +225,14 @@ var character = React.createClass({
 													<th>misc mod</th>
 												</tr>
 												<tr>
-													<td><input type="text" value={(Number(this.state.size_mod) + modifer(this.state.ability_score_dex, this.state.ability_score_dex_temp) + Number(this.state.ac_armor_bonus) + Number(this.state.ac_shild_bonus) + Number(this.state.ac_natural_armor) + Number(this.state.ac_defelection_mod) + Number(this.state.ac_misc_mod)+ 10)} readOnly /></td>
-													<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="ac_armor_bonus" onChange={this.editField} value={this.state.ac_armor_bonus} /></td>
-													<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="ac_shild_bonus" onChange={this.editField} value={this.state.ac_shild_bonus} /></td>
-													<td><input type="text" value={modifer(this.state.ability_score_dex, this.state.ability_score_dex_temp)} readOnly /></td>
-													<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="size_mod" onChange={this.editField} value={this.state.size_mod} /></td>
-													<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="ac_natural_armor" onChange={this.editField} value={this.state.ac_natural_armor} /></td>
-													<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="ac_defelection_mod" onChange={this.editField} value={this.state.ac_defelection_mod} /></td>
-													<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="ac_misc_mod" onChange={this.editField} value={this.state.ac_misc_mod} /></td>
+													<td><input onFocus={this.select} type="text" value={(Number(this.state.size_mod) + modifer(this.state.ability_score_dex, this.state.ability_score_dex_temp) + Number(this.state.ac_armor_bonus) + Number(this.state.ac_shild_bonus) + Number(this.state.ac_natural_armor) + Number(this.state.ac_defelection_mod) + Number(this.state.ac_misc_mod)+ 10)} readOnly /></td>
+													<td><input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="ac_armor_bonus" onChange={this.editField} value={this.state.ac_armor_bonus} /></td>
+													<td><input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="ac_shild_bonus" onChange={this.editField} value={this.state.ac_shild_bonus} /></td>
+													<td><input onFocus={this.select} type="text" value={modifer(this.state.ability_score_dex, this.state.ability_score_dex_temp)} readOnly /></td>
+													<td><input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="size_mod" onChange={this.editField} value={this.state.size_mod} /></td>
+													<td><input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="ac_natural_armor" onChange={this.editField} value={this.state.ac_natural_armor} /></td>
+													<td><input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="ac_defelection_mod" onChange={this.editField} value={this.state.ac_defelection_mod} /></td>
+													<td><input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="ac_misc_mod" onChange={this.editField} value={this.state.ac_misc_mod} /></td>
 													<td> + 10 </td>
 												</tr>
 											</table>
@@ -235,15 +240,15 @@ var character = React.createClass({
 										<div className="babdrsr">
 											<div>
 												<label>BAB:</label>
-												<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="base_attack_bonus" onChange={this.editField} value={this.state.base_attack_bonus} />
+												<input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="base_attack_bonus" onChange={this.editField} value={this.state.base_attack_bonus} />
 											</div>
 											<div>
 												<label>DR:</label>
-												<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="damage_reduction" onChange={this.editField} value={this.state.damage_reduction} />
+												<input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="damage_reduction" onChange={this.editField} value={this.state.damage_reduction} />
 											</div>
 											<div>
 												<label>spell resistance:</label>
-												<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="spell_resistance" onChange={this.editField} value={this.state.spell_resistance} />
+												<input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="spell_resistance" onChange={this.editField} value={this.state.spell_resistance} />
 											</div>
 										</div>										
 										<table className="saving-throws">
@@ -259,29 +264,29 @@ var character = React.createClass({
 											<tr>
 												<td>Fortitude</td>
 												<td>{(Number(this.state.fort_base_save) + modifer(this.state.ability_score_con, this.state.ability_score_con_temp) + Number(this.state.fort_magic_mod) + Number(this.state.fort_misc_mod) + Number(this.state.fort_temp_mod))}</td>
-												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="fort_base_save" onChange={this.editField} value={this.state.fort_base_save} /></td>
-												<td><input type="text" value={modifer(this.state.ability_score_con, this.state.ability_score_con_temp)} readOnly /></td>
-												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="fort_magic_mod" onChange={this.editField} value={this.state.fort_magic_mod} /></td>
-												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="fort_misc_mod" onChange={this.editField} value={this.state.fort_misc_mod} /></td>
-												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="fort_temp_mod" onChange={this.editField} value={this.state.fort_temp_mod} /></td>
+												<td><input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="fort_base_save" onChange={this.editField} value={this.state.fort_base_save} /></td>
+												<td><input onFocus={this.select} type="text" value={modifer(this.state.ability_score_con, this.state.ability_score_con_temp)} readOnly /></td>
+												<td><input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="fort_magic_mod" onChange={this.editField} value={this.state.fort_magic_mod} /></td>
+												<td><input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="fort_misc_mod" onChange={this.editField} value={this.state.fort_misc_mod} /></td>
+												<td><input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="fort_temp_mod" onChange={this.editField} value={this.state.fort_temp_mod} /></td>
 											</tr>
 											<tr>
 												<td>Reflex</td>
 												<td>{(Number(this.state.ref_base_save) + modifer(this.state.ability_score_dex, this.state.ability_score_dex_temp) + Number(this.state.ref_magic_mod) + Number(this.state.ref_misc_mod) + Number(this.state.ref_temp_mod))}</td>
-												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="ref_base_save" onChange={this.editField} value={this.state.ref_base_save} /></td>
-												<td><input type="text" value={modifer(this.state.ability_score_dex, this.state.ability_score_dex_temp)} readOnly /></td>
-												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="ref_magic_mod" onChange={this.editField} value={this.state.ref_magic_mod} /></td>
-												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="ref_misc_mod" onChange={this.editField} value={this.state.ref_misc_mod} /></td>
-												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="ref_temp_mod" onChange={this.editField} value={this.state.ref_temp_mod} /></td>
+												<td><input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="ref_base_save" onChange={this.editField} value={this.state.ref_base_save} /></td>
+												<td><input onFocus={this.select} type="text" value={modifer(this.state.ability_score_dex, this.state.ability_score_dex_temp)} readOnly /></td>
+												<td><input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="ref_magic_mod" onChange={this.editField} value={this.state.ref_magic_mod} /></td>
+												<td><input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="ref_misc_mod" onChange={this.editField} value={this.state.ref_misc_mod} /></td>
+												<td><input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="ref_temp_mod" onChange={this.editField} value={this.state.ref_temp_mod} /></td>
 											</tr>
 											<tr>
 												<td>Will</td>
 												<td>{(Number(this.state.will_base_save) + modifer(this.state.ability_score_wis, this.state.ability_score_wis_temp) + Number(this.state.will_magic_mod) + Number(this.state.will_misc_mod) + Number(this.state.will_temp_mod))}</td>
-												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="will_base_save" onChange={this.editField} value={this.state.will_base_save} /></td>
-												<td><input type="text" value={modifer(this.state.ability_score_wis, this.state.ability_score_wis_temp)} readOnly /></td>
-												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="will_magic_mod" onChange={this.editField} value={this.state.will_magic_mod} /></td>
-												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="will_misc_mod" onChange={this.editField} value={this.state.will_misc_mod} /></td>
-												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="will_temp_mod" onChange={this.editField} value={this.state.will_temp_mod} /></td>
+												<td><input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="will_base_save" onChange={this.editField} value={this.state.will_base_save} /></td>
+												<td><input onFocus={this.select} type="text" value={modifer(this.state.ability_score_wis, this.state.ability_score_wis_temp)} readOnly /></td>
+												<td><input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="will_magic_mod" onChange={this.editField} value={this.state.will_magic_mod} /></td>
+												<td><input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="will_misc_mod" onChange={this.editField} value={this.state.will_misc_mod} /></td>
+												<td><input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="will_temp_mod" onChange={this.editField} value={this.state.will_temp_mod} /></td>
 											</tr>
 										</table>
 										<div className="initaitive-wrapper">
@@ -296,13 +301,13 @@ var character = React.createClass({
 												</tr>
 												<tr>
 													<td>
-														<input type="text" value={(modifer(this.state.ability_score_dex, this.state.ability_score_dex_temp) + Number(this.state.init_misc_mod))} readOnly />
+														<input onFocus={this.select} type="text" value={(modifer(this.state.ability_score_dex, this.state.ability_score_dex_temp) + Number(this.state.init_misc_mod))} readOnly />
 													</td>
 													<td>
-														<input type="text" value={modifer(this.state.ability_score_dex, this.state.ability_score_dex_temp)} readOnly />
+														<input onFocus={this.select} type="text" value={modifer(this.state.ability_score_dex, this.state.ability_score_dex_temp)} readOnly />
 													</td>
 													<td>
-														<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="init_misc_mod" onChange={this.editField} value={this.state.init_misc_mod} />
+														<input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="init_misc_mod" onChange={this.editField} value={this.state.init_misc_mod} />
 													</td>
 												</tr>
 											</table>
@@ -319,10 +324,10 @@ var character = React.createClass({
 													<th>size mod</th>
 												</tr>
 												<tr>
-													<td><input type="text" value={(Number(this.state.base_attack_bonus) + modifer(this.state.ability_score_str, this.state.ability_score_str_temp) + Number(this.state.size_mod))} readOnly /></td>
-													<td><input type="text" value={this.state.base_attack_bonus} readOnly /></td>
-													<td><input type="text" value={modifer(this.state.ability_score_str, this.state.ability_score_str_temp)} readOnly /></td>
-													<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="size_mod" onChange={this.editField} value={this.state.size_mod} /></td>
+													<td><input onFocus={this.select} type="text" value={(Number(this.state.base_attack_bonus) + modifer(this.state.ability_score_str, this.state.ability_score_str_temp) + Number(this.state.size_mod))} readOnly /></td>
+													<td><input onFocus={this.select} type="text" value={this.state.base_attack_bonus} readOnly /></td>
+													<td><input onFocus={this.select} type="text" value={modifer(this.state.ability_score_str, this.state.ability_score_str_temp)} readOnly /></td>
+													<td><input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="size_mod" onChange={this.editField} value={this.state.size_mod} /></td>
 												</tr>
 											</table>
 										</div>
@@ -339,11 +344,11 @@ var character = React.createClass({
 													<th>size mod</th>
 												</tr>
 												<tr>
-													<td><input type="text" value={(Number(this.state.base_attack_bonus) + modifer(this.state.ability_score_str, this.state.ability_score_str_temp) + modifer(this.state.ability_score_dex, this.state.ability_score_dex_temp) + Number(this.state.size_mod) + 10)} readOnly /></td>
-													<td><input type="text" value={this.state.base_attack_bonus} readOnly /></td>
-													<td><input type="text" value={modifer(this.state.ability_score_str, this.state.ability_score_str_temp)} readOnly /></td>
-													<td><input type="text" value={modifer(this.state.ability_score_dex, this.state.ability_score_dex_temp)} readOnly /></td>
-													<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="size_mod" onChange={this.editField} value={this.state.size_mod} /></td>
+													<td><input onFocus={this.select} type="text" value={(Number(this.state.base_attack_bonus) + modifer(this.state.ability_score_str, this.state.ability_score_str_temp) + modifer(this.state.ability_score_dex, this.state.ability_score_dex_temp) + Number(this.state.size_mod) + 10)} readOnly /></td>
+													<td><input onFocus={this.select} type="text" value={this.state.base_attack_bonus} readOnly /></td>
+													<td><input onFocus={this.select} type="text" value={modifer(this.state.ability_score_str, this.state.ability_score_str_temp)} readOnly /></td>
+													<td><input onFocus={this.select} type="text" value={modifer(this.state.ability_score_dex, this.state.ability_score_dex_temp)} readOnly /></td>
+													<td><input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="size_mod" onChange={this.editField} value={this.state.size_mod} /></td>
 													<td> + 10 </td>
 												</tr>
 											</table>
@@ -351,81 +356,89 @@ var character = React.createClass({
 										<div className="carrying-capacity">
 											<div>
 												<label>light load:</label>
-												<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="light_load" onChange={this.editField} value={this.state.light_load} />
+												<input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="light_load" onChange={this.editField} value={this.state.light_load} />
 											</div>
 											<div>	
 												<label>medium load:</label>
-												<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="medium_load" onChange={this.editField} value={this.state.medium_load} />
+												<input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="medium_load" onChange={this.editField} value={this.state.medium_load} />
 											</div>
 											<div>
 												<label>heavy load:</label>
-												<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="heavy_load" onChange={this.editField} value={this.state.heavy_load} />
+												<input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="heavy_load" onChange={this.editField} value={this.state.heavy_load} />
 											</div>
 											<div>
 												<label>lift over head:</label>
-												<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="lift_over_head" onChange={this.editField} value={this.state.lift_over_head} />
+												<input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="lift_over_head" onChange={this.editField} value={this.state.lift_over_head} />
 											</div>
 											<div>
 												<label>lift off ground:</label>
-												<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="lift_off_ground" onChange={this.editField} value={this.state.lift_off_ground} />
+												<input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="lift_off_ground" onChange={this.editField} value={this.state.lift_off_ground} />
 											</div>
 											<div>
 												<label>drag or push:</label>
-												<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="drag_or_push" onChange={this.editField} value={this.state.drag_or_push} />
+												<input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="drag_or_push" onChange={this.editField} value={this.state.drag_or_push} />
 											</div>
 											<div>
 												<label>copper:</label>
-												<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="money_cp" onChange={this.editField} value={this.state.money_cp} />
+												<input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="money_cp" onChange={this.editField} value={this.state.money_cp} />
 											</div>
 											<div>
 												<label>silver:</label>
-												<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="money_sp" onChange={this.editField} value={this.state.money_sp} />
+												<input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="money_sp" onChange={this.editField} value={this.state.money_sp} />
 											</div>
 											<div>
 												<label>gold:</label>
-												<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="money_gp" onChange={this.editField} value={this.state.money_gp} />
+												<input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="money_gp" onChange={this.editField} value={this.state.money_gp} />
 											</div>
 											<div>
 												<label>platinum:</label>
-												<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="money_pp" onChange={this.editField} value={this.state.money_pp} />
+												<input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="money_pp" onChange={this.editField} value={this.state.money_pp} />
 											</div>
 											<FeatContainer _characterId={this.props.params._characterId} />
 											<FeatureContainer _characterId={this.props.params._characterId} />
 										</div>
 									</section>
 									<section className="column-right">
-										<div className="speed">
+										<div className="xp-points">
 											<div>
 												<label>xp points:</label>
-												<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="xp_points" onChange={this.editField} value={this.state.xp_points} />
+												<input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="xp_points" onChange={this.editField} value={this.state.xp_points} />
 											</div>
 											<div>
 												<label>next level:</label>
-												<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="next_level" onChange={this.editField} value={this.state.next_level} />
+												<input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="next_level" onChange={this.editField} value={this.state.next_level} />
 											</div>
+										</div>
+										<div className="speed">
 											<div>
 												<label>land speed:</label>
-												<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="land_speed" onChange={this.editField} value={this.state.land_speed} />
+												<p>squares</p>
+												<input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="land_speed" onChange={this.editField} value={this.state.land_speed} />
 											</div>
 											<div>
 												<label>armor speed:</label>
-												<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="armor_speed" onChange={this.editField} value={this.state.armor_speed} />
+												<p>squares</p>
+												<input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="armor_speed" onChange={this.editField} value={this.state.armor_speed} />
 											</div>
 											<div>
 												<label>fly speed:</label>
-												<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="fly_speed" onChange={this.editField} value={this.state.fly_speed} />
+												<p>squares</p>
+												<input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="fly_speed" onChange={this.editField} value={this.state.fly_speed} />
 											</div>
 											<div>
 												<label>climb speed:</label>
-												<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="climb_speed" onChange={this.editField} value={this.state.climb_speed} />
+												<p>squares</p>
+												<input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="climb_speed" onChange={this.editField} value={this.state.climb_speed} />
 											</div>
 											<div>
 												<label>swim speed:</label>
-												<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="swim_speed" onChange={this.editField} value={this.state.swim_speed} />
+												<p>squares</p>
+												<input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="swim_speed" onChange={this.editField} value={this.state.swim_speed} />
 											</div>
 											<div>
 												<label>borrow speed:</label>
-												<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="borrow_speed" onChange={this.editField} value={this.state.borrow_speed} />
+												<p>squares</p>
+												<input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="borrow_speed" onChange={this.editField} value={this.state.borrow_speed} />
 											</div>
 										</div>
 										<SkillContainer _characterId={this.props.params._characterId} />
@@ -438,78 +451,78 @@ var character = React.createClass({
 												<th>Bonus Spells</th>
 											</tr>
 											<tr>
-												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_0_spells_known" onChange={this.editField} value={this.state.level_0_spells_known} /></td>
-												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_0_spell_save_dc" onChange={this.editField} value={this.state.level_0_spell_save_dc} /></td>
+												<td><input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_0_spells_known" onChange={this.editField} value={this.state.level_0_spells_known} /></td>
+												<td><input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_0_spell_save_dc" onChange={this.editField} value={this.state.level_0_spell_save_dc} /></td>
 												<td>0</td>
-												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_0_spell_per_day" onChange={this.editField} value={this.state.level_0_spell_per_day} /></td>
-												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_0_bonus_spells" onChange={this.editField} value={this.state.level_0_bonus_spells} /></td>
+												<td><input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_0_spell_per_day" onChange={this.editField} value={this.state.level_0_spell_per_day} /></td>
+												<td><input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_0_bonus_spells" onChange={this.editField} value={this.state.level_0_bonus_spells} /></td>
 											</tr>
 											<tr>
-												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_1_spells_known" onChange={this.editField} value={this.state.level_1_spells_known} /></td>
-												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_1_spell_save_dc" onChange={this.editField} value={this.state.level_1_spell_save_dc} /></td>
+												<td><input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_1_spells_known" onChange={this.editField} value={this.state.level_1_spells_known} /></td>
+												<td><input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_1_spell_save_dc" onChange={this.editField} value={this.state.level_1_spell_save_dc} /></td>
 												<td>1</td>
-												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_1_spell_per_day" onChange={this.editField} value={this.state.level_1_spell_per_day} /></td>
-												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_1_bonus_spells" onChange={this.editField} value={this.state.level_1_bonus_spells} /></td>
+												<td><input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_1_spell_per_day" onChange={this.editField} value={this.state.level_1_spell_per_day} /></td>
+												<td><input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_1_bonus_spells" onChange={this.editField} value={this.state.level_1_bonus_spells} /></td>
 											</tr>
 											<tr>
-												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_2_spells_known" onChange={this.editField} value={this.state.level_2_spells_known} /></td>
-												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_2_spell_save_dc" onChange={this.editField} value={this.state.level_2_spell_save_dc} /></td>
+												<td><input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_2_spells_known" onChange={this.editField} value={this.state.level_2_spells_known} /></td>
+												<td><input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_2_spell_save_dc" onChange={this.editField} value={this.state.level_2_spell_save_dc} /></td>
 												<td>2</td>
-												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_2_spell_per_day" onChange={this.editField} value={this.state.level_2_spell_per_day} /></td>
-												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_2_bonus_spells" onChange={this.editField} value={this.state.level_2_bonus_spells} /></td>
+												<td><input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_2_spell_per_day" onChange={this.editField} value={this.state.level_2_spell_per_day} /></td>
+												<td><input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_2_bonus_spells" onChange={this.editField} value={this.state.level_2_bonus_spells} /></td>
 											</tr>
 											<tr>
-												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_3_spells_known" onChange={this.editField} value={this.state.level_3_spells_known} /></td>
-												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_3_spell_save_dc" onChange={this.editField} value={this.state.level_3_spell_save_dc} /></td>
+												<td><input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_3_spells_known" onChange={this.editField} value={this.state.level_3_spells_known} /></td>
+												<td><input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_3_spell_save_dc" onChange={this.editField} value={this.state.level_3_spell_save_dc} /></td>
 												<td>3</td>
-												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_3_spell_per_day" onChange={this.editField} value={this.state.level_3_spell_per_day} /></td>
-												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_3_bonus_spells" onChange={this.editField} value={this.state.level_3_bonus_spells} /></td>
+												<td><input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_3_spell_per_day" onChange={this.editField} value={this.state.level_3_spell_per_day} /></td>
+												<td><input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_3_bonus_spells" onChange={this.editField} value={this.state.level_3_bonus_spells} /></td>
 											</tr>
 											<tr>
-												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_4_spells_known" onChange={this.editField} value={this.state.level_4_spells_known} /></td>
-												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_4_spell_save_dc" onChange={this.editField} value={this.state.level_4_spell_save_dc} /></td>
+												<td><input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_4_spells_known" onChange={this.editField} value={this.state.level_4_spells_known} /></td>
+												<td><input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_4_spell_save_dc" onChange={this.editField} value={this.state.level_4_spell_save_dc} /></td>
 												<td>4</td>
-												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_4_spell_per_day" onChange={this.editField} value={this.state.level_4_spell_per_day} /></td>
-												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_4_bonus_spells" onChange={this.editField} value={this.state.level_4_bonus_spells} /></td>
+												<td><input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_4_spell_per_day" onChange={this.editField} value={this.state.level_4_spell_per_day} /></td>
+												<td><input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_4_bonus_spells" onChange={this.editField} value={this.state.level_4_bonus_spells} /></td>
 											</tr>
 											<tr>
-												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_5_spells_known" onChange={this.editField} value={this.state.level_5_spells_known} /></td>
-												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_5_spell_save_dc" onChange={this.editField} value={this.state.level_5_spell_save_dc} /></td>
+												<td><input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_5_spells_known" onChange={this.editField} value={this.state.level_5_spells_known} /></td>
+												<td><input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_5_spell_save_dc" onChange={this.editField} value={this.state.level_5_spell_save_dc} /></td>
 												<td>5</td>
-												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_5_spell_per_day" onChange={this.editField} value={this.state.level_5_spell_per_day} /></td>
-												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_5_bonus_spells" onChange={this.editField} value={this.state.level_5_bonus_spells} /></td>
+												<td><input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_5_spell_per_day" onChange={this.editField} value={this.state.level_5_spell_per_day} /></td>
+												<td><input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_5_bonus_spells" onChange={this.editField} value={this.state.level_5_bonus_spells} /></td>
 											</tr>
 											<tr>
-												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_6_spells_known" onChange={this.editField} value={this.state.level_6_spells_known} /></td>
-												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_6_spell_save_dc" onChange={this.editField} value={this.state.level_6_spell_save_dc} /></td>
+												<td><input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_6_spells_known" onChange={this.editField} value={this.state.level_6_spells_known} /></td>
+												<td><input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_6_spell_save_dc" onChange={this.editField} value={this.state.level_6_spell_save_dc} /></td>
 												<td>6</td>
-												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_6_spell_per_day" onChange={this.editField} value={this.state.level_6_spell_per_day} /></td>
-												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_6_bonus_spells" onChange={this.editField} value={this.state.level_6_bonus_spells} /></td>
+												<td><input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_6_spell_per_day" onChange={this.editField} value={this.state.level_6_spell_per_day} /></td>
+												<td><input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_6_bonus_spells" onChange={this.editField} value={this.state.level_6_bonus_spells} /></td>
 											</tr>
 											<tr>
-												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_7_spells_known" onChange={this.editField} value={this.state.level_7_spells_known} /></td>
-												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_7_spell_save_dc" onChange={this.editField} value={this.state.level_7_spell_save_dc} /></td>
+												<td><input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_7_spells_known" onChange={this.editField} value={this.state.level_7_spells_known} /></td>
+												<td><input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_7_spell_save_dc" onChange={this.editField} value={this.state.level_7_spell_save_dc} /></td>
 												<td>7</td>
-												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_7_spell_per_day" onChange={this.editField} value={this.state.level_7_spell_per_day} /></td>
-												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_7_bonus_spells" onChange={this.editField} value={this.state.level_7_bonus_spells} /></td>
+												<td><input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_7_spell_per_day" onChange={this.editField} value={this.state.level_7_spell_per_day} /></td>
+												<td><input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_7_bonus_spells" onChange={this.editField} value={this.state.level_7_bonus_spells} /></td>
 											</tr>
 											<tr>
-												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_8_spells_known" onChange={this.editField} value={this.state.level_8_spells_known} /></td>
-												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_8_spell_save_dc" onChange={this.editField} value={this.state.level_8_spell_save_dc} /></td>
+												<td><input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_8_spells_known" onChange={this.editField} value={this.state.level_8_spells_known} /></td>
+												<td><input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_8_spell_save_dc" onChange={this.editField} value={this.state.level_8_spell_save_dc} /></td>
 												<td>8</td>
-												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_8_spell_per_day" onChange={this.editField} value={this.state.level_8_spell_per_day} /></td>
-												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_8_bonus_spells" onChange={this.editField} value={this.state.level_8_bonus_spells} /></td>
+												<td><input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_8_spell_per_day" onChange={this.editField} value={this.state.level_8_spell_per_day} /></td>
+												<td><input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_8_bonus_spells" onChange={this.editField} value={this.state.level_8_bonus_spells} /></td>
 											</tr>
 											<tr>
-												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_9_spells_known" onChange={this.editField} value={this.state.level_9_spells_known} /></td>
-												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_9_spell_save_dc" onChange={this.editField} value={this.state.level_9_spell_save_dc} /></td>
+												<td><input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_9_spells_known" onChange={this.editField} value={this.state.level_9_spells_known} /></td>
+												<td><input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_9_spell_save_dc" onChange={this.editField} value={this.state.level_9_spell_save_dc} /></td>
 												<td>9</td>
-												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_9_spell_per_day" onChange={this.editField} value={this.state.level_9_spell_per_day} /></td>
-												<td><input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_9_bonus_spells" onChange={this.editField} value={this.state.level_9_bonus_spells} /></td>
+												<td><input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_9_spell_per_day" onChange={this.editField} value={this.state.level_9_spell_per_day} /></td>
+												<td><input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="number" name="level_9_bonus_spells" onChange={this.editField} value={this.state.level_9_bonus_spells} /></td>
 											</tr>							
 								    	</table>
 								    	<label>domain and specialty school:</label>
-										<input onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="domain_and_specialty_school" onChange={this.editField} value={this.state.domain_and_specialty_school} />
+										<input onFocus={this.select} onBlur={this.saveCharacter} onKeyPress={this.hitKey} type="text" name="domain_and_specialty_school" onChange={this.editField} value={this.state.domain_and_specialty_school} />
 										<SpellContainer _characterId={this.props.params._characterId} />
 										<div className="languages">
 									    	<p>languages:</p>

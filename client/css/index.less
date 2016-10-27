@@ -53,18 +53,18 @@ ol, ul {
 		    		margin-left: 15px;
 		    	}
 			    .create-character {
-			    	> div {
+			    	> form {
 			    		> label {
 			    			margin-right: 5px;
 			    		}
 			    		> input {
 			    			margin-right: 25px;
 			    		}
-			    		> a {
+			    		> input[type="submit"] {
     						background-color: #4499dc;
 						    text-decoration: none;
 						    text-transform: uppercase;
-						    line-height: 45px;
+						    line-height: 16px;
 						    font-size: 13pt;
 						    color: white;
 						    border: 0px solid red;
@@ -86,6 +86,7 @@ ol, ul {
 	}
 	table {
 		width: 100%;
+		padding-left: 20px;
 		th {
 			font-size: 12px;
 		}
@@ -96,6 +97,14 @@ ol, ul {
 		input {
 			width: 90%;
 		}
+    }
+    button {
+		background-color: #4499dc;
+		text-decoration: none;
+		text-transform: uppercase;
+		color: white;
+		border: 0px solid red;
+  		border-radius: 5px;
     }
     .character-menu {
 	    > div {
@@ -108,12 +117,11 @@ ol, ul {
 					background-color: #4499dc;
 					text-decoration: none;
 					text-transform: uppercase;
-					line-height: 45px;
 					font-size: 13pt;
 					color: white;
 					border: 0px solid red;
     				border-radius: 5px;
-    				padding: 6px;
+    				padding: 4px;
 				}
 			}
     	}
@@ -136,9 +144,9 @@ ol, ul {
 	    	main {
 		    	.column-left {
 					display: inline-block;
-					width: 50%;
+					width: 49%;
 					vertical-align: top;
-
+					padding-right: 1%;
 		    	}
 		    	.column-right {
 		    		display: inline-block;
@@ -146,6 +154,9 @@ ol, ul {
 		    		width: 50%;
 		    	}
 		    	section {
+		    		> div {
+		    			padding-bottom: 10px;
+		    		}
 		    		.health {
 		    			> div {
 		    				display: inline-block;
@@ -166,6 +177,7 @@ ol, ul {
 						}
 		    		}
 		    		.initaitive, .AC-wrapper, .CMB, .CMD {
+		    			padding: 0;
 						th, td {
 						    border-bottom: 0px solid #ddd;
 						}
@@ -185,6 +197,7 @@ ol, ul {
 		    				}
 		    			}
 		    		}
+
 		    		.babdrsr {
 		    			div {
 		    				padding-right: 20px;
@@ -197,7 +210,8 @@ ol, ul {
 		    				width: 50px;
 		    			}
 		    		}
-		    		.speed, .carrying-capacity {
+
+		    		.xp-points, .carrying-capacity {
 		    			div {
 		    				display: inline-block;
 		    				width: 50%;
@@ -211,6 +225,31 @@ ol, ul {
 
 		    			}
 		    		}
+
+		    		.speed {
+		    			div {
+		    				display: inline-block;
+		    				width: 50%;
+		    				
+		    				label {
+		    					padding-left: 5%;
+		    				}
+
+		    				p {
+		    					margin: 0;
+							    display: inline-block;
+							    float: right;
+							    font-size: .5rem;
+		    				}
+
+		    				input {
+		    					width: 30%;
+		    					float: right;
+		    				}
+
+		    			}
+		    		}
+
 		    		.languages {
 		    			textarea {
 		    				width: 100%;
@@ -277,16 +316,15 @@ ol, ul {
 	    }
 	}
 
-    input, a {
+	input[type="submit"], a {
     	margin: 10px;
-    }
-
-    > input, a {
-	    text-decoration: none;
+		text-decoration: none;
 	    text-transform: uppercase;
 	    line-height: 45px;
 	    font-size: 13pt;
 	    color: #16576B;
+	    background: none;
+    	border: none;
     }
 }
 

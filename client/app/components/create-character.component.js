@@ -5,7 +5,8 @@ var React = require('react'),
 	characterActions = require('../actions/character.actions');
 
 var character = React.createClass({
-	handleSubmit: function() {
+	handleSubmit: function(event) {
+		event.preventDefault();
 		if (this.refs.name.value) {
 			this.props.dispatch(characterActions.createCharacter(this.refs.name.value, this.props.link));
 			this.refs.name.value = '';
@@ -24,11 +25,11 @@ var character = React.createClass({
 	render: function() {
 		return (
 			<div className="create-character">
-			    <div>
+			    <form onSubmit={this.handleSubmit} >
 			        <label>Name:</label>
 			        <input type="text" onKeyPress={this.hitkey} ref="name" name="name"/>
-			        <a herf="/#/user" onClick={this.handleSubmit} >CREATE</a>
-			    </div>
+			        <input type="submit" value="CREATE CRARACTER" />
+			    </form>
 			</div>
 		);
 	}

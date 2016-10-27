@@ -46,17 +46,17 @@ ul {
 .user-page #user .container > div ul {
   margin-left: 15px;
 }
-.user-page #user .container > div .create-character > div > label {
+.user-page #user .container > div .create-character > form > label {
   margin-right: 5px;
 }
-.user-page #user .container > div .create-character > div > input {
+.user-page #user .container > div .create-character > form > input {
   margin-right: 25px;
 }
-.user-page #user .container > div .create-character > div > a {
+.user-page #user .container > div .create-character > form > input[type="submit"] {
   background-color: #4499dc;
   text-decoration: none;
   text-transform: uppercase;
-  line-height: 45px;
+  line-height: 16px;
   font-size: 13pt;
   color: white;
   border: 0px solid red;
@@ -72,6 +72,7 @@ ul {
 }
 .character-page table {
   width: 100%;
+  padding-left: 20px;
 }
 .character-page table th {
   font-size: 12px;
@@ -83,6 +84,14 @@ ul {
 }
 .character-page table input {
   width: 90%;
+}
+.character-page button {
+  background-color: #4499dc;
+  text-decoration: none;
+  text-transform: uppercase;
+  color: white;
+  border: 0px solid red;
+  border-radius: 5px;
 }
 .character-page .character-menu > div {
   display: inline-block;
@@ -96,12 +105,11 @@ ul {
   background-color: #4499dc;
   text-decoration: none;
   text-transform: uppercase;
-  line-height: 45px;
   font-size: 13pt;
   color: white;
   border: 0px solid red;
   border-radius: 5px;
-  padding: 6px;
+  padding: 4px;
 }
 .character-page .container > div {
   padding: 10px 4em 50px 3em;
@@ -117,13 +125,17 @@ ul {
 }
 .character-page .container .character main .column-left {
   display: inline-block;
-  width: 50%;
+  width: 49%;
   vertical-align: top;
+  padding-right: 1%;
 }
 .character-page .container .character main .column-right {
   display: inline-block;
   vertical-align: top;
   width: 50%;
+}
+.character-page .container .character main section > div {
+  padding-bottom: 10px;
 }
 .character-page .container .character main section .health > div {
   display: inline-block;
@@ -138,6 +150,12 @@ ul {
 .character-page .container .character main section .AC-wrapper table th,
 .character-page .container .character main section .AC-wrapper table td {
   width: 50px;
+}
+.character-page .container .character main section .initaitive,
+.character-page .container .character main section .AC-wrapper,
+.character-page .container .character main section .CMB,
+.character-page .container .character main section .CMD {
+  padding: 0;
 }
 .character-page .container .character main section .initaitive th,
 .character-page .container .character main section .AC-wrapper th,
@@ -181,18 +199,35 @@ ul {
 .character-page .container .character main section .babdrsr input {
   width: 50px;
 }
-.character-page .container .character main section .speed div,
+.character-page .container .character main section .xp-points div,
 .character-page .container .character main section .carrying-capacity div {
   display: inline-block;
   width: 50%;
 }
-.character-page .container .character main section .speed div label,
+.character-page .container .character main section .xp-points div label,
 .character-page .container .character main section .carrying-capacity div label {
   padding-left: 10px;
 }
-.character-page .container .character main section .speed div > input,
+.character-page .container .character main section .xp-points div > input,
 .character-page .container .character main section .carrying-capacity div > input {
   width: 40%;
+  float: right;
+}
+.character-page .container .character main section .speed div {
+  display: inline-block;
+  width: 50%;
+}
+.character-page .container .character main section .speed div label {
+  padding-left: 5%;
+}
+.character-page .container .character main section .speed div p {
+  margin: 0;
+  display: inline-block;
+  float: right;
+  font-size: .5rem;
+}
+.character-page .container .character main section .speed div input {
+  width: 30%;
   float: right;
 }
 .character-page .container .character main section .languages textarea {
@@ -252,21 +287,18 @@ ul {
   font-weight: 200;
   color: #FFFFFF;
 }
-.login-page input,
-.signup-page input,
+.login-page input[type="submit"],
+.signup-page input[type="submit"],
 .login-page a,
 .signup-page a {
   margin: 10px;
-}
-.login-page > input,
-.signup-page > input,
-.login-page a,
-.signup-page a {
   text-decoration: none;
   text-transform: uppercase;
   line-height: 45px;
   font-size: 13pt;
   color: #16576B;
+  background: none;
+  border: none;
 }
 .nav-bar {
   padding-top: 3em;

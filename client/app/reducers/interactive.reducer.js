@@ -6,11 +6,11 @@ module.exports = function(state, action, label) {
     InteractiveInitialState[label] = [];
     InteractiveInitialState.updated = false;
     state = state || InteractiveInitialState;
-    if (action.type === actions.GET_SUCCESS) {
+    if (action.type === actions.GET_SUCCESS_ALL) {
         state[label] = action.data;
         state.updated = false;
     }
-    if (action.type === actions.GET_ERROR) {
+    if (action.type === actions.GET_ERROR_ALL) {
         state[label] = [];
         state.updated = false;
     }
@@ -29,8 +29,11 @@ module.exports = function(state, action, label) {
         console.log(action.error);
     }
     if (action.type === actions.UPDATE_SUCCESS) {
-        state[label] = [];
-        state.updated = true;
+        for (var i = 0; i < state[label].length; i++) {
+            if (state[label][i]._id == action.interactive._id) {
+                state[label][i] = action.interactive;
+            }
+        }
     }
     if (action.type === actions.UPDATE_ERROR) {
         console.log(action.error);

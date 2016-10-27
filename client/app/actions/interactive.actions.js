@@ -5,11 +5,11 @@ var interactives = require('../interactives');
 var actions = function(label) {
     var fetch = require('isomorphic-fetch');
 
-    var get = function(_characterId) {
+    var getAll = function(_characterId) {
         if (!'cookie' in document) {
             var error = new Error('cookie is missing');
             return {
-                type: GET_ERROR,
+                type: GET_ERROR_ALL,
                 error: error
             };
         }
@@ -17,14 +17,14 @@ var actions = function(label) {
         if (userKey[0] != 'UserKey') {
             var error = new Error('UserKey cookie is missing');
             return {
-                type: GET_ERROR,
+                type: GET_ERROR_ALL,
                 error: error
             };
         }
         if (userKey[1] == 'null') {
             var error = new Error('UserKey cookie is null');
             return {
-                type: GET_ERROR,
+                type: GET_ERROR_ALL,
                 error: error
             };
         }    
@@ -49,26 +49,26 @@ var actions = function(label) {
                 return response.json();
             })
             .then(function(data) {
-                return dispatch(getSuccess(data));
+                return dispatch(getSuccessAll(data));
             })
             .catch(function(error) {
-                return dispatch(getError(error));
+                return dispatch(getErrorAll(error));
             });
         }
     };
 
-    var GET_SUCCESS = 'GET_SUCCESS' + label;
-    var getSuccess = function(data) {
+    var GET_SUCCESS_ALL = 'GET_SUCCESS_ALL' + label;
+    var getSuccessAll = function(data) {
         return {
-            type: GET_SUCCESS,
+            type: GET_SUCCESS_ALL,
             data: data
         };
     };
 
-    var GET_ERROR = 'GET_ERROR' + label;
-    var getError = function(error) {
+    var GET_ERROR_ALL = 'GET_ERROR_ALL' + label;
+    var getErrorAll = function(error) {
         return {
-            type: GET_ERROR,
+            type: GET_ERROR_ALL,
             error: error
         };
     };
@@ -283,7 +283,8 @@ var actions = function(label) {
     var UPDATE_SUCCESS = 'UPDATE_SUCCESS' + label;
     var updateSuccess = function(data) {
         return {
-            type: UPDATE_SUCCESS
+            type: UPDATE_SUCCESS,
+            interactive: data
         };
     };
 
@@ -296,11 +297,11 @@ var actions = function(label) {
     };
 
     var actions = {};
-    actions.get = get;
-    actions.GET_SUCCESS = GET_SUCCESS;
-    actions.getSuccess = getSuccess;
-    actions.GET_ERROR = GET_ERROR;
-    actions.getError = getError;
+    actions.getAll = getAll;
+    actions.GET_SUCCESS_ALL = GET_SUCCESS_ALL;
+    actions.getSuccessAll = getSuccessAll;
+    actions.GET_ERROR_ALL = GET_ERROR_ALL;
+    actions.getErrorAll = getErrorAll;
     actions.create = create
     actions.CREATE_SUCCESS = CREATE_SUCCESS;
     actions.createSuccess = createSuccess;

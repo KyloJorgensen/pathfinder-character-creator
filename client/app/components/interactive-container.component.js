@@ -8,11 +8,11 @@ module.exports =function(label) {
 
     var InteractiveContainer = React.createClass({
         componentDidMount: function() {
-            this.props.dispatch(interactiveActions.get(this.props._characterId));
+            this.props.dispatch(interactiveActions.getAll(this.props._characterId));
         },
         render: function() {
             if (this.props.updated) {
-                this.props.dispatch(interactiveActions.get(this.props._characterId));
+                this.props.dispatch(interactiveActions.getAll(this.props._characterId));
             }
             var className = label + '-container'
             return (

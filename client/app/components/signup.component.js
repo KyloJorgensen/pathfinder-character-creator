@@ -49,7 +49,7 @@ var mainPage = React.createClass({
 		var component = (
 			<div className="signup">
 		   		<h1>Signup</h1>
-				<div>
+				<form onSubmit={this.handleSubmit} >
 					<div>
 				        <label>Name:</label>
 				        <input type="text" onKeyPress={this.hitkey} ref="name" name="name"/>
@@ -66,9 +66,9 @@ var mainPage = React.createClass({
 				        <label>Confrim:</label>
 				        <input type="password" onKeyPress={this.hitkey} ref="confrimedPassword" name="confrimedPassword"/>
 				    </div>
-				    <a onClick={this.handleSubmit} >SIGNUP</a>
 				    <Link to={'/login'}>LOGIN</Link>
-				</div>
+				    <input type="submit" value="SIGNUP" />
+				</form>
 		    </div>					
 		);
 		

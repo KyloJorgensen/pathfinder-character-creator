@@ -24734,11 +24734,11 @@
 	    InteractiveInitialState[label] = [];
 	    InteractiveInitialState.updated = false;
 	    state = state || InteractiveInitialState;
-	    if (action.type === actions.GET_SUCCESS) {
+	    if (action.type === actions.GET_SUCCESS_ALL) {
 	        state[label] = action.data;
 	        state.updated = false;
 	    }
-	    if (action.type === actions.GET_ERROR) {
+	    if (action.type === actions.GET_ERROR_ALL) {
 	        state[label] = [];
 	        state.updated = false;
 	    }
@@ -24757,8 +24757,11 @@
 	        console.log(action.error);
 	    }
 	    if (action.type === actions.UPDATE_SUCCESS) {
-	        state[label] = [];
-	        state.updated = true;
+	        for (var i = 0; i < state[label].length; i++) {
+	            if (state[label][i]._id == action.interactive._id) {
+	                state[label][i] = action.interactive;
+	            }
+	        }
 	    }
 	    if (action.type === actions.UPDATE_ERROR) {
 	        console.log(action.error);
@@ -24777,11 +24780,11 @@
 	var actions = function actions(label) {
 	    var fetch = __webpack_require__(204);
 	
-	    var get = function get(_characterId) {
+	    var getAll = function getAll(_characterId) {
 	        if (!'cookie' in document) {
 	            var error = new Error('cookie is missing');
 	            return {
-	                type: GET_ERROR,
+	                type: GET_ERROR_ALL,
 	                error: error
 	            };
 	        }
@@ -24789,14 +24792,14 @@
 	        if (userKey[0] != 'UserKey') {
 	            var error = new Error('UserKey cookie is missing');
 	            return {
-	                type: GET_ERROR,
+	                type: GET_ERROR_ALL,
 	                error: error
 	            };
 	        }
 	        if (userKey[1] == 'null') {
 	            var error = new Error('UserKey cookie is null');
 	            return {
-	                type: GET_ERROR,
+	                type: GET_ERROR_ALL,
 	                error: error
 	            };
 	        }
@@ -24819,25 +24822,25 @@
 	            }).then(function (response) {
 	                return response.json();
 	            }).then(function (data) {
-	                return dispatch(getSuccess(data));
+	                return dispatch(getSuccessAll(data));
 	            }).catch(function (error) {
-	                return dispatch(getError(error));
+	                return dispatch(getErrorAll(error));
 	            });
 	        };
 	    };
 	
-	    var GET_SUCCESS = 'GET_SUCCESS' + label;
-	    var getSuccess = function getSuccess(data) {
+	    var GET_SUCCESS_ALL = 'GET_SUCCESS_ALL' + label;
+	    var getSuccessAll = function getSuccessAll(data) {
 	        return {
-	            type: GET_SUCCESS,
+	            type: GET_SUCCESS_ALL,
 	            data: data
 	        };
 	    };
 	
-	    var GET_ERROR = 'GET_ERROR' + label;
-	    var getError = function getError(error) {
+	    var GET_ERROR_ALL = 'GET_ERROR_ALL' + label;
+	    var getErrorAll = function getErrorAll(error) {
 	        return {
-	            type: GET_ERROR,
+	            type: GET_ERROR_ALL,
 	            error: error
 	        };
 	    };
@@ -25044,7 +25047,8 @@
 	    var UPDATE_SUCCESS = 'UPDATE_SUCCESS' + label;
 	    var updateSuccess = function updateSuccess(data) {
 	        return {
-	            type: UPDATE_SUCCESS
+	            type: UPDATE_SUCCESS,
+	            interactive: data
 	        };
 	    };
 	
@@ -25057,11 +25061,11 @@
 	    };
 	
 	    var actions = {};
-	    actions.get = get;
-	    actions.GET_SUCCESS = GET_SUCCESS;
-	    actions.getSuccess = getSuccess;
-	    actions.GET_ERROR = GET_ERROR;
-	    actions.getError = getError;
+	    actions.getAll = getAll;
+	    actions.GET_SUCCESS_ALL = GET_SUCCESS_ALL;
+	    actions.getSuccessAll = getSuccessAll;
+	    actions.GET_ERROR_ALL = GET_ERROR_ALL;
+	    actions.getErrorAll = getErrorAll;
 	    actions.create = create;
 	    actions.CREATE_SUCCESS = CREATE_SUCCESS;
 	    actions.createSuccess = createSuccess;
@@ -25203,6 +25207,11 @@
 										'p',
 										null,
 										'Pathfinder Character Creator is a place to make, edit, and save your characters for pathfinder.'
+									),
+									React.createElement(
+										'p',
+										null,
+										'Login or Signup to start using creating today.'
 									)
 								)
 							)
@@ -31009,7 +31018,8 @@
 	var mainPage = React.createClass({
 		displayName: 'mainPage',
 	
-		handleSubmit: function handleSubmit() {
+		handleSubmit: function handleSubmit(event) {
+			event.preventDefault();
 			if (this.refs.username.value == '') {
 				return alert('Username Field Required');
 			}
@@ -31043,8 +31053,8 @@
 					'Login'
 				),
 				React.createElement(
-					'div',
-					null,
+					'form',
+					{ onSubmit: this.handleSubmit },
 					React.createElement(
 						'div',
 						null,
@@ -31066,15 +31076,11 @@
 						React.createElement('input', { type: 'password', onKeyPress: this.hitkey, ref: 'password', name: 'password' })
 					),
 					React.createElement(
-						'a',
-						{ onClick: this.handleSubmit },
-						'LOGIN'
-					),
-					React.createElement(
 						Link,
 						{ to: '/signup' },
 						'SIGNUP'
-					)
+					),
+					React.createElement('input', { type: 'submit', value: 'LOGIN' })
 				)
 			);
 		}
@@ -31235,8 +31241,8 @@
 					'Signup'
 				),
 				React.createElement(
-					'div',
-					null,
+					'form',
+					{ onSubmit: this.handleSubmit },
 					React.createElement(
 						'div',
 						null,
@@ -31278,15 +31284,11 @@
 						React.createElement('input', { type: 'password', onKeyPress: this.hitkey, ref: 'confrimedPassword', name: 'confrimedPassword' })
 					),
 					React.createElement(
-						'a',
-						{ onClick: this.handleSubmit },
-						'SIGNUP'
-					),
-					React.createElement(
 						Link,
 						{ to: '/login' },
 						'LOGIN'
-					)
+					),
+					React.createElement('input', { type: 'submit', value: 'SIGNUP' })
 				)
 			);
 	
@@ -31361,6 +31363,11 @@
 									'h1',
 									null,
 									'Characters'
+								),
+								React.createElement(
+									'p',
+									null,
+									'Click on the character you want to veiw. Make a new character by typing the name and then click create create character.'
 								)
 							)
 						)
@@ -31459,7 +31466,8 @@
 	var character = React.createClass({
 		displayName: 'character',
 	
-		handleSubmit: function handleSubmit() {
+		handleSubmit: function handleSubmit(event) {
+			event.preventDefault();
 			if (this.refs.name.value) {
 				this.props.dispatch(characterActions.createCharacter(this.refs.name.value, this.props.link));
 				this.refs.name.value = '';
@@ -31480,19 +31488,15 @@
 				'div',
 				{ className: 'create-character' },
 				React.createElement(
-					'div',
-					null,
+					'form',
+					{ onSubmit: this.handleSubmit },
 					React.createElement(
 						'label',
 						null,
 						'Name:'
 					),
 					React.createElement('input', { type: 'text', onKeyPress: this.hitkey, ref: 'name', name: 'name' }),
-					React.createElement(
-						'a',
-						{ herf: '/#/user', onClick: this.handleSubmit },
-						'CREATE'
-					)
+					React.createElement('input', { type: 'submit', value: 'CREATE CRARACTER' })
 				)
 			);
 		}
@@ -31568,6 +31572,9 @@
 				this.saveCharacter();
 			}
 		},
+		select: function select(event) {
+			event.target.select();
+		},
 		render: function render() {
 			if (Object.keys(this.props.params).length == 0) {
 				this.props.history.replace('/user');
@@ -31600,7 +31607,11 @@
 									React.createElement(
 										'h1',
 										null,
-										'Character ',
+										'Character'
+									),
+									React.createElement(
+										'h2',
+										null,
 										this.props.character.name,
 										' - ',
 										this.props.character.class,
@@ -31609,6 +31620,11 @@
 										' ',
 										this.props.character.level,
 										' '
+									),
+									React.createElement(
+										'p',
+										null,
+										'Click on any field you want to edit.'
 									)
 								),
 								React.createElement(
@@ -31652,7 +31668,7 @@
 											null,
 											'Name:'
 										),
-										React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'name', onChange: this.editField, value: this.state.name })
+										React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'name', onChange: this.editField, value: this.state.name })
 									),
 									React.createElement(
 										'div',
@@ -31662,7 +31678,7 @@
 											null,
 											'Class:'
 										),
-										React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'class', onChange: this.editField, value: this.state.class })
+										React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'class', onChange: this.editField, value: this.state.class })
 									),
 									React.createElement(
 										'div',
@@ -31672,7 +31688,7 @@
 											null,
 											'Level:'
 										),
-										React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level', onChange: this.editField, value: this.state.level })
+										React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level', onChange: this.editField, value: this.state.level })
 									),
 									React.createElement(
 										'div',
@@ -31682,7 +31698,7 @@
 											null,
 											'Race:'
 										),
-										React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'race', onChange: this.editField, value: this.state.race })
+										React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'race', onChange: this.editField, value: this.state.race })
 									),
 									React.createElement(
 										'div',
@@ -31692,7 +31708,7 @@
 											null,
 											'Alignment:'
 										),
-										React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'alignment', onChange: this.editField, value: this.state.alignment })
+										React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'alignment', onChange: this.editField, value: this.state.alignment })
 									),
 									React.createElement(
 										'div',
@@ -31702,7 +31718,7 @@
 											null,
 											'Deity:'
 										),
-										React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'deity', onChange: this.editField, value: this.state.deity })
+										React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'deity', onChange: this.editField, value: this.state.deity })
 									),
 									React.createElement(
 										'div',
@@ -31712,7 +31728,7 @@
 											null,
 											'Homeland:'
 										),
-										React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'homeland', onChange: this.editField, value: this.state.homeland })
+										React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'homeland', onChange: this.editField, value: this.state.homeland })
 									),
 									React.createElement(
 										'div',
@@ -31722,7 +31738,7 @@
 											null,
 											'Size:'
 										),
-										React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'size', onChange: this.editField, value: this.state.size })
+										React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'size', onChange: this.editField, value: this.state.size })
 									),
 									React.createElement(
 										'div',
@@ -31732,7 +31748,7 @@
 											null,
 											'Gender:'
 										),
-										React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'gender', onChange: this.editField, value: this.state.gender })
+										React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'gender', onChange: this.editField, value: this.state.gender })
 									),
 									React.createElement(
 										'div',
@@ -31742,7 +31758,7 @@
 											null,
 											'Age:'
 										),
-										React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'age', onChange: this.editField, value: this.state.age })
+										React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'age', onChange: this.editField, value: this.state.age })
 									),
 									React.createElement(
 										'div',
@@ -31752,7 +31768,7 @@
 											null,
 											'Weight:'
 										),
-										React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'weight', onChange: this.editField, value: this.state.weight })
+										React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'weight', onChange: this.editField, value: this.state.weight })
 									),
 									React.createElement(
 										'div',
@@ -31762,7 +31778,7 @@
 											null,
 											'Height:'
 										),
-										React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'height', onChange: this.editField, value: this.state.height })
+										React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'height', onChange: this.editField, value: this.state.height })
 									),
 									React.createElement(
 										'div',
@@ -31772,7 +31788,7 @@
 											null,
 											'Hair:'
 										),
-										React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'hair', onChange: this.editField, value: this.state.hair })
+										React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'hair', onChange: this.editField, value: this.state.hair })
 									),
 									React.createElement(
 										'div',
@@ -31782,7 +31798,7 @@
 											null,
 											'Eyes:'
 										),
-										React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'eyes', onChange: this.editField, value: this.state.eyes })
+										React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'eyes', onChange: this.editField, value: this.state.eyes })
 									)
 								),
 								React.createElement(
@@ -31802,7 +31818,7 @@
 													null,
 													'hit points:'
 												),
-												React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'hit_points', onChange: this.editField, value: this.state.hit_points })
+												React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'hit_points', onChange: this.editField, value: this.state.hit_points })
 											),
 											React.createElement(
 												'div',
@@ -31812,7 +31828,7 @@
 													null,
 													'current:'
 												),
-												React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'current_hit_points', onChange: this.editField, value: this.state.current_hit_points })
+												React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'current_hit_points', onChange: this.editField, value: this.state.current_hit_points })
 											)
 										),
 										React.createElement(
@@ -31858,22 +31874,22 @@
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'ability_score_str', onChange: this.editField, value: this.state.ability_score_str })
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'ability_score_str', onChange: this.editField, value: this.state.ability_score_str })
 												),
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { type: 'text', value: modifer(this.state.ability_score_str), readOnly: true })
+													React.createElement('input', { onFocus: this.select, type: 'text', value: modifer(this.state.ability_score_str), readOnly: true })
 												),
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'ability_score_str_temp', onChange: this.editField, value: this.state.ability_score_str_temp })
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'ability_score_str_temp', onChange: this.editField, value: this.state.ability_score_str_temp })
 												),
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { type: 'text', value: modifer(this.state.ability_score_str, this.state.ability_score_str_temp), readOnly: true })
+													React.createElement('input', { onFocus: this.select, type: 'text', value: modifer(this.state.ability_score_str, this.state.ability_score_str_temp), readOnly: true })
 												)
 											),
 											React.createElement(
@@ -31887,22 +31903,22 @@
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'ability_score_dex', onChange: this.editField, value: this.state.ability_score_dex })
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'ability_score_dex', onChange: this.editField, value: this.state.ability_score_dex })
 												),
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { type: 'text', value: modifer(this.state.ability_score_dex), readOnly: true })
+													React.createElement('input', { onFocus: this.select, type: 'text', value: modifer(this.state.ability_score_dex), readOnly: true })
 												),
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'ability_score_dex_temp', onChange: this.editField, value: this.state.ability_score_dex_temp })
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'ability_score_dex_temp', onChange: this.editField, value: this.state.ability_score_dex_temp })
 												),
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { type: 'text', value: modifer(this.state.ability_score_dex, this.state.ability_score_dex_temp), readOnly: true })
+													React.createElement('input', { onFocus: this.select, type: 'text', value: modifer(this.state.ability_score_dex, this.state.ability_score_dex_temp), readOnly: true })
 												)
 											),
 											React.createElement(
@@ -31916,22 +31932,22 @@
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'ability_score_con', onChange: this.editField, value: this.state.ability_score_con })
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'ability_score_con', onChange: this.editField, value: this.state.ability_score_con })
 												),
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { type: 'text', value: modifer(this.state.ability_score_con), readOnly: true })
+													React.createElement('input', { onFocus: this.select, type: 'text', value: modifer(this.state.ability_score_con), readOnly: true })
 												),
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'ability_score_con_temp', onChange: this.editField, value: this.state.ability_score_con_temp })
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'ability_score_con_temp', onChange: this.editField, value: this.state.ability_score_con_temp })
 												),
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { type: 'text', value: modifer(this.state.ability_score_con, this.state.ability_score_con_temp), readOnly: true })
+													React.createElement('input', { onFocus: this.select, type: 'text', value: modifer(this.state.ability_score_con, this.state.ability_score_con_temp), readOnly: true })
 												)
 											),
 											React.createElement(
@@ -31945,22 +31961,22 @@
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'ability_score_int', onChange: this.editField, value: this.state.ability_score_int })
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'ability_score_int', onChange: this.editField, value: this.state.ability_score_int })
 												),
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { type: 'text', value: modifer(this.state.ability_score_int), readOnly: true })
+													React.createElement('input', { onFocus: this.select, type: 'text', value: modifer(this.state.ability_score_int), readOnly: true })
 												),
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'ability_score_int_temp', onChange: this.editField, value: this.state.ability_score_int_temp })
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'ability_score_int_temp', onChange: this.editField, value: this.state.ability_score_int_temp })
 												),
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { type: 'text', value: modifer(this.state.ability_score_int, this.state.ability_score_int_temp), readOnly: true })
+													React.createElement('input', { onFocus: this.select, type: 'text', value: modifer(this.state.ability_score_int, this.state.ability_score_int_temp), readOnly: true })
 												)
 											),
 											React.createElement(
@@ -31974,22 +31990,22 @@
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'ability_score_wis', onChange: this.editField, value: this.state.ability_score_wis })
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'ability_score_wis', onChange: this.editField, value: this.state.ability_score_wis })
 												),
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { type: 'text', value: modifer(this.state.ability_score_wis), readOnly: true })
+													React.createElement('input', { onFocus: this.select, type: 'text', value: modifer(this.state.ability_score_wis), readOnly: true })
 												),
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'ability_score_wis_temp', onChange: this.editField, value: this.state.ability_score_wis_temp })
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'ability_score_wis_temp', onChange: this.editField, value: this.state.ability_score_wis_temp })
 												),
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { type: 'text', value: modifer(this.state.ability_score_wis, this.state.ability_score_wis_temp), readOnly: true })
+													React.createElement('input', { onFocus: this.select, type: 'text', value: modifer(this.state.ability_score_wis, this.state.ability_score_wis_temp), readOnly: true })
 												)
 											),
 											React.createElement(
@@ -32003,22 +32019,22 @@
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'ability_score_cha', onChange: this.editField, value: this.state.ability_score_cha })
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'ability_score_cha', onChange: this.editField, value: this.state.ability_score_cha })
 												),
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { type: 'text', value: modifer(this.state.ability_score_cha), readOnly: true })
+													React.createElement('input', { onFocus: this.select, type: 'text', value: modifer(this.state.ability_score_cha), readOnly: true })
 												),
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'ability_score_cha_temp', onChange: this.editField, value: this.state.ability_score_cha_temp })
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'ability_score_cha_temp', onChange: this.editField, value: this.state.ability_score_cha_temp })
 												),
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { type: 'text', value: modifer(this.state.ability_score_cha, this.state.ability_score_cha_temp), readOnly: true })
+													React.createElement('input', { onFocus: this.select, type: 'text', value: modifer(this.state.ability_score_cha, this.state.ability_score_cha_temp), readOnly: true })
 												)
 											)
 										),
@@ -32083,42 +32099,42 @@
 													React.createElement(
 														'td',
 														null,
-														React.createElement('input', { type: 'text', value: Number(this.state.size_mod) + modifer(this.state.ability_score_dex, this.state.ability_score_dex_temp) + Number(this.state.ac_armor_bonus) + Number(this.state.ac_shild_bonus) + Number(this.state.ac_natural_armor) + Number(this.state.ac_defelection_mod) + Number(this.state.ac_misc_mod) + 10, readOnly: true })
+														React.createElement('input', { onFocus: this.select, type: 'text', value: Number(this.state.size_mod) + modifer(this.state.ability_score_dex, this.state.ability_score_dex_temp) + Number(this.state.ac_armor_bonus) + Number(this.state.ac_shild_bonus) + Number(this.state.ac_natural_armor) + Number(this.state.ac_defelection_mod) + Number(this.state.ac_misc_mod) + 10, readOnly: true })
 													),
 													React.createElement(
 														'td',
 														null,
-														React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'ac_armor_bonus', onChange: this.editField, value: this.state.ac_armor_bonus })
+														React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'ac_armor_bonus', onChange: this.editField, value: this.state.ac_armor_bonus })
 													),
 													React.createElement(
 														'td',
 														null,
-														React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'ac_shild_bonus', onChange: this.editField, value: this.state.ac_shild_bonus })
+														React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'ac_shild_bonus', onChange: this.editField, value: this.state.ac_shild_bonus })
 													),
 													React.createElement(
 														'td',
 														null,
-														React.createElement('input', { type: 'text', value: modifer(this.state.ability_score_dex, this.state.ability_score_dex_temp), readOnly: true })
+														React.createElement('input', { onFocus: this.select, type: 'text', value: modifer(this.state.ability_score_dex, this.state.ability_score_dex_temp), readOnly: true })
 													),
 													React.createElement(
 														'td',
 														null,
-														React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'size_mod', onChange: this.editField, value: this.state.size_mod })
+														React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'size_mod', onChange: this.editField, value: this.state.size_mod })
 													),
 													React.createElement(
 														'td',
 														null,
-														React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'ac_natural_armor', onChange: this.editField, value: this.state.ac_natural_armor })
+														React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'ac_natural_armor', onChange: this.editField, value: this.state.ac_natural_armor })
 													),
 													React.createElement(
 														'td',
 														null,
-														React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'ac_defelection_mod', onChange: this.editField, value: this.state.ac_defelection_mod })
+														React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'ac_defelection_mod', onChange: this.editField, value: this.state.ac_defelection_mod })
 													),
 													React.createElement(
 														'td',
 														null,
-														React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'ac_misc_mod', onChange: this.editField, value: this.state.ac_misc_mod })
+														React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'ac_misc_mod', onChange: this.editField, value: this.state.ac_misc_mod })
 													),
 													React.createElement(
 														'td',
@@ -32139,7 +32155,7 @@
 													null,
 													'BAB:'
 												),
-												React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'base_attack_bonus', onChange: this.editField, value: this.state.base_attack_bonus })
+												React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'base_attack_bonus', onChange: this.editField, value: this.state.base_attack_bonus })
 											),
 											React.createElement(
 												'div',
@@ -32149,7 +32165,7 @@
 													null,
 													'DR:'
 												),
-												React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'damage_reduction', onChange: this.editField, value: this.state.damage_reduction })
+												React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'damage_reduction', onChange: this.editField, value: this.state.damage_reduction })
 											),
 											React.createElement(
 												'div',
@@ -32159,7 +32175,7 @@
 													null,
 													'spell resistance:'
 												),
-												React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'spell_resistance', onChange: this.editField, value: this.state.spell_resistance })
+												React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'spell_resistance', onChange: this.editField, value: this.state.spell_resistance })
 											)
 										),
 										React.createElement(
@@ -32220,27 +32236,27 @@
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'fort_base_save', onChange: this.editField, value: this.state.fort_base_save })
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'fort_base_save', onChange: this.editField, value: this.state.fort_base_save })
 												),
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { type: 'text', value: modifer(this.state.ability_score_con, this.state.ability_score_con_temp), readOnly: true })
+													React.createElement('input', { onFocus: this.select, type: 'text', value: modifer(this.state.ability_score_con, this.state.ability_score_con_temp), readOnly: true })
 												),
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'fort_magic_mod', onChange: this.editField, value: this.state.fort_magic_mod })
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'fort_magic_mod', onChange: this.editField, value: this.state.fort_magic_mod })
 												),
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'fort_misc_mod', onChange: this.editField, value: this.state.fort_misc_mod })
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'fort_misc_mod', onChange: this.editField, value: this.state.fort_misc_mod })
 												),
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'fort_temp_mod', onChange: this.editField, value: this.state.fort_temp_mod })
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'fort_temp_mod', onChange: this.editField, value: this.state.fort_temp_mod })
 												)
 											),
 											React.createElement(
@@ -32259,27 +32275,27 @@
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'ref_base_save', onChange: this.editField, value: this.state.ref_base_save })
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'ref_base_save', onChange: this.editField, value: this.state.ref_base_save })
 												),
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { type: 'text', value: modifer(this.state.ability_score_dex, this.state.ability_score_dex_temp), readOnly: true })
+													React.createElement('input', { onFocus: this.select, type: 'text', value: modifer(this.state.ability_score_dex, this.state.ability_score_dex_temp), readOnly: true })
 												),
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'ref_magic_mod', onChange: this.editField, value: this.state.ref_magic_mod })
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'ref_magic_mod', onChange: this.editField, value: this.state.ref_magic_mod })
 												),
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'ref_misc_mod', onChange: this.editField, value: this.state.ref_misc_mod })
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'ref_misc_mod', onChange: this.editField, value: this.state.ref_misc_mod })
 												),
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'ref_temp_mod', onChange: this.editField, value: this.state.ref_temp_mod })
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'ref_temp_mod', onChange: this.editField, value: this.state.ref_temp_mod })
 												)
 											),
 											React.createElement(
@@ -32298,27 +32314,27 @@
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'will_base_save', onChange: this.editField, value: this.state.will_base_save })
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'will_base_save', onChange: this.editField, value: this.state.will_base_save })
 												),
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { type: 'text', value: modifer(this.state.ability_score_wis, this.state.ability_score_wis_temp), readOnly: true })
+													React.createElement('input', { onFocus: this.select, type: 'text', value: modifer(this.state.ability_score_wis, this.state.ability_score_wis_temp), readOnly: true })
 												),
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'will_magic_mod', onChange: this.editField, value: this.state.will_magic_mod })
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'will_magic_mod', onChange: this.editField, value: this.state.will_magic_mod })
 												),
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'will_misc_mod', onChange: this.editField, value: this.state.will_misc_mod })
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'will_misc_mod', onChange: this.editField, value: this.state.will_misc_mod })
 												),
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'will_temp_mod', onChange: this.editField, value: this.state.will_temp_mod })
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'will_temp_mod', onChange: this.editField, value: this.state.will_temp_mod })
 												)
 											)
 										),
@@ -32362,17 +32378,17 @@
 													React.createElement(
 														'td',
 														null,
-														React.createElement('input', { type: 'text', value: modifer(this.state.ability_score_dex, this.state.ability_score_dex_temp) + Number(this.state.init_misc_mod), readOnly: true })
+														React.createElement('input', { onFocus: this.select, type: 'text', value: modifer(this.state.ability_score_dex, this.state.ability_score_dex_temp) + Number(this.state.init_misc_mod), readOnly: true })
 													),
 													React.createElement(
 														'td',
 														null,
-														React.createElement('input', { type: 'text', value: modifer(this.state.ability_score_dex, this.state.ability_score_dex_temp), readOnly: true })
+														React.createElement('input', { onFocus: this.select, type: 'text', value: modifer(this.state.ability_score_dex, this.state.ability_score_dex_temp), readOnly: true })
 													),
 													React.createElement(
 														'td',
 														null,
-														React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'init_misc_mod', onChange: this.editField, value: this.state.init_misc_mod })
+														React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'init_misc_mod', onChange: this.editField, value: this.state.init_misc_mod })
 													)
 												)
 											)
@@ -32422,22 +32438,22 @@
 													React.createElement(
 														'td',
 														null,
-														React.createElement('input', { type: 'text', value: Number(this.state.base_attack_bonus) + modifer(this.state.ability_score_str, this.state.ability_score_str_temp) + Number(this.state.size_mod), readOnly: true })
+														React.createElement('input', { onFocus: this.select, type: 'text', value: Number(this.state.base_attack_bonus) + modifer(this.state.ability_score_str, this.state.ability_score_str_temp) + Number(this.state.size_mod), readOnly: true })
 													),
 													React.createElement(
 														'td',
 														null,
-														React.createElement('input', { type: 'text', value: this.state.base_attack_bonus, readOnly: true })
+														React.createElement('input', { onFocus: this.select, type: 'text', value: this.state.base_attack_bonus, readOnly: true })
 													),
 													React.createElement(
 														'td',
 														null,
-														React.createElement('input', { type: 'text', value: modifer(this.state.ability_score_str, this.state.ability_score_str_temp), readOnly: true })
+														React.createElement('input', { onFocus: this.select, type: 'text', value: modifer(this.state.ability_score_str, this.state.ability_score_str_temp), readOnly: true })
 													),
 													React.createElement(
 														'td',
 														null,
-														React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'size_mod', onChange: this.editField, value: this.state.size_mod })
+														React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'size_mod', onChange: this.editField, value: this.state.size_mod })
 													)
 												)
 											)
@@ -32492,27 +32508,27 @@
 													React.createElement(
 														'td',
 														null,
-														React.createElement('input', { type: 'text', value: Number(this.state.base_attack_bonus) + modifer(this.state.ability_score_str, this.state.ability_score_str_temp) + modifer(this.state.ability_score_dex, this.state.ability_score_dex_temp) + Number(this.state.size_mod) + 10, readOnly: true })
+														React.createElement('input', { onFocus: this.select, type: 'text', value: Number(this.state.base_attack_bonus) + modifer(this.state.ability_score_str, this.state.ability_score_str_temp) + modifer(this.state.ability_score_dex, this.state.ability_score_dex_temp) + Number(this.state.size_mod) + 10, readOnly: true })
 													),
 													React.createElement(
 														'td',
 														null,
-														React.createElement('input', { type: 'text', value: this.state.base_attack_bonus, readOnly: true })
+														React.createElement('input', { onFocus: this.select, type: 'text', value: this.state.base_attack_bonus, readOnly: true })
 													),
 													React.createElement(
 														'td',
 														null,
-														React.createElement('input', { type: 'text', value: modifer(this.state.ability_score_str, this.state.ability_score_str_temp), readOnly: true })
+														React.createElement('input', { onFocus: this.select, type: 'text', value: modifer(this.state.ability_score_str, this.state.ability_score_str_temp), readOnly: true })
 													),
 													React.createElement(
 														'td',
 														null,
-														React.createElement('input', { type: 'text', value: modifer(this.state.ability_score_dex, this.state.ability_score_dex_temp), readOnly: true })
+														React.createElement('input', { onFocus: this.select, type: 'text', value: modifer(this.state.ability_score_dex, this.state.ability_score_dex_temp), readOnly: true })
 													),
 													React.createElement(
 														'td',
 														null,
-														React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'size_mod', onChange: this.editField, value: this.state.size_mod })
+														React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'size_mod', onChange: this.editField, value: this.state.size_mod })
 													),
 													React.createElement(
 														'td',
@@ -32533,7 +32549,7 @@
 													null,
 													'light load:'
 												),
-												React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'light_load', onChange: this.editField, value: this.state.light_load })
+												React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'light_load', onChange: this.editField, value: this.state.light_load })
 											),
 											React.createElement(
 												'div',
@@ -32543,7 +32559,7 @@
 													null,
 													'medium load:'
 												),
-												React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'medium_load', onChange: this.editField, value: this.state.medium_load })
+												React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'medium_load', onChange: this.editField, value: this.state.medium_load })
 											),
 											React.createElement(
 												'div',
@@ -32553,7 +32569,7 @@
 													null,
 													'heavy load:'
 												),
-												React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'heavy_load', onChange: this.editField, value: this.state.heavy_load })
+												React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'heavy_load', onChange: this.editField, value: this.state.heavy_load })
 											),
 											React.createElement(
 												'div',
@@ -32563,7 +32579,7 @@
 													null,
 													'lift over head:'
 												),
-												React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'lift_over_head', onChange: this.editField, value: this.state.lift_over_head })
+												React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'lift_over_head', onChange: this.editField, value: this.state.lift_over_head })
 											),
 											React.createElement(
 												'div',
@@ -32573,7 +32589,7 @@
 													null,
 													'lift off ground:'
 												),
-												React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'lift_off_ground', onChange: this.editField, value: this.state.lift_off_ground })
+												React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'lift_off_ground', onChange: this.editField, value: this.state.lift_off_ground })
 											),
 											React.createElement(
 												'div',
@@ -32583,7 +32599,7 @@
 													null,
 													'drag or push:'
 												),
-												React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'drag_or_push', onChange: this.editField, value: this.state.drag_or_push })
+												React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'drag_or_push', onChange: this.editField, value: this.state.drag_or_push })
 											),
 											React.createElement(
 												'div',
@@ -32593,7 +32609,7 @@
 													null,
 													'copper:'
 												),
-												React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'money_cp', onChange: this.editField, value: this.state.money_cp })
+												React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'money_cp', onChange: this.editField, value: this.state.money_cp })
 											),
 											React.createElement(
 												'div',
@@ -32603,7 +32619,7 @@
 													null,
 													'silver:'
 												),
-												React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'money_sp', onChange: this.editField, value: this.state.money_sp })
+												React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'money_sp', onChange: this.editField, value: this.state.money_sp })
 											),
 											React.createElement(
 												'div',
@@ -32613,7 +32629,7 @@
 													null,
 													'gold:'
 												),
-												React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'money_gp', onChange: this.editField, value: this.state.money_gp })
+												React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'money_gp', onChange: this.editField, value: this.state.money_gp })
 											),
 											React.createElement(
 												'div',
@@ -32623,7 +32639,7 @@
 													null,
 													'platinum:'
 												),
-												React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'money_pp', onChange: this.editField, value: this.state.money_pp })
+												React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'money_pp', onChange: this.editField, value: this.state.money_pp })
 											),
 											React.createElement(FeatContainer, { _characterId: this.props.params._characterId }),
 											React.createElement(FeatureContainer, { _characterId: this.props.params._characterId })
@@ -32634,7 +32650,7 @@
 										{ className: 'column-right' },
 										React.createElement(
 											'div',
-											{ className: 'speed' },
+											{ className: 'xp-points' },
 											React.createElement(
 												'div',
 												null,
@@ -32643,7 +32659,7 @@
 													null,
 													'xp points:'
 												),
-												React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'xp_points', onChange: this.editField, value: this.state.xp_points })
+												React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'xp_points', onChange: this.editField, value: this.state.xp_points })
 											),
 											React.createElement(
 												'div',
@@ -32653,8 +32669,12 @@
 													null,
 													'next level:'
 												),
-												React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'next_level', onChange: this.editField, value: this.state.next_level })
-											),
+												React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'next_level', onChange: this.editField, value: this.state.next_level })
+											)
+										),
+										React.createElement(
+											'div',
+											{ className: 'speed' },
 											React.createElement(
 												'div',
 												null,
@@ -32663,7 +32683,12 @@
 													null,
 													'land speed:'
 												),
-												React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'land_speed', onChange: this.editField, value: this.state.land_speed })
+												React.createElement(
+													'p',
+													null,
+													'squares'
+												),
+												React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'land_speed', onChange: this.editField, value: this.state.land_speed })
 											),
 											React.createElement(
 												'div',
@@ -32673,7 +32698,12 @@
 													null,
 													'armor speed:'
 												),
-												React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'armor_speed', onChange: this.editField, value: this.state.armor_speed })
+												React.createElement(
+													'p',
+													null,
+													'squares'
+												),
+												React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'armor_speed', onChange: this.editField, value: this.state.armor_speed })
 											),
 											React.createElement(
 												'div',
@@ -32683,7 +32713,12 @@
 													null,
 													'fly speed:'
 												),
-												React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'fly_speed', onChange: this.editField, value: this.state.fly_speed })
+												React.createElement(
+													'p',
+													null,
+													'squares'
+												),
+												React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'fly_speed', onChange: this.editField, value: this.state.fly_speed })
 											),
 											React.createElement(
 												'div',
@@ -32693,7 +32728,12 @@
 													null,
 													'climb speed:'
 												),
-												React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'climb_speed', onChange: this.editField, value: this.state.climb_speed })
+												React.createElement(
+													'p',
+													null,
+													'squares'
+												),
+												React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'climb_speed', onChange: this.editField, value: this.state.climb_speed })
 											),
 											React.createElement(
 												'div',
@@ -32703,7 +32743,12 @@
 													null,
 													'swim speed:'
 												),
-												React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'swim_speed', onChange: this.editField, value: this.state.swim_speed })
+												React.createElement(
+													'p',
+													null,
+													'squares'
+												),
+												React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'swim_speed', onChange: this.editField, value: this.state.swim_speed })
 											),
 											React.createElement(
 												'div',
@@ -32713,7 +32758,12 @@
 													null,
 													'borrow speed:'
 												),
-												React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'borrow_speed', onChange: this.editField, value: this.state.borrow_speed })
+												React.createElement(
+													'p',
+													null,
+													'squares'
+												),
+												React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'borrow_speed', onChange: this.editField, value: this.state.borrow_speed })
 											)
 										),
 										React.createElement(SkillContainer, { _characterId: this.props.params._characterId }),
@@ -32755,12 +32805,12 @@
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_0_spells_known', onChange: this.editField, value: this.state.level_0_spells_known })
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_0_spells_known', onChange: this.editField, value: this.state.level_0_spells_known })
 												),
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_0_spell_save_dc', onChange: this.editField, value: this.state.level_0_spell_save_dc })
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_0_spell_save_dc', onChange: this.editField, value: this.state.level_0_spell_save_dc })
 												),
 												React.createElement(
 													'td',
@@ -32770,12 +32820,12 @@
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_0_spell_per_day', onChange: this.editField, value: this.state.level_0_spell_per_day })
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_0_spell_per_day', onChange: this.editField, value: this.state.level_0_spell_per_day })
 												),
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_0_bonus_spells', onChange: this.editField, value: this.state.level_0_bonus_spells })
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_0_bonus_spells', onChange: this.editField, value: this.state.level_0_bonus_spells })
 												)
 											),
 											React.createElement(
@@ -32784,12 +32834,12 @@
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_1_spells_known', onChange: this.editField, value: this.state.level_1_spells_known })
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_1_spells_known', onChange: this.editField, value: this.state.level_1_spells_known })
 												),
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_1_spell_save_dc', onChange: this.editField, value: this.state.level_1_spell_save_dc })
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_1_spell_save_dc', onChange: this.editField, value: this.state.level_1_spell_save_dc })
 												),
 												React.createElement(
 													'td',
@@ -32799,12 +32849,12 @@
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_1_spell_per_day', onChange: this.editField, value: this.state.level_1_spell_per_day })
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_1_spell_per_day', onChange: this.editField, value: this.state.level_1_spell_per_day })
 												),
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_1_bonus_spells', onChange: this.editField, value: this.state.level_1_bonus_spells })
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_1_bonus_spells', onChange: this.editField, value: this.state.level_1_bonus_spells })
 												)
 											),
 											React.createElement(
@@ -32813,12 +32863,12 @@
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_2_spells_known', onChange: this.editField, value: this.state.level_2_spells_known })
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_2_spells_known', onChange: this.editField, value: this.state.level_2_spells_known })
 												),
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_2_spell_save_dc', onChange: this.editField, value: this.state.level_2_spell_save_dc })
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_2_spell_save_dc', onChange: this.editField, value: this.state.level_2_spell_save_dc })
 												),
 												React.createElement(
 													'td',
@@ -32828,12 +32878,12 @@
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_2_spell_per_day', onChange: this.editField, value: this.state.level_2_spell_per_day })
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_2_spell_per_day', onChange: this.editField, value: this.state.level_2_spell_per_day })
 												),
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_2_bonus_spells', onChange: this.editField, value: this.state.level_2_bonus_spells })
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_2_bonus_spells', onChange: this.editField, value: this.state.level_2_bonus_spells })
 												)
 											),
 											React.createElement(
@@ -32842,12 +32892,12 @@
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_3_spells_known', onChange: this.editField, value: this.state.level_3_spells_known })
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_3_spells_known', onChange: this.editField, value: this.state.level_3_spells_known })
 												),
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_3_spell_save_dc', onChange: this.editField, value: this.state.level_3_spell_save_dc })
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_3_spell_save_dc', onChange: this.editField, value: this.state.level_3_spell_save_dc })
 												),
 												React.createElement(
 													'td',
@@ -32857,12 +32907,12 @@
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_3_spell_per_day', onChange: this.editField, value: this.state.level_3_spell_per_day })
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_3_spell_per_day', onChange: this.editField, value: this.state.level_3_spell_per_day })
 												),
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_3_bonus_spells', onChange: this.editField, value: this.state.level_3_bonus_spells })
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_3_bonus_spells', onChange: this.editField, value: this.state.level_3_bonus_spells })
 												)
 											),
 											React.createElement(
@@ -32871,12 +32921,12 @@
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_4_spells_known', onChange: this.editField, value: this.state.level_4_spells_known })
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_4_spells_known', onChange: this.editField, value: this.state.level_4_spells_known })
 												),
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_4_spell_save_dc', onChange: this.editField, value: this.state.level_4_spell_save_dc })
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_4_spell_save_dc', onChange: this.editField, value: this.state.level_4_spell_save_dc })
 												),
 												React.createElement(
 													'td',
@@ -32886,12 +32936,12 @@
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_4_spell_per_day', onChange: this.editField, value: this.state.level_4_spell_per_day })
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_4_spell_per_day', onChange: this.editField, value: this.state.level_4_spell_per_day })
 												),
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_4_bonus_spells', onChange: this.editField, value: this.state.level_4_bonus_spells })
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_4_bonus_spells', onChange: this.editField, value: this.state.level_4_bonus_spells })
 												)
 											),
 											React.createElement(
@@ -32900,12 +32950,12 @@
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_5_spells_known', onChange: this.editField, value: this.state.level_5_spells_known })
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_5_spells_known', onChange: this.editField, value: this.state.level_5_spells_known })
 												),
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_5_spell_save_dc', onChange: this.editField, value: this.state.level_5_spell_save_dc })
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_5_spell_save_dc', onChange: this.editField, value: this.state.level_5_spell_save_dc })
 												),
 												React.createElement(
 													'td',
@@ -32915,12 +32965,12 @@
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_5_spell_per_day', onChange: this.editField, value: this.state.level_5_spell_per_day })
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_5_spell_per_day', onChange: this.editField, value: this.state.level_5_spell_per_day })
 												),
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_5_bonus_spells', onChange: this.editField, value: this.state.level_5_bonus_spells })
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_5_bonus_spells', onChange: this.editField, value: this.state.level_5_bonus_spells })
 												)
 											),
 											React.createElement(
@@ -32929,12 +32979,12 @@
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_6_spells_known', onChange: this.editField, value: this.state.level_6_spells_known })
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_6_spells_known', onChange: this.editField, value: this.state.level_6_spells_known })
 												),
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_6_spell_save_dc', onChange: this.editField, value: this.state.level_6_spell_save_dc })
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_6_spell_save_dc', onChange: this.editField, value: this.state.level_6_spell_save_dc })
 												),
 												React.createElement(
 													'td',
@@ -32944,12 +32994,12 @@
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_6_spell_per_day', onChange: this.editField, value: this.state.level_6_spell_per_day })
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_6_spell_per_day', onChange: this.editField, value: this.state.level_6_spell_per_day })
 												),
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_6_bonus_spells', onChange: this.editField, value: this.state.level_6_bonus_spells })
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_6_bonus_spells', onChange: this.editField, value: this.state.level_6_bonus_spells })
 												)
 											),
 											React.createElement(
@@ -32958,12 +33008,12 @@
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_7_spells_known', onChange: this.editField, value: this.state.level_7_spells_known })
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_7_spells_known', onChange: this.editField, value: this.state.level_7_spells_known })
 												),
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_7_spell_save_dc', onChange: this.editField, value: this.state.level_7_spell_save_dc })
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_7_spell_save_dc', onChange: this.editField, value: this.state.level_7_spell_save_dc })
 												),
 												React.createElement(
 													'td',
@@ -32973,12 +33023,12 @@
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_7_spell_per_day', onChange: this.editField, value: this.state.level_7_spell_per_day })
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_7_spell_per_day', onChange: this.editField, value: this.state.level_7_spell_per_day })
 												),
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_7_bonus_spells', onChange: this.editField, value: this.state.level_7_bonus_spells })
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_7_bonus_spells', onChange: this.editField, value: this.state.level_7_bonus_spells })
 												)
 											),
 											React.createElement(
@@ -32987,12 +33037,12 @@
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_8_spells_known', onChange: this.editField, value: this.state.level_8_spells_known })
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_8_spells_known', onChange: this.editField, value: this.state.level_8_spells_known })
 												),
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_8_spell_save_dc', onChange: this.editField, value: this.state.level_8_spell_save_dc })
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_8_spell_save_dc', onChange: this.editField, value: this.state.level_8_spell_save_dc })
 												),
 												React.createElement(
 													'td',
@@ -33002,12 +33052,12 @@
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_8_spell_per_day', onChange: this.editField, value: this.state.level_8_spell_per_day })
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_8_spell_per_day', onChange: this.editField, value: this.state.level_8_spell_per_day })
 												),
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_8_bonus_spells', onChange: this.editField, value: this.state.level_8_bonus_spells })
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_8_bonus_spells', onChange: this.editField, value: this.state.level_8_bonus_spells })
 												)
 											),
 											React.createElement(
@@ -33016,12 +33066,12 @@
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_9_spells_known', onChange: this.editField, value: this.state.level_9_spells_known })
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_9_spells_known', onChange: this.editField, value: this.state.level_9_spells_known })
 												),
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_9_spell_save_dc', onChange: this.editField, value: this.state.level_9_spell_save_dc })
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_9_spell_save_dc', onChange: this.editField, value: this.state.level_9_spell_save_dc })
 												),
 												React.createElement(
 													'td',
@@ -33031,12 +33081,12 @@
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_9_spell_per_day', onChange: this.editField, value: this.state.level_9_spell_per_day })
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_9_spell_per_day', onChange: this.editField, value: this.state.level_9_spell_per_day })
 												),
 												React.createElement(
 													'td',
 													null,
-													React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_9_bonus_spells', onChange: this.editField, value: this.state.level_9_bonus_spells })
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', name: 'level_9_bonus_spells', onChange: this.editField, value: this.state.level_9_bonus_spells })
 												)
 											)
 										),
@@ -33045,7 +33095,7 @@
 											null,
 											'domain and specialty school:'
 										),
-										React.createElement('input', { onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'domain_and_specialty_school', onChange: this.editField, value: this.state.domain_and_specialty_school }),
+										React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'domain_and_specialty_school', onChange: this.editField, value: this.state.domain_and_specialty_school }),
 										React.createElement(SpellContainer, { _characterId: this.props.params._characterId }),
 										React.createElement(
 											'div',
@@ -33118,11 +33168,11 @@
 	        displayName: 'InteractiveContainer',
 	
 	        componentDidMount: function componentDidMount() {
-	            this.props.dispatch(interactiveActions.get(this.props._characterId));
+	            this.props.dispatch(interactiveActions.getAll(this.props._characterId));
 	        },
 	        render: function render() {
 	            if (this.props.updated) {
-	                this.props.dispatch(interactiveActions.get(this.props._characterId));
+	                this.props.dispatch(interactiveActions.getAll(this.props._characterId));
 	            }
 	            var className = label + '-container';
 	            return React.createElement(
@@ -33182,7 +33232,6 @@
 	                var items = [];
 	                for (var i = 0; i < keys.length; i++) {
 	                    if (keys[i] != '_id' && keys[i] != '_characterId' && keys[i] != '_userId' && keys[i] != '__v') {
-	                        keys[i];
 	                        items.push(React.createElement(
 	                            'th',
 	                            null,
@@ -33193,7 +33242,7 @@
 	                interactives.push(items);
 	            }
 	            for (var i = 0; i < this.props.interactives.length; i++) {
-	                interactives.push(React.createElement(Interactive, { key: i, interactive: this.props.interactives[i] }));
+	                interactives.push(React.createElement(Interactive, { key: i, interactiveNumber: i }));
 	            }
 	            interactives.push(React.createElement(
 	                'tr',
@@ -33230,6 +33279,7 @@
 
 	'use strict';
 	
+	var focus = false;
 	module.exports = function (label) {
 	    var React = __webpack_require__(1),
 	        connect = __webpack_require__(172).connect,
@@ -33249,8 +33299,10 @@
 	            }
 	        },
 	        saveInteractive: function saveInteractive() {
-	            if (this.state.name != '') {
+	            if (this.state.name != '' && !focus) {
 	                this.props.dispatch(interactiveActions.update(this.state, this.props.interactive));
+	            } else {
+	                setTimeout(this.saveInteractive, 3000);
 	            }
 	        },
 	        deleteItem: function deleteItem() {
@@ -33259,17 +33311,29 @@
 	        componentWillMount: function componentWillMount() {
 	            this.setState(this.props.interactive);
 	        },
+	        focus: false,
+	        focusOn: function focusOn(event) {
+	            event.target.select();
+	            focus = true;
+	        },
+	        focusOff: function focusOff() {
+	            setTimeout(this.saveInteractive, 1000);
+	            focus = false;
+	        },
 	        render: function render() {
 	            var state = this.state;
 	            var keys = Object.keys(state);
 	            var items = [];
 	            for (var i = 0; i < keys.length; i++) {
 	                if (keys[i] != '_id' && keys[i] != '_characterId' && keys[i] != '_userId' && keys[i] != '__v') {
-	                    keys[i];
+	                    var type = 'text';
+	                    if (typeof this.props.interactive[keys[i]] == 'number') {
+	                        type = 'number';
+	                    }
 	                    items.push(React.createElement(
 	                        'td',
 	                        null,
-	                        React.createElement('input', { type: 'text', onKeyPress: this.hitkey, onChange: this.editField, onBlur: this.saveInteractive, name: keys[i], value: this.state[keys[i]] })
+	                        React.createElement('input', { type: type, onFocus: this.focusOn, onKeyPress: this.hitkey, onChange: this.editField, onBlur: this.focusOff, name: keys[i], value: this.state[keys[i]] })
 	                    ));
 	                }
 	            }
@@ -33286,7 +33350,15 @@
 	        }
 	    });
 	
-	    var Container = connect()(Interactive);
+	    var mapStateToProps = function mapStateToProps(state, props) {
+	        // console.log(state, props, label)
+	        // console.log(state[label][label][props.interactiveNumber])
+	        return {
+	            interactive: state[label][label][props.interactiveNumber]
+	        };
+	    };
+	
+	    var Container = connect(mapStateToProps)(Interactive);
 	
 	    return Container;
 	};
