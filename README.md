@@ -416,7 +416,7 @@ UPDATE A WEAPON
 	path: weapon/
 	body: 
 	      required: _characterId, and _id
-	      Optional: name, dameage_type, range, crit, attack_bonus, damage_bonus, and/or
+	      Optional: name, damage_type, range, crit, attack_bonus, damage_bonus, and/or
 	returns: Weapon
 
 DELETE A WEAPON
