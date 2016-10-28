@@ -1,21 +1,20 @@
 # Pathfinder Character Creator
 	
-# H1 SUMMARY
+# SUMMARY
 This app was made to be a place to make Pathfinder RPG Characters. A user needs to signup or login to an account. Then that user can create, delete, and characters. Each Character has many fields similar to the Pathfinder Character Sheet.
 	
-# H1 Demo 
-	https://pathfinder-character-creator.herokuapp.com/
+# Demo 
+[I'm an inline-style link](https://pathfinder-character-creator.herokuapp.com/)
 
-
-# H1 SCREENSHOTS
+# SCREENSHOTS
 
 	https://github.com/KyloJorgensen/pathfinder-character-creator/tree/images/screenshots
 
-# H1 TRAVIS CI
+# TRAVIS CI
 
 	https://travis-ci.org/KyloJorgensen/pathfinder-character-creator
 	
-# H1 TECHNOLOGIES USED
+# TECHNOLOGIES USED
 	
 	Node.js, express, npm, webpack, react, redux, CRUD Server, travis.ci, mongo, mongoose, chai, and heroku.
 	
@@ -50,7 +49,7 @@ This app was made to be a place to make Pathfinder RPG Characters. A user needs 
 		    "webpack": "^1.13.2"
 		  }
 	
-# H1 API
+# API
 
 	USER ENDPOINT
 
