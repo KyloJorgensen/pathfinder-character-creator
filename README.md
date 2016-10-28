@@ -28,18 +28,28 @@ Modules:
 ## USER ENDPOINT
 
 GET A USER NAME
-	headers: "Authentication:" + document.cookie
-	mathod: get
-	path: user/
-	returns: CharacterName
+
+headers: "Authentication:" + document.cookie
+
+mathod: get
+
+path: user/
+
+returns: CharacterName
 
 CREATE AN USER
-	headers: "Authentication:" + document.cookie
-	mathod: post
-	path: user/
-	body: 
-	      required: name, username, and password
-	returns: Character
+
+headers: "Authentication:" + document.cookie
+
+mathod: post
+
+path: user/
+
+body: 
+
+   required: name, username, and password
+
+returns: Character
 
 ## LOGOUT ENDPOINT
 
