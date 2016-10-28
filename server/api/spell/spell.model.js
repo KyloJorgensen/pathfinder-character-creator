@@ -28,7 +28,7 @@ var spellSchema = mongoose.Schema({
         require: true,
         default: 'School'
     },
-    perpared: {
+    prepared: {
         type: Number,
         require: true,
         default: 0

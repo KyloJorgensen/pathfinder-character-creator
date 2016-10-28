@@ -79,7 +79,7 @@ SpellController.prototype.createSpell = function(req, res, next) {
 	});
 };
 
-// Update Spell queries: _characterId and _id update: name, level, school, perpared, and/or used returns: new Spell 
+// Update Spell queries: _characterId and _id update: name, level, school, prepared, and/or used returns: new Spell 
 SpellController.prototype.updateSpell = function(req, res, next) {
 	var changes = {};
 	if ('body' in req) {
@@ -92,8 +92,8 @@ SpellController.prototype.updateSpell = function(req, res, next) {
 		if ('school' in req.body) {
 			changes.school = req.body.school;
 		}
-		if ('perpared' in req.body) {
-			changes.perpared = req.body.perpared;
+		if ('prepared' in req.body) {
+			changes.prepared = req.body.prepared;
 		}
 		if ('used' in req.body) {
 			changes.used = req.body.used;
