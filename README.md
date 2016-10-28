@@ -7,48 +7,21 @@ This app was made to be a place to make Pathfinder RPG Characters. A user needs 
 This is an active demo of website hosted by a server.
 [https://pathfinder-character-creator.herokuapp.com/](https://pathfinder-character-creator.herokuapp.com/)
 
+# TECHNOLOGIES USED
+
+The front-end is built using React, the back-end using NodeJS with ExpressJS as the web server and MongoDB as the database.
+
+Java script file is full of Javascript libaraies called modules that are complied to one file with Webpack and Node package Manager. 
+
+Backend is Test with mocha, chai and travis ci. [Click here to see test results](https://travis-ci.org/KyloJorgensen/pathfinder-character-creator)
+
+Modules:
+	atob, babel-loader, babel-preset-es2015, babel-preset-react, bcryptjs, body-parser, btoa, chai, chai-http, chokidar-cli, cookie, cookie-parser, express, isomorphic-fetch, less, less-plugin-clean-css, mocha, mongoose, react, react-cookie, react-dom, react-redux, react-router, redux, redux-thunk, and webpack.
+
+
 # SCREENSHOTS
 
 	https://github.com/KyloJorgensen/pathfinder-character-creator/tree/images/screenshots
-
-# TRAVIS CI
-
-	https://travis-ci.org/KyloJorgensen/pathfinder-character-creator
-	
-# TECHNOLOGIES USED
-	
-	Node.js, express, npm, webpack, react, redux, CRUD Server, travis.ci, mongo, mongoose, chai, and heroku.
-	
-		  "dependencies": {
-		    "atob": "^2.0.3",
-		    "bcryptjs": "^2.3.0",
-		    "body-parser": "^1.15.2",
-		    "btoa": "^1.1.2",
-		    "cookie": "^0.3.1",
-		    "cookie-parser": "^1.4.3",
-		    "express": "^4.14.0",
-		    "mongoose": "^4.6.3"
-		  },
-		  "devDependencies": {
-		    "babel-loader": "^6.2.5",
-		    "babel-preset-es2015": "^6.16.0",
-		    "babel-preset-react": "^6.16.0",
-		    "chai": "^3.5.0",
-		    "chai-http": "^3.0.0",
-		    "chokidar-cli": "^1.2.0",
-		    "isomorphic-fetch": "^2.2.1",
-		    "less": "^2.7.1",
-		    "less-plugin-clean-css": "^1.5.1",
-		    "mocha": "^3.1.2",
-		    "react": "^15.3.2",
-		    "react-cookie": "^0.4.8",
-		    "react-dom": "^15.3.2",
-		    "react-redux": "^4.4.5",
-		    "react-router": "^2.8.1",
-		    "redux": "^3.6.0",
-		    "redux-thunk": "^2.1.0",
-		    "webpack": "^1.13.2"
-		  }
 	
 # API
 
