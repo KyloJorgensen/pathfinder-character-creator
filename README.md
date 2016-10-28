@@ -89,7 +89,7 @@ CREATE A CHARACTER
 UPDATE A CHARACTER
 
 	headers: "Authentication:" + document.cookie
-	mathod: put
+	method: put
 	path: character/
 	body: 
 		required: _characterId
@@ -99,7 +99,7 @@ UPDATE A CHARACTER
 DELETE A CHARACTER
 
 	headers: "Authentication:" + document.cookie
-	mathod: delete
+	method: delete
 	path: character/
 	body: 
 	      required: _characterId, and _id
@@ -110,21 +110,21 @@ DELETE A CHARACTER
 GET ALL OF A CHARACTER'S ACITEMS
 
 	headers: "Authentication:" + document.cookie
-	mathod: get
+	method: get
 	path: acitem/:_characterId
 	returns: Acitems
 
 GET AN ACITEM
 
 	headers: "Authentication:" + document.cookie
-	mathod: get
+	method: get
 	path: acitem/:_characterId/:_acitemId
 	returns: Acitem
 
 CREATE AN ACITEM
 
 	headers: "Authentication:" + document.cookie
-	mathod: post
+	method: post
 	path: acitem/
 	body: 
 	      required: _characterId, and name
@@ -133,7 +133,7 @@ CREATE AN ACITEM
 UPDATE AN ACITEM
 
 	headers: "Authentication:" + document.cookie
-	mathod: put
+	method: put
 	path: acitem/
 	body: 
 	      required: _characterId, and _id
@@ -143,7 +143,7 @@ UPDATE AN ACITEM
 DELETE AN ACITEM
 
 	headers: "Authentication:" + document.cookie
-	mathod: delete
+	method: delete
 	path: acitem/
 	body: 
 	      required: _characterId, and _id
@@ -154,19 +154,19 @@ DELETE AN ACITEM
 GET ALL OF A CHARACTER'S FEATS
 
 	headers: "Authentication:" + document.cookie
-	mathod: get
+	method: get
 	path: feat/:_characterId
 	returns: Feats
 		GET A FEAT
 	headers: "Authentication:" + document.cookie
-	mathod: get
+	method: get
 	path: feat/:_characterId/:_featId
 	returns: Feat
 
 CREATE A FEAT
 
 	headers: "Authentication:" + document.cookie
-	mathod: post
+	method: post
 	path: feat/
 	body: 
 	      required: _characterId, and name
@@ -175,7 +175,7 @@ CREATE A FEAT
 UPDATE A FEAT
 
 	headers: "Authentication:" + document.cookie
-	mathod: put
+	method: put
 	path: feat/
 	body: 
 	      required: _characterId, and _id
@@ -185,32 +185,32 @@ UPDATE A FEAT
 DELETE A FEAT
 
 	headers: "Authentication:" + document.cookie
-	mathod: delete
+	method: delete
 	path: feat/
 	body: 
 	      required: _characterId, and _id
 	returns: Feat
 
-# FEATURE ENDPOINT
+## FEATURE ENDPOINT
 
 GET ALL OF A CHARACTER'S FEATURES
 
 	headers: "Authentication:" + document.cookie
-	mathod: get
+	method: get
 	path: feature/:_characterId
 	returns: Features
 	
 GET A FEATURE
 
 	headers: "Authentication:" + document.cookie
-	mathod: get
+	method: get
 	path: feature/:_characterId/:_featureId
 	returns: Feature
 
 CREATE A FEATURE
 
 	headers: "Authentication:" + document.cookie
-	mathod: post
+	method: post
 	path: feature/
 	body: 
 	      required: _characterId, and name
@@ -219,7 +219,7 @@ CREATE A FEATURE
 UPDATE A FEATURE
 
 	headers: "Authentication:" + document.cookie
-	mathod: put
+	method: put
 	path: feature/
 	body: 
 	      required: _characterId, and _id
@@ -229,7 +229,7 @@ UPDATE A FEATURE
 DELETE A FEATURE
 
 	headers: "Authentication:" + document.cookie
-	mathod: delete
+	method: delete
 	path: feature/
 	body: 
 	      required: _characterId, and _id
@@ -240,21 +240,21 @@ DELETE A FEATURE
 GET ALL OF A CHARACTER'S GEAR
 
 	headers: "Authentication:" + document.cookie
-	mathod: get
+	method: get
 	path: gear/:_characterId
 	returns: gear
 
 GET A GEAR
 
 	headers: "Authentication:" + document.cookie
-	mathod: get
+	method: get
 	path: gear/:_characterId/:_gearId
 	returns: gear
 
 CREATE A GEAR
 
 	headers: "Authentication:" + document.cookie
-	mathod: post
+	method: post
 	path: gear/
 	body: 
 	      required: _characterId, and name
@@ -263,7 +263,7 @@ CREATE A GEAR
 UPDATE A GEAR
 
 	headers: "Authentication:" + document.cookie
-	mathod: put
+	method: put
 	path: gear/
 	body: 
 	      required: _characterId, and _id
@@ -273,7 +273,7 @@ UPDATE A GEAR
 DELETE A GEAR
 
 	headers: "Authentication:" + document.cookie
-	mathod: delete
+	method: delete
 	path: gear/
 	body: 
 	      required: _characterId, and _id
@@ -284,21 +284,21 @@ DELETE A GEAR
 GET ALL OF A CHARACTER'S SKILLS
 
 	headers: "Authentication:" + document.cookie
-	mathod: get
+	method: get
 	path: skill/:_characterId
 	returns: Skills
 
 GET A SKILL
 
 	headers: "Authentication:" + document.cookie
-	mathod: get
+	method: get
 	path: skill/:_characterId/:_skillId
 	returns: Skill
 
 CREATE A SKILL
 
 	headers: "Authentication:" + document.cookie
-	mathod: post
+	method: post
 	path: skill/
 	body: 
 	      required: _characterId, and name
@@ -307,7 +307,7 @@ CREATE A SKILL
 UPDATE A SKILL
 
 	headers: "Authentication:" + document.cookie
-	mathod: put
+	method: put
 	path: skill/
 	body: 
 	      required: _characterId, and _id
@@ -317,7 +317,7 @@ UPDATE A SKILL
 DELETE A SKILL
 
 	headers: "Authentication:" + document.cookie
-	mathod: delete
+	method: delete
 	path: skill/
 	body: 
 		required: _characterId, and _id
@@ -328,21 +328,21 @@ DELETE A SKILL
 GET ALL OF A CHARACTER'S SPELLS
 
 	headers: "Authentication:" + document.cookie
-	mathod: get
+	method: get
 	path: spell/:_characterId
 	returns: Spells
 
 GET A SPELL
 
 	headers: "Authentication:" + document.cookie
-	mathod: get
+	method: get
 	path: spell/:_characterId/:_spellId
 	returns: Spell
 
 CREATE A SPELL
 
 	headers: "Authentication:" + document.cookie
-	mathod: post
+	method: post
 	path: spell/
 	body: 
 	      required: _characterId, and name
@@ -351,7 +351,7 @@ CREATE A SPELL
 UPDATE A SPELL
 
 	headers: "Authentication:" + document.cookie
-	mathod: put
+	method: put
 	path: spell/
 	body: 
 	      required: _characterId, and _id
@@ -361,7 +361,7 @@ UPDATE A SPELL
 DELETE A SPELL
 
 	headers: "Authentication:" + document.cookie
-	mathod: delete
+	method: delete
 	path: spell/
 	body: 
 	      required: _characterId, and _id
@@ -372,21 +372,21 @@ DELETE A SPELL
 GET ALL OF A CHARACTER'S WEAPONS
 
 	headers: "Authentication:" + document.cookie
-	mathod: get
+	method: get
 	path: weapon/:_characterId
 	returns: Weapons
 
 GET A WEAPON
 
 	headers: "Authentication:" + document.cookie
-	mathod: get
+	method: get
 	path: weapon/:_characterId/:_weaponId
 	returns: Weapon
 
 CREATE A WEAPON
 
 	headers: "Authentication:" + document.cookie
-	mathod: post
+	method: post
 	path: weapon/
 	body: 
 	      required: _characterId, and name
@@ -395,7 +395,7 @@ CREATE A WEAPON
 UPDATE A WEAPON
 
 	headers: "Authentication:" + document.cookie
-	mathod: put
+	method: put
 	path: weapon/
 	body: 
 	      required: _characterId, and _id
@@ -405,7 +405,7 @@ UPDATE A WEAPON
 DELETE A WEAPON
 
 	headers: "Authentication:" + document.cookie
-	mathod: delete
+	method: delete
 	path: weapon/
 	body: 
 	      required: _characterId, and _id
