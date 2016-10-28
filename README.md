@@ -29,31 +29,24 @@ Modules:
 
 GET A USER NAME
 
-headers: "Authentication:" + document.cookie
-
-method: get
-
-path: user/
-
-returns: CharacterName
+	headers: "Authentication:" + document.cookie
+	method: get
+	path: user/
+	returns: CharacterName
 
 CREATE AN USER
 
-headers: "Authentication:" + document.cookie
-
-method: post
-
-path: user/
-
-body: 
-
-   required: name, username, and password
-
-returns: Character
+	headers: "Authentication:" + document.cookie
+	method: post
+	path: user/
+	body: 
+		required: name, username, and password
+	returns: Character
 
 ## LOGOUT ENDPOINT
 
 LOG OUT OF USER
+
 	method: get
 	path: user/
 	returns: status 200 with a cookie attached in header
@@ -61,6 +54,7 @@ LOG OUT OF USER
 ## LOGIN ENDPOINT
 
 LOG INTO USER
+
 	method: post
 	path: user/
 	body: 
@@ -70,18 +64,21 @@ LOG INTO USER
 ## CHARACTER ENDPOINT
 
 GET ALL OF A USER'S CHARACTERS
+
 	headers: "Authentication:" + document.cookie
 	method: get
 	path: character/
 	returns: Characters
 
 GET A CHARACTER
+
 	headers: "Authentication:" + document.cookie
 	method: get
 	path: character/:_characterId/
 	returns: Character
 
 CREATE A CHARACTER
+
 	headers: "Authentication:" + document.cookie
 	method: post
 	path: character/
@@ -90,6 +87,7 @@ CREATE A CHARACTER
 	returns: Character
 
 UPDATE A CHARACTER
+
 	headers: "Authentication:" + document.cookie
 	mathod: put
 	path: character/
@@ -99,6 +97,7 @@ UPDATE A CHARACTER
 	returns: Character
 
 DELETE A CHARACTER
+
 	headers: "Authentication:" + document.cookie
 	mathod: delete
 	path: character/
@@ -109,18 +108,21 @@ DELETE A CHARACTER
 ## ACITEM ENDPOINT
 
 GET ALL OF A CHARACTER'S ACITEMS
+
 	headers: "Authentication:" + document.cookie
 	mathod: get
 	path: acitem/:_characterId
 	returns: Acitems
 
 GET AN ACITEM
+
 	headers: "Authentication:" + document.cookie
 	mathod: get
 	path: acitem/:_characterId/:_acitemId
 	returns: Acitem
 
 CREATE AN ACITEM
+
 	headers: "Authentication:" + document.cookie
 	mathod: post
 	path: acitem/
@@ -129,6 +131,7 @@ CREATE AN ACITEM
 	returns: Acitem
 
 UPDATE AN ACITEM
+
 	headers: "Authentication:" + document.cookie
 	mathod: put
 	path: acitem/
@@ -138,6 +141,7 @@ UPDATE AN ACITEM
 	returns: Acitem
 
 DELETE AN ACITEM
+
 	headers: "Authentication:" + document.cookie
 	mathod: delete
 	path: acitem/
@@ -148,6 +152,7 @@ DELETE AN ACITEM
 ## FEAT ENDPOINT
 
 GET ALL OF A CHARACTER'S FEATS
+
 	headers: "Authentication:" + document.cookie
 	mathod: get
 	path: feat/:_characterId
@@ -159,6 +164,7 @@ GET ALL OF A CHARACTER'S FEATS
 	returns: Feat
 
 CREATE A FEAT
+
 	headers: "Authentication:" + document.cookie
 	mathod: post
 	path: feat/
@@ -167,6 +173,7 @@ CREATE A FEAT
 	returns: Feat
 
 UPDATE A FEAT
+
 	headers: "Authentication:" + document.cookie
 	mathod: put
 	path: feat/
@@ -176,6 +183,7 @@ UPDATE A FEAT
 	returns: Feat
 
 DELETE A FEAT
+
 	headers: "Authentication:" + document.cookie
 	mathod: delete
 	path: feat/
@@ -186,24 +194,30 @@ DELETE A FEAT
 # FEATURE ENDPOINT
 
 GET ALL OF A CHARACTER'S FEATURES
+
 	headers: "Authentication:" + document.cookie
 	mathod: get
 	path: feature/:_characterId
 	returns: Features
-		GET A FEATURE
+	
+GET A FEATURE
+
 	headers: "Authentication:" + document.cookie
 	mathod: get
 	path: feature/:_characterId/:_featureId
 	returns: Feature
 
 CREATE A FEATURE
+
 	headers: "Authentication:" + document.cookie
 	mathod: post
 	path: feature/
 	body: 
 	      required: _characterId, and name
 	returns: Feature
-		UPDATE A FEATURE
+	
+UPDATE A FEATURE
+
 	headers: "Authentication:" + document.cookie
 	mathod: put
 	path: feature/
@@ -213,6 +227,7 @@ CREATE A FEATURE
 	returns: Feature
 
 DELETE A FEATURE
+
 	headers: "Authentication:" + document.cookie
 	mathod: delete
 	path: feature/
@@ -223,18 +238,21 @@ DELETE A FEATURE
 ## GEAR ENDPOINT
 
 GET ALL OF A CHARACTER'S GEAR
+
 	headers: "Authentication:" + document.cookie
 	mathod: get
 	path: gear/:_characterId
 	returns: gear
 
 GET A GEAR
+
 	headers: "Authentication:" + document.cookie
 	mathod: get
 	path: gear/:_characterId/:_gearId
 	returns: gear
 
 CREATE A GEAR
+
 	headers: "Authentication:" + document.cookie
 	mathod: post
 	path: gear/
@@ -243,6 +261,7 @@ CREATE A GEAR
 	returns: gear
 
 UPDATE A GEAR
+
 	headers: "Authentication:" + document.cookie
 	mathod: put
 	path: gear/
@@ -252,6 +271,7 @@ UPDATE A GEAR
 	returns: gear
 	
 DELETE A GEAR
+
 	headers: "Authentication:" + document.cookie
 	mathod: delete
 	path: gear/
@@ -262,18 +282,21 @@ DELETE A GEAR
 ## SKILL ENDPOINT
 
 GET ALL OF A CHARACTER'S SKILLS
+
 	headers: "Authentication:" + document.cookie
 	mathod: get
 	path: skill/:_characterId
 	returns: Skills
 
 GET A SKILL
+
 	headers: "Authentication:" + document.cookie
 	mathod: get
 	path: skill/:_characterId/:_skillId
 	returns: Skill
 
 CREATE A SKILL
+
 	headers: "Authentication:" + document.cookie
 	mathod: post
 	path: skill/
@@ -282,6 +305,7 @@ CREATE A SKILL
 	returns: Skill
 
 UPDATE A SKILL
+
 	headers: "Authentication:" + document.cookie
 	mathod: put
 	path: skill/
@@ -291,6 +315,7 @@ UPDATE A SKILL
 	returns: Skill
 
 DELETE A SKILL
+
 	headers: "Authentication:" + document.cookie
 	mathod: delete
 	path: skill/
@@ -301,18 +326,21 @@ DELETE A SKILL
 ## SPELL ENDPOINT
 
 GET ALL OF A CHARACTER'S SPELLS
+
 	headers: "Authentication:" + document.cookie
 	mathod: get
 	path: spell/:_characterId
 	returns: Spells
 
 GET A SPELL
+
 	headers: "Authentication:" + document.cookie
 	mathod: get
 	path: spell/:_characterId/:_spellId
 	returns: Spell
 
 CREATE A SPELL
+
 	headers: "Authentication:" + document.cookie
 	mathod: post
 	path: spell/
@@ -321,6 +349,7 @@ CREATE A SPELL
 	returns: Spell
 
 UPDATE A SPELL
+
 	headers: "Authentication:" + document.cookie
 	mathod: put
 	path: spell/
@@ -330,6 +359,7 @@ UPDATE A SPELL
 	returns: Spell
 
 DELETE A SPELL
+
 	headers: "Authentication:" + document.cookie
 	mathod: delete
 	path: spell/
@@ -340,17 +370,21 @@ DELETE A SPELL
 ## WEAPON ENDPOINT
 
 GET ALL OF A CHARACTER'S WEAPONS
+
 	headers: "Authentication:" + document.cookie
 	mathod: get
 	path: weapon/:_characterId
 	returns: Weapons
-		GET A WEAPON
+
+GET A WEAPON
+
 	headers: "Authentication:" + document.cookie
 	mathod: get
 	path: weapon/:_characterId/:_weaponId
 	returns: Weapon
 
 CREATE A WEAPON
+
 	headers: "Authentication:" + document.cookie
 	mathod: post
 	path: weapon/
@@ -359,6 +393,7 @@ CREATE A WEAPON
 	returns: Weapon
 
 UPDATE A WEAPON
+
 	headers: "Authentication:" + document.cookie
 	mathod: put
 	path: weapon/
@@ -368,6 +403,7 @@ UPDATE A WEAPON
 	returns: Weapon
 
 DELETE A WEAPON
+
 	headers: "Authentication:" + document.cookie
 	mathod: delete
 	path: weapon/
