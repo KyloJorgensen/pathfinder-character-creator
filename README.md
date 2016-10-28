@@ -4,7 +4,8 @@
 This app was made to be a place to make Pathfinder RPG Characters. A user needs to signup or login to an account. Then that user can create, delete, and characters. Each Character has many fields similar to the Pathfinder Character Sheet.
 	
 # Demo 
-[I'm an inline-style link](https://pathfinder-character-creator.herokuapp.com/)
+This is an active demo of website hosted by a server.
+[https://pathfinder-character-creator.herokuapp.com/](https://pathfinder-character-creator.herokuapp.com/)
 
 # SCREENSHOTS
 
