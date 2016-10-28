@@ -221,7 +221,7 @@ var character = React.createClass({
 													<th>dex mod</th>
 													<th>size mod</th>
 													<th>natural armor</th>
-													<th>defelection mod</th>
+													<th>deflection mod</th>
 													<th>misc mod</th>
 												</tr>
 												<tr>

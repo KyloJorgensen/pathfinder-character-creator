@@ -37,7 +37,7 @@ var mainPage = React.createClass({
 			    		<div className="container">
 			    			<div>
 				    			<h1>Characters</h1>
-				    			<p>Click on the character you want to veiw. Make a new character by typing the name and then click create create character.</p>
+				    			<p>Click on the character you want to view. Make a new character by typing the name and then click create create character.</p>
 					    	</div>
 				    	</div>
 				    </div>
