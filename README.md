@@ -3,7 +3,7 @@
 # SUMMARY
 This app was made to be a place to make Pathfinder RPG Characters. A user needs to signup or login to an account. Then that user can create, delete, and characters. Each Character has many fields similar to the Pathfinder Character Sheet.
 	
-# Demo 
+# DEMO 
 This is an active demo of website hosted by a server.
 [https://pathfinder-character-creator.herokuapp.com/](https://pathfinder-character-creator.herokuapp.com/)
 
@@ -11,19 +11,36 @@ This is an active demo of website hosted by a server.
 
 The front-end is built using React, the back-end using NodeJS with ExpressJS as the web server and MongoDB as the database.
 
-Java script file is full of Javascript libaraies called modules that are complied to one file with Webpack and Node package Manager. 
+Javascript file is full of Javascript libraries called modules that are complied to one file with Webpack and Node package Manager. 
 
-Backend is Test with mocha, chai and travis ci. [Click here to see test results](https://travis-ci.org/KyloJorgensen/pathfinder-character-creator)
+Backend is Test with Mocha, Chai and Travis CI. [Click here to see test results](https://travis-ci.org/KyloJorgensen/pathfinder-character-creator)
 
-Modules:
-	atob, babel-loader, babel-preset-es2015, babel-preset-react, bcryptjs, body-parser, btoa, chai, chai-http, chokidar-cli, cookie, cookie-parser, express, isomorphic-fetch, less, less-plugin-clean-css, mocha, mongoose, react, react-cookie, react-dom, react-redux, react-router, redux, redux-thunk, and webpack.
-
+## Modules:
+	
+atob, babel-loader, babel-preset-es2015, babel-preset-react, bcryptjs, body-parser, btoa, chai, chai-http, chokidar-cli, cookie, cookie-parser, express, isomorphic-fetch, less, less-plugin-clean-css, mocha, mongoose, react, react-cookie, react-dom, react-redux, react-router, redux, redux-thunk, and webpack.
 
 # SCREENSHOTS
 ## Main Page
-![alt text]()
+![Main Page](https://raw.githubusercontent.com/KyloJorgensen/pathfinder-character-creator/master/screenshots/Screen%20Shot%202016-10-28%20at%2010.23.10%20AM.png)
+## Login Page
+![Login Page](https://raw.githubusercontent.com/KyloJorgensen/pathfinder-character-creator/master/screenshots/Screen%20Shot%202016-10-28%20at%2010.23.22%20AM.png)
+## Signup Page
+![Signup Page](https://raw.githubusercontent.com/KyloJorgensen/pathfinder-character-creator/master/screenshots/Screen%20Shot%202016-10-28%20at%2010.23.29%20AM.png)
+## User Page
+![User Page](https://raw.githubusercontent.com/KyloJorgensen/pathfinder-character-creator/master/screenshots/Screen%20Shot%202016-10-28%20at%2010.24.12%20AM.png)
+## Character page
+![Character page](https://raw.githubusercontent.com/KyloJorgensen/pathfinder-character-creator/master/screenshots/Screen%20Shot%202016-10-28%20at%2010.50.45%20AM.png)
+
 	
 # API
+
+## MAIN ENDPOINT
+
+GET HTML FILE
+
+	method: get
+	path: /
+	returns: html file
 
 ## USER ENDPOINT
 
@@ -355,7 +372,7 @@ UPDATE A SPELL
 	path: spell/
 	body: 
 	      required: _characterId, and _id
-	      Optional: name, level, school, perpared, and/or used
+	      Optional: name, level, school, prepared, and/or used
 	returns: Spell
 
 DELETE A SPELL
@@ -399,7 +416,7 @@ UPDATE A WEAPON
 	path: weapon/
 	body: 
 	      required: _characterId, and _id
-	      Optional: name, dameage_type, renage, crit, attack_bonus, damage_bonus, and/or
+	      Optional: name, dameage_type, range, crit, attack_bonus, damage_bonus, and/or
 	returns: Weapon
 
 DELETE A WEAPON
