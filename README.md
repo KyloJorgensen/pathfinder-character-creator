@@ -31,7 +31,7 @@ GET A USER NAME
 
 headers: "Authentication:" + document.cookie
 
-mathod: get
+method: get
 
 path: user/
 
@@ -41,7 +41,7 @@ CREATE AN USER
 
 headers: "Authentication:" + document.cookie
 
-mathod: post
+method: post
 
 path: user/
 
@@ -71,19 +71,19 @@ LOG INTO USER
 
 GET ALL OF A USER'S CHARACTERS
 	headers: "Authentication:" + document.cookie
-	mathod: get
+	method: get
 	path: character/
 	returns: Characters
 
 GET A CHARACTER
 	headers: "Authentication:" + document.cookie
-	mathod: get
+	method: get
 	path: character/:_characterId/
 	returns: Character
 
 CREATE A CHARACTER
 	headers: "Authentication:" + document.cookie
-	mathod: post
+	method: post
 	path: character/
 	body: 
 	      required: _characterId, and name
