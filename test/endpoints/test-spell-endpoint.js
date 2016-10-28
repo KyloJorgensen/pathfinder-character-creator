@@ -96,7 +96,7 @@ module.exports = function () {
                         res.body.name.should.equal(spellName);
                         res.body.level.should.equal(0);
                         res.body.school.should.equal('School');
-                        res.body.perpared.should.equal(0);
+                        res.body.prepared.should.equal(0);
                         res.body.used.should.equal(0);
                         _spellId = res.body._id;
                         done();
@@ -138,7 +138,7 @@ module.exports = function () {
                         res.body.name.should.equal(spellName);
                         res.body.level.should.equal(0);
                         res.body.school.should.equal('School');
-                        res.body.perpared.should.equal(0);
+                        res.body.prepared.should.equal(0);
                         res.body.used.should.equal(0);
                         done();
                     });
@@ -180,7 +180,7 @@ module.exports = function () {
                         res.body[0].name.should.equal(spellName);
                         res.body[0].level.should.equal(0);
                         res.body[0].school.should.equal('School');
-                        res.body[0].perpared.should.equal(0);
+                        res.body[0].prepared.should.equal(0);
                         res.body[0].used.should.equal(0);
                         done();
                     });
@@ -217,7 +217,7 @@ module.exports = function () {
                         name: 'Jump',
                         level: 4,
                         school: 'jumpping',
-                        perpared: 0,
+                        prepared: 0,
                         used: 0
                     };
                     agent.put('/spell')
@@ -231,7 +231,7 @@ module.exports = function () {
                         res.body.name.should.equal(data.name);
                         res.body.level.should.equal(data.level);
                         res.body.school.should.equal(data.school);
-                        res.body.perpared.should.equal(data.perpared);
+                        res.body.prepared.should.equal(data.prepared);
                         res.body.used.should.equal(data.used);
                         done();
                     });
