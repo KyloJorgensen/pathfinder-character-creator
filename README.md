@@ -1,7 +1,7 @@
-# pathfinder-character-creator
+# Pathfinder Character Creator
 	
 # H1 SUMMARY
-	This app was made to be a place to make Pathfinder RPG Characters. A user needs to signup or login to an account. Then that user can create, delete, and characters. Each Character has many fields similar to the Pathfinder Character Sheet.
+This app was made to be a place to make Pathfinder RPG Characters. A user needs to signup or login to an account. Then that user can create, delete, and characters. Each Character has many fields similar to the Pathfinder Character Sheet.
 	
 # H1 Demo 
 	https://pathfinder-character-creator.herokuapp.com/
