@@ -25115,9 +25115,7 @@
 	'use strict';
 	
 	var React = __webpack_require__(1),
-	    connect = __webpack_require__(172).connect,
-	    userActions = __webpack_require__(203),
-	    characterActions = __webpack_require__(209);
+	    connect = __webpack_require__(172).connect;
 	
 	var App = React.createClass({
 	    displayName: 'App',
@@ -31367,7 +31365,7 @@
 								React.createElement(
 									'p',
 									null,
-									'Click on the character you want to veiw. Make a new character by typing the name and then click create create character.'
+									'Click on the character you want to view. Make a new character by typing the name and then click create create character.'
 								)
 							)
 						)
@@ -32085,7 +32083,7 @@
 													React.createElement(
 														'th',
 														null,
-														'defelection mod'
+														'deflection mod'
 													),
 													React.createElement(
 														'th',
@@ -33355,8 +33353,6 @@
 	    });
 	
 	    var mapStateToProps = function mapStateToProps(state, props) {
-	        // console.log(state, props, label)
-	        // console.log(state[label][label][props.interactiveNumber])
 	        return {
 	            interactive: state[label][label][props.interactiveNumber]
 	        };

@@ -1,9 +1,7 @@
 'use strict';
 
 var React = require('react'),
-    connect = require('react-redux').connect,
-    userActions = require('../actions/user.actions'),
-    characterActions = require('../actions/character.actions');
+    connect = require('react-redux').connect;
 
 
 var App = React.createClass({

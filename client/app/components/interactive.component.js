@@ -61,8 +61,6 @@ module.exports = function(label) {
     });
 
 var mapStateToProps = function(state, props) {
-    // console.log(state, props, label)
-    // console.log(state[label][label][props.interactiveNumber])
     return {
         interactive: state[label][label][props.interactiveNumber]
     };
