@@ -301,10 +301,10 @@ ol, ul {
 		color: #FFFFFF;
 	}
 	.login, .signup {
-	    > div > div {
+	    > form > div {
 	    	float: right;
 	    	> label {
-			    padding: 30px 0px 0px 0px;
+			    padding: 30px 10px 0px 0px;
 			    letter-spacing: -1px;
 			    text-align: center;
 			    text-decoration: none;
@@ -313,10 +313,13 @@ ol, ul {
 			    font-weight: 200;
 			    color: #FFFFFF;
 	    	}
+
 	    }
 	}
 
 	input[type="submit"], a {
+		width: 40%;
+		display: inline-block;
     	margin: 10px;
 		text-decoration: none;
 	    text-transform: uppercase;
@@ -325,6 +328,12 @@ ol, ul {
 	    color: #16576B;
 	    background: none;
     	border: none;
+    }
+
+    input[type="submit"] {
+		background-color: #16576b;
+	    color: #4499dc;
+	    border-radius: 10px;
     }
 }
 
