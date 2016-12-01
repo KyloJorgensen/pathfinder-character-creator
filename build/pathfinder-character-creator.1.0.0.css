@@ -17,6 +17,10 @@ ul {
   margin-left: auto;
   margin-right: auto;
 }
+.container > div {
+  padding-left: 1em;
+  padding-right: 1em;
+}
 .main-page {
   color: black;
 }
@@ -24,7 +28,8 @@ ul {
   width: 100%;
 }
 .main-page .container > div {
-  padding: 50px 3em;
+  padding-top: 50px;
+  padding-bottom: 50px;
   background-color: #fff;
   position: static;
   text-align: center;
@@ -33,12 +38,14 @@ ul {
   color: black;
 }
 .user-page #header .container > div {
-  padding: 10px 4em 1px 3em;
+  padding-top: 10px;
+  padding-bottom: 1px;
   background-color: #fff;
   position: static;
 }
 .user-page #user .container > div {
-  padding: 10px 4em 120px 3em;
+  padding-top: 10px;
+  padding-bottom: 120px;
   background-color: #fff;
   position: static;
 }
@@ -92,11 +99,11 @@ ul {
   border: 0px solid red;
   border-radius: 5px;
 }
-.character-page .character-menu > div {
+.character-page .character-menu > div p {
   display: inline-block;
-  width: 50%;
 }
 .character-page .character-menu > div > div {
+  display: inline-block;
   float: right;
 }
 .character-page .character-menu > div > div a {
@@ -111,7 +118,8 @@ ul {
   padding: 4px;
 }
 .character-page .container > div {
-  padding: 10px 4em 50px 3em;
+  padding-top: 10px;
+  padding-bottom: 50px;
   background-color: #fff;
   position: static;
 }
@@ -122,22 +130,10 @@ ul {
   display: inline-block;
   width: 150px;
 }
-.character-page .container .character main .column-left {
-  display: inline-block;
-  width: 49%;
-  vertical-align: top;
-  padding-right: 1%;
-}
-.character-page .container .character main .column-right {
-  display: inline-block;
-  vertical-align: top;
-  width: 50%;
-}
 .character-page .container .character main section > div {
   padding-bottom: 10px;
 }
 .character-page .container .character main section .health > div {
-  display: inline-block;
   width: 50%;
 }
 .character-page .container .character main section .health > div label {
@@ -306,7 +302,6 @@ ul {
 .nav-bar #logo {
   overflow: hidden;
   text-align: center;
-  height: 100px;
 }
 .nav-bar #logo h1 {
   display: block;
@@ -319,6 +314,7 @@ ul {
   font-size: 36pt;
   font-weight: 200;
   color: #FFFFFF;
+  line-height: 120%;
 }
 .nav-bar #menu {
   height: 90px;
@@ -345,8 +341,26 @@ ul {
   margin: 0;
 }
 @media screen and (min-width: 1200px) {
-  .contatiner {
+  .container {
     width: 1200px;
+  }
+  .container > div {
+    padding-left: 3em;
+    padding-right: 3em;
+  }
+  .column-left {
+    display: inline-block;
+    width: 49%;
+    vertical-align: top;
+    padding-right: 1%;
+  }
+  .column-right {
+    display: inline-block;
+    vertical-align: top;
+    width: 50%;
+  }
+  .health > div {
+    display: inline-block;
   }
   .nav-bar #logo h1 {
     font-size: 44pt;

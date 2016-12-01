@@ -77,8 +77,6 @@ var character = React.createClass({
 					    			<h1>Character</h1>
 					    			<h2>{this.props.character.name} - {this.props.character.class} {this.props.character.race} {this.props.character.level} </h2>
 					    			<p>Click on any field you want to edit.</p>
-						    	</div>
-								<div>
 									<div>
 										<a onClick={this.saveCharacter}>SAVE</a>
 										<a onClick={this.deleteCharacter}>DELETE</a>

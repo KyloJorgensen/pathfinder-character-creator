@@ -31623,11 +31623,7 @@
 										'p',
 										null,
 										'Click on any field you want to edit.'
-									)
-								),
-								React.createElement(
-									'div',
-									null,
+									),
 									React.createElement(
 										'div',
 										null,

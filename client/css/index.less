@@ -1,5 +1,4 @@
 @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro');
-
 body {
 	background-color: #e5e5e5;
 	margin: 0;
@@ -17,6 +16,11 @@ ol, ul {
 .container {
     margin-left: auto;
     margin-right: auto;
+
+	> div {
+		padding-left: 1em;
+		padding-right: 1em;		
+	}
 }
 .main-page {
 	color: black;
@@ -24,7 +28,8 @@ ol, ul {
 		width: 100%;
 	}
 	.container > div {
-    	padding: 50px 3em;
+    	padding-top: 50px;
+    	padding-bottom: 50px;
 	    background-color: #fff;
 	    position: static;
 	    text-align: center;
@@ -36,7 +41,8 @@ ol, ul {
 	#header {
 		.container {
 			> div {
-		   	    padding: 10px 4em 1px 3em;
+				padding-top: 10px;
+				padding-bottom: 1px;
 			    background-color: #fff;
 			    position: static;
 			}
@@ -45,7 +51,8 @@ ol, ul {
 	#user {
 		.container {
 			> div {
-		   	    padding: 10px 4em 120px 3em;
+				padding-top: 10px;
+				padding-bottom: 120px;
 			    background-color: #fff;
 			    position: static;
 		    	ul {
@@ -107,9 +114,13 @@ ol, ul {
     }
     .character-menu {
 	    > div {
-			display: inline-block;
-			width: 50%;
+
+	    	p {
+	    		display: inline-block;
+	    	}
+
 			> div {
+				display: inline-block;
 				float: right;
 				a {
 					margin-left: 32px;
@@ -127,7 +138,8 @@ ol, ul {
     }
 	.container {
 		> div {
-	   	    padding: 10px 4em 50px 3em;
+			padding-top: 10px;
+			padding-bottom: 50px;
 		    background-color: #fff;
 		    position: static;
 	    }
@@ -141,24 +153,13 @@ ol, ul {
 	    		}
 	    	}
 	    	main {
-		    	.column-left {
-					display: inline-block;
-					width: 49%;
-					vertical-align: top;
-					padding-right: 1%;
-		    	}
-		    	.column-right {
-		    		display: inline-block;
-					vertical-align: top;
-		    		width: 50%;
-		    	}
+
 		    	section {
 		    		> div {
 		    			padding-bottom: 10px;
 		    		}
 		    		.health {
 		    			> div {
-		    				display: inline-block;
 		    				width: 50%;
 		    				label {
 		    					padding-right: 10px;
@@ -333,7 +334,6 @@ ol, ul {
 	#logo {
 	    overflow: hidden;
 	    text-align: center;
-	    height: 100px;
 	    h1 {
 	    	display: block;
 		    padding: 30px 0px 0px 0px;
@@ -345,6 +345,7 @@ ol, ul {
 		    font-size: 36pt;
 		    font-weight: 200;
 		    color: #FFFFFF;
+	        line-height: 120%;
 	    }
 	}
 	#menu {
@@ -374,10 +375,33 @@ ol, ul {
 }
 
 @media screen and (min-width: 1200px) {
-	.contatiner{
+	.container {
 		width: 1200px;
+
+		> div {
+		   	padding-left: 3em;
+		   	padding-right: 3em;
+		}
 	}
 
+   	.column-left {
+		display: inline-block;
+		width: 49%;
+		vertical-align: top;
+		padding-right: 1%;
+   	}
+
+   	.column-right {
+   		display: inline-block;
+		vertical-align: top;
+   		width: 50%;
+   	}
+
+   	.health {
+		> div {
+			display: inline-block;
+		}
+	}
 	.nav-bar #logo h1 {
 		font-size: 44pt;
 	}
