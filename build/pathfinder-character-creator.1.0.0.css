@@ -134,6 +134,9 @@ ul {
 .character-page .container .character .character-header div label {
   padding-right: 5px;
 }
+.character-page .container .character main .interactive {
+  overflow-x: scroll;
+}
 .character-page .container .character main section > div {
   padding-bottom: 10px;
 }
@@ -235,12 +238,12 @@ ul {
 .character-page .container .character main div .stuff > div {
   display: inline-block;
   vertical-align: top;
-  width: 75%;
+  width: 100%;
 }
 .character-page .container .character main div .stuff .gear-container {
   display: inline-block;
   vertical-align: top;
-  width: 25%;
+  width: 100%;
 }
 .character-page .container .character main div .background textarea {
   width: 100%;
@@ -376,6 +379,14 @@ ul {
   }
   .nav-bar #logo h1 {
     font-size: 44pt;
+  }
+  .character-page .container .character main div .stuff > div {
+    display: inline-block;
+    vertical-align: top;
+    width: 75%;
+  }
+  .character-page .container .character main div .stuff .gear-container {
+    width: 25%;
   }
 }
 /*# sourceMappingURL=pathfinder-character-creator.1.0.0.css.map */

@@ -14,7 +14,7 @@ module.exports =function(label) {
             if (this.props.updated) {
                 this.props.dispatch(interactiveActions.getAll(this.props._characterId));
             }
-            var className = label + '-container'
+            var className = label + '-container interactive'
             return (
                 <div className={className}>
                     <p>{label}</p>

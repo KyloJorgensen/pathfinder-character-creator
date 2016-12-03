@@ -213,14 +213,14 @@ var character = React.createClass({
 											<label>armor class</label>
 											<table className="AC">
 												<tr>
-													<th>total ac</th>
-													<th>armor bonus</th>
-													<th>shild bonus</th>
-													<th>dex mod</th>
-													<th>size mod</th>
-													<th>natural armor</th>
-													<th>deflection mod</th>
-													<th>misc mod</th>
+													<th>total</th>
+													<th>armor</th>
+													<th>shild</th>
+													<th>dex</th>
+													<th>size</th>
+													<th>natural</th>
+													<th>deflection</th>
+													<th>misc</th>
 												</tr>
 												<tr>
 													<td><input onFocus={this.select} type="text" value={(Number(this.state.size_mod) + modifer(this.state.ability_score_dex, this.state.ability_score_dex_temp) + Number(this.state.ac_armor_bonus) + Number(this.state.ac_shild_bonus) + Number(this.state.ac_natural_armor) + Number(this.state.ac_defelection_mod) + Number(this.state.ac_misc_mod)+ 10)} readOnly /></td>
@@ -253,11 +253,11 @@ var character = React.createClass({
 											<tr>
 												<th>Saving Throws</th>
 												<th>total</th>
-												<th>Base Save</th>
-												<th>Ability Modifier</th>
-												<th>Magic Modifier</th>
-												<th>Misc Modifier</th>
-												<th>Temp Modifier</th>
+												<th>Base</th>
+												<th>Ability</th>
+												<th>Magic</th>
+												<th>Misc</th>
+												<th>Temp</th>
 											</tr>
 											<tr>
 												<td>Fortitude</td>
@@ -294,8 +294,8 @@ var character = React.createClass({
 											<table className="initaitive">
 												<tr>
 													<th>total</th>
-													<th>dex mod</th>
-													<th>misc mod</th>
+													<th>dex</th>
+													<th>misc</th>
 												</tr>
 												<tr>
 													<td>
@@ -318,8 +318,8 @@ var character = React.createClass({
 												<tr>
 													<th>total</th>
 													<th>bab</th>
-													<th>str mod</th>
-													<th>size mod</th>
+													<th>str</th>
+													<th>size</th>
 												</tr>
 												<tr>
 													<td><input onFocus={this.select} type="text" value={(Number(this.state.base_attack_bonus) + modifer(this.state.ability_score_str, this.state.ability_score_str_temp) + Number(this.state.size_mod))} readOnly /></td>
@@ -337,9 +337,9 @@ var character = React.createClass({
 												<tr>
 													<th>total</th>
 													<th>BAB</th>
-													<th>str mod</th>
-													<th>dex mod</th>
-													<th>size mod</th>
+													<th>str</th>
+													<th>dex</th>
+													<th>size</th>
 												</tr>
 												<tr>
 													<td><input onFocus={this.select} type="text" value={(Number(this.state.base_attack_bonus) + modifer(this.state.ability_score_str, this.state.ability_score_str_temp) + modifer(this.state.ability_score_dex, this.state.ability_score_dex_temp) + Number(this.state.size_mod) + 10)} readOnly /></td>

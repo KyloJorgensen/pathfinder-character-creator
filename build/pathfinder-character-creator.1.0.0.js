@@ -32739,42 +32739,42 @@
 													React.createElement(
 														'th',
 														null,
-														'total ac'
+														'total'
 													),
 													React.createElement(
 														'th',
 														null,
-														'armor bonus'
+														'armor'
 													),
 													React.createElement(
 														'th',
 														null,
-														'shild bonus'
+														'shild'
 													),
 													React.createElement(
 														'th',
 														null,
-														'dex mod'
+														'dex'
 													),
 													React.createElement(
 														'th',
 														null,
-														'size mod'
+														'size'
 													),
 													React.createElement(
 														'th',
 														null,
-														'natural armor'
+														'natural'
 													),
 													React.createElement(
 														'th',
 														null,
-														'deflection mod'
+														'deflection'
 													),
 													React.createElement(
 														'th',
 														null,
-														'misc mod'
+														'misc'
 													)
 												),
 												React.createElement(
@@ -32881,27 +32881,27 @@
 												React.createElement(
 													'th',
 													null,
-													'Base Save'
+													'Base'
 												),
 												React.createElement(
 													'th',
 													null,
-													'Ability Modifier'
+													'Ability'
 												),
 												React.createElement(
 													'th',
 													null,
-													'Magic Modifier'
+													'Magic'
 												),
 												React.createElement(
 													'th',
 													null,
-													'Misc Modifier'
+													'Misc'
 												),
 												React.createElement(
 													'th',
 													null,
-													'Temp Modifier'
+													'Temp'
 												)
 											),
 											React.createElement(
@@ -33048,12 +33048,12 @@
 													React.createElement(
 														'th',
 														null,
-														'dex mod'
+														'dex'
 													),
 													React.createElement(
 														'th',
 														null,
-														'misc mod'
+														'misc'
 													)
 												),
 												React.createElement(
@@ -33108,12 +33108,12 @@
 													React.createElement(
 														'th',
 														null,
-														'str mod'
+														'str'
 													),
 													React.createElement(
 														'th',
 														null,
-														'size mod'
+														'size'
 													)
 												),
 												React.createElement(
@@ -33173,17 +33173,17 @@
 													React.createElement(
 														'th',
 														null,
-														'str mod'
+														'str'
 													),
 													React.createElement(
 														'th',
 														null,
-														'dex mod'
+														'dex'
 													),
 													React.createElement(
 														'th',
 														null,
-														'size mod'
+														'size'
 													)
 												),
 												React.createElement(
@@ -33858,7 +33858,7 @@
 	            if (this.props.updated) {
 	                this.props.dispatch(interactiveActions.getAll(this.props._characterId));
 	            }
-	            var className = label + '-container';
+	            var className = label + '-container interactive';
 	            return React.createElement(
 	                'div',
 	                { className: className },
@@ -33910,38 +33910,40 @@
 	            }
 	        },
 	        render: function render() {
-	            var interactives = [];
+	            var head = [];
 	            if (this.props.interactives[0]) {
 	                var keys = Object.keys(this.props.interactives[0]);
-	                var items = [];
 	                for (var i = 0; i < keys.length; i++) {
 	                    if (keys[i] != '_id' && keys[i] != '_characterId' && keys[i] != '_userId' && keys[i] != '__v') {
-	                        items.push(React.createElement(
+	                        head.push(React.createElement(
 	                            'th',
-	                            null,
+	                            { key: i },
 	                            keys[i]
 	                        ));
 	                    }
 	                }
-	                interactives.push(items);
 	            }
+	
+	            var interactives = [];
 	            for (var i = 0; i < this.props.interactives.length; i++) {
 	                interactives.push(React.createElement(Interactive, { key: i, interactiveNumber: i }));
 	            }
-	            interactives.push(React.createElement(
-	                'tr',
-	                null,
-	                React.createElement(
-	                    'td',
-	                    null,
-	                    React.createElement('input', { type: 'text', onKeyPress: this.hitkey, onBlur: this.addInteractive, name: 'newItem', ref: 'newItem', placeholder: 'ADD NEW' })
-	                )
-	            ));
+	
 	            var className = label + '-list';
 	            return React.createElement(
 	                'table',
 	                { className: className },
-	                interactives
+	                head,
+	                interactives,
+	                React.createElement(
+	                    'tfoot',
+	                    null,
+	                    React.createElement(
+	                        'tr',
+	                        null,
+	                        React.createElement('input', { type: 'text', onKeyPress: this.hitkey, onBlur: this.addInteractive, name: 'newItem', ref: 'newItem', placeholder: 'ADD NEW' })
+	                    )
+	                )
 	            );
 	        }
 	    });

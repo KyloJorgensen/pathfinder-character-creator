@@ -19,26 +19,34 @@ module.exports = function(label) {
             }
         },
         render: function() {
-            var interactives = [];
+            var head = [];
             if (this.props.interactives[0]) {
                 var keys = Object.keys(this.props.interactives[0]);
-                var items = [];
                 for (var i = 0; i < keys.length; i++) {
                     if (keys[i] != '_id' && keys[i] != '_characterId' && keys[i] != '_userId' && keys[i] != '__v') {
-                        items.push(<th>{keys[i]}</th>);
+                        head.push(<th key={i} >{keys[i]}</th>);
                     }
                 }
-                interactives.push(items);
             }
+
+            var interactives = [];
             for (var i = 0; i < this.props.interactives.length; i++) {
                 interactives.push(<Interactive key={i} interactiveNumber={i}/>);
             }
-            interactives.push(<tr><td><input type="text" onKeyPress={this.hitkey} onBlur={this.addInteractive} name="newItem" ref="newItem" placeholder="ADD NEW" /></td></tr>);
+
             var className = label + '-list';
             return (
                 <table className={className}>
+                    {head}
                     {interactives}
+                    <tfoot>
+                        <tr>
+                            <input type="text" onKeyPress={this.hitkey} onBlur={this.addInteractive} name="newItem" ref="newItem" placeholder="ADD NEW" />
+                        </tr>
+                    </tfoot>
+
                 </table>
+                
             );
         }
     });
