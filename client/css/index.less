@@ -89,21 +89,25 @@ ol, ul {
 	text-transform: uppercase;
 	input {
 		text-align: center;
+		border-style: none;
 	}
 	table {
 		width: 100%;
-		padding-left: 20px;
+
 		th {
 			font-size: 12px;
 		}
+
 		th, td {
 		    border-bottom: 1px solid #ddd;
 		    text-align: center;
 		}
+
 		input {
 			width: 90%;
 		}
     }
+
     button {
 		background-color: #4499dc;
 		text-decoration: none;
@@ -148,9 +152,13 @@ ol, ul {
     		.character-header {
     			padding-bottom: 15px;
 	    		div {
-	    			display: inline-block;
-	    			width: 150px;
-	    		}
+					display: inline-block;
+					width: 275px;
+					text-align: right;
+					label {
+						padding-right: 5px;
+					}
+				}
 	    	}
 	    	main {
 
@@ -159,8 +167,9 @@ ol, ul {
 		    			padding-bottom: 10px;
 		    		}
 		    		.health {
-		    			> div {
-		    				width: 50%;
+						> div {
+							display: inline-block;
+							width: 268px;
 		    				label {
 		    					padding-right: 10px;
 		    				}
@@ -185,7 +194,6 @@ ol, ul {
 		    		.initaitive-wrapper, .CMB-wrapper, .CMD-wrapper {
 		    			div {
 		    				display: inline-block;
-		    				width: 15%;
 		    				float: left;
 		    			}
 		    			table {
@@ -214,7 +222,7 @@ ol, ul {
 		    		.xp-points, .carrying-capacity {
 		    			div {
 		    				display: inline-block;
-		    				width: 50%;
+							width: 260px;
 		    				label {
 		    					padding-left: 10px;
 		    				}
@@ -229,7 +237,7 @@ ol, ul {
 		    		.speed {
 		    			div {
 		    				display: inline-block;
-		    				width: 50%;
+		    				width: 260px;
 		    				
 		    				label {
 		    					padding-left: 5%;
@@ -263,8 +271,8 @@ ol, ul {
 							vertical-align: top;
 				    		width: 75%;
 						}
-						.gear-container {
 
+						.gear-container {
 				    		display: inline-block;
 							vertical-align: top;
 				    		width: 25%;

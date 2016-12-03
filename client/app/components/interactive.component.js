@@ -47,7 +47,7 @@ module.exports = function(label) {
                     if (typeof this.props.interactive[keys[i]] == 'number') {
                         items.push(<td><input type="number" inputmode="numeric" pattern="[0-9]*" onFocus={this.focusOn} onKeyPress={this.hitkey} onChange={this.editField} onBlur={this.focusOff} name={keys[i]} value={this.state[keys[i]]} /></td>);
                     } else {
-                        items.push(<td><input type={type}  onFocus={this.focusOn} onKeyPress={this.hitkey} onChange={this.editField} onBlur={this.focusOff} name={keys[i]} value={this.state[keys[i]]} /></td>);
+                        items.push(<td><input type="text"  onFocus={this.focusOn} onKeyPress={this.hitkey} onChange={this.editField} onBlur={this.focusOff} name={keys[i]} value={this.state[keys[i]]} /></td>);
                     }
                 }
             }

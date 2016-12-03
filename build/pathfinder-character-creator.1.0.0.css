@@ -75,10 +75,10 @@ ul {
 }
 .character-page input {
   text-align: center;
+  border-style: none;
 }
 .character-page table {
   width: 100%;
-  padding-left: 20px;
 }
 .character-page table th {
   font-size: 12px;
@@ -128,13 +128,18 @@ ul {
 }
 .character-page .container .character .character-header div {
   display: inline-block;
-  width: 150px;
+  width: 275px;
+  text-align: right;
+}
+.character-page .container .character .character-header div label {
+  padding-right: 5px;
 }
 .character-page .container .character main section > div {
   padding-bottom: 10px;
 }
 .character-page .container .character main section .health > div {
-  width: 50%;
+  display: inline-block;
+  width: 268px;
 }
 .character-page .container .character main section .health > div label {
   padding-right: 10px;
@@ -166,7 +171,6 @@ ul {
 .character-page .container .character main section .CMB-wrapper div,
 .character-page .container .character main section .CMD-wrapper div {
   display: inline-block;
-  width: 15%;
   float: left;
 }
 .character-page .container .character main section .initaitive-wrapper table,
@@ -197,7 +201,7 @@ ul {
 .character-page .container .character main section .xp-points div,
 .character-page .container .character main section .carrying-capacity div {
   display: inline-block;
-  width: 50%;
+  width: 260px;
 }
 .character-page .container .character main section .xp-points div label,
 .character-page .container .character main section .carrying-capacity div label {
@@ -210,7 +214,7 @@ ul {
 }
 .character-page .container .character main section .speed div {
   display: inline-block;
-  width: 50%;
+  width: 260px;
 }
 .character-page .container .character main section .speed div label {
   padding-left: 5%;
