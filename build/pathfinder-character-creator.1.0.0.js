@@ -25787,7 +25787,8 @@
 	'use strict';
 	
 	var React = __webpack_require__(1),
-	    connect = __webpack_require__(183).connect;
+	    connect = __webpack_require__(183).connect,
+	    Nav = __webpack_require__(238);
 	
 	var App = React.createClass({
 	    displayName: 'App',
@@ -25796,11 +25797,13 @@
 	        return React.createElement(
 	            'div',
 	            { className: 'pathfinder-character-creator' },
+	            React.createElement(Nav, null),
 	            React.createElement(
 	                'div',
 	                { className: 'pathfinder-character-creator-body' },
 	                this.props.children
-	            )
+	            ),
+	            React.createElement('footer', null)
 	        );
 	    }
 	});
@@ -25839,7 +25842,6 @@
 			return React.createElement(
 				'div',
 				{ className: 'main-page-wrapper' },
-				React.createElement(Nav, null),
 				React.createElement(
 					'div',
 					{ className: 'main-page' },
@@ -32016,7 +32018,6 @@
 			return React.createElement(
 				'div',
 				{ className: 'user-page-wrapper' },
-				React.createElement(Nav, null),
 				React.createElement(
 					'div',
 					{ className: 'user-page' },
@@ -32365,7 +32366,6 @@
 			return React.createElement(
 				'div',
 				{ className: 'character-page-wrapper' },
-				React.createElement(Nav, null),
 				React.createElement(
 					'div',
 					{ className: 'character-page' },

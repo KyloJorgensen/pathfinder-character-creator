@@ -177,7 +177,6 @@ var character = React.createClass({
 		}
 		return (
 			<div className="character-page-wrapper">
-		    	<Nav />
 		    	<div className="character-page">
 		    		<div id="banner">
 			    		<div className="container">

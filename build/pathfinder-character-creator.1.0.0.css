@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro');
 body {
-  background-color: #e5e5e5;
+  background-color: #ffffff;
   margin: 0;
   font-family: "Source Sans Pro", arial, sans-serif;
   font-weight: 300;
@@ -8,10 +8,17 @@ body {
   line-height: 1.5em;
   color: #b3b3b3;
 }
+.pathfinder-character-creator {
+  background-color: #4499dc;
+}
 ol,
 ul {
   list-style: none;
   padding: 0;
+}
+.pathfinder-character-creator-body {
+  background-color: #ffffff;
+  padding-bottom: 75px;
 }
 .container {
   margin-left: auto;
@@ -30,7 +37,6 @@ ul {
 .main-page .container > div {
   padding-top: 50px;
   padding-bottom: 50px;
-  background-color: #fff;
   position: static;
   text-align: center;
 }
@@ -40,13 +46,11 @@ ul {
 .user-page #header .container > div {
   padding-top: 10px;
   padding-bottom: 1px;
-  background-color: #fff;
   position: static;
 }
 .user-page #user .container > div {
   padding-top: 10px;
   padding-bottom: 120px;
-  background-color: #fff;
   position: static;
 }
 .user-page #user .container > div ul {
@@ -129,7 +133,6 @@ ul {
 .character-page .container > div {
   padding-top: 10px;
   padding-bottom: 50px;
-  background-color: #fff;
   position: static;
 }
 .character-page .container .character .character-header {
@@ -324,7 +327,6 @@ ul {
 }
 .nav-bar {
   padding-top: 3em;
-  background-color: #4499dc;
 }
 .nav-bar #logo {
   overflow: hidden;
@@ -366,6 +368,14 @@ ul {
 .nav-bar h1 {
   padding: 0.83em;
   margin: 0;
+}
+footer {
+  height: 75px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #4499dc;
 }
 @media screen and (min-width: 1200px) {
   .container {

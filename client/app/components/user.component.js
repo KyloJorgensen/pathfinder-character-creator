@@ -31,7 +31,6 @@ var mainPage = React.createClass({
 	    }
 		return (
 		    <div className="user-page-wrapper">
-		    	<Nav />
 		    	<div className="user-page">
 		    		<div id="header">
 			    		<div className="container">

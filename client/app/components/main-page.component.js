@@ -17,7 +17,6 @@ var mainPage = React.createClass({
   		
 		return (
 		    <div className="main-page-wrapper">
-		    	<Nav />
 		    	<div className="main-page">
 		    		<div id="banner">
 			    		<div className="container">
@@ -38,6 +37,7 @@ var mainPage = React.createClass({
 				        </div>
 				    </div>
 				</div>
+
 		    </div>
 		);
 	}
