@@ -1,10 +1,9 @@
 'use strict';
 
 var fetch = require('isomorphic-fetch');
-var redirect = false;
 var cookie = require('react-cookie');
 
-var getUserName = function(link) {
+var getUserName = function() {
     if (!'cookie' in document) {
         var error = new Error('cookie is missing');
         return {
@@ -27,7 +26,6 @@ var getUserName = function(link) {
             error: error
         };
     }
-    redirect = link;
     return function(dispatch) {
         var url = '/user';
         return fetch(url, {
@@ -59,7 +57,6 @@ var getUserName = function(link) {
 
 var GET_USER_NAME_SUCCESS = 'GET_USER_NAME_SUCCESS';
 var getUserNameSuccess = function(data) {
-    redirect = false;
     return {
         type: GET_USER_NAME_SUCCESS,
         name: data
@@ -70,22 +67,21 @@ var GET_USER_NAME_ERROR = 'GET_USER_NAME_ERROR';
 var getUserNameError = function(error) {
     console.log(cookie);
     cookie.remove('UserKey');
-    redirect.replace('/');
-    redirect = false;
+    location.assign('#/');
     return {
         type: GET_USER_NAME_ERROR,
         error: error
     };
 };
 
-var login = function(username, password, that) {
+var login = function(username, password) {
     var payload = {
         username: username,
         password: password
     };
     return function(dispatch) {
-        redirect = that.props.history;
         var url = '/login';
+
         return fetch(url, {
             method: 'POST',
             credentials: 'same-origin',
@@ -116,8 +112,7 @@ var login = function(username, password, that) {
 
 var LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 var loginSuccess = function(data) {
-    redirect.replace('/user');
-    redirect = false;
+    location.assign('#/user');
     return {
         type: LOGIN_SUCCESS,
         data: data
@@ -126,21 +121,19 @@ var loginSuccess = function(data) {
 
 var LOGIN_ERROR = 'LOGIN_ERROR';
 var loginError = function(error) {
-    redirect = false;
     return {
         type: LOGIN_ERROR,
         error: error
     };
 };
 
-var signup = function(name, username, password, that) {
+var signup = function(name, username, password) {
     var payload = {
         username: username,
         password: password,
         name: name
     };
     return function(dispatch) {
-        redirect = that.props.history;
         var url = '/user';
         return fetch(url, {
             method: 'POST',
@@ -172,8 +165,7 @@ var signup = function(name, username, password, that) {
 
 var SIGNUP_SUCCESS = 'SIGNUP_SUCCESS';
 var signupSuccess = function(data) {
-    redirect.replace('/user');
-    redirect = false;
+    location.assign('#/user');
     return {
         type: SIGNUP_SUCCESS,
         data: data
@@ -182,7 +174,6 @@ var signupSuccess = function(data) {
 
 var SIGNUP_ERROR = 'SIGNUP_ERROR';
 var signupError = function(error) {
-    redirect = false;
     return {
         type: SIGNUP_ERROR,
         error: error

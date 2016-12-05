@@ -46,7 +46,7 @@ var acitemSchema = mongoose.Schema({
     properties: {
         type: String,
         require: true,
-        default: 'n/a'
+        default: 'none'
     },
     max_dex_bonus: {
         type: Number,

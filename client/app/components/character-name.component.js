@@ -2,16 +2,14 @@
 
 var React = require('react'),
     connect = require('react-redux').connect,
-    characterActions = require('../actions/character.actions');
+    characterActions = require('../actions/character.actions'),
+    Link = require('react-router').Link;
 
 var characterName = React.createClass({
-    onCharacter: function() {
-        this.props.link.replace('/character/' + this.props.character._id);
-    },
     render: function() {
         return (
             <li className="character-name">
-                <a onClick={this.onCharacter} >{this.props.character.name} - {this.props.character.class} {this.props.character.race} {this.props.character.level} </a>
+                <Link to={'/character/' + this.props.character._id }>{this.props.character.name} - {this.props.character.race} {this.props.character.class} {this.props.character.level}</Link>
             </li>
         );
     }

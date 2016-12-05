@@ -1,7 +1,6 @@
 'use strict';
 
 var fetch = require('isomorphic-fetch');
-var redirect = false;
 
 var getListOfCharacters = function() {
     if (!'cookie' in document) {
@@ -71,10 +70,11 @@ var getListOfCharactersError = function(error) {
     };
 };
 
-var getCharacter = function(_id, link) {
+var getCharacter = function(_id) {
+
     if (!'cookie' in document) {
         var error = new Error('cookie is missing');
-        link.replace('/user');
+        location.assign('#/user');
         return {
             type: GET_CHARACTER_ERROR,
             error: error
@@ -83,7 +83,7 @@ var getCharacter = function(_id, link) {
     var userKey = document.cookie.split('=');
     if (userKey[0] != 'UserKey') {
         var error = new Error('UserKey cookie is missing');
-        link.replace('/user');
+        location.assign('#/user');
         return {
             type: GET_CHARACTER_ERROR,
             error: error
@@ -91,13 +91,12 @@ var getCharacter = function(_id, link) {
     }
     if (userKey[1] == 'null') {
         var error = new Error('UserKey cookie is null');
-        link.replace('/user');
+        location.assign('#/user');
         return {
             type: GET_CHARACTER_ERROR,
             error: error
         };
-    }    
-    redirect = link;
+    } 
     return function(dispatch) {
         var url = '/character/' + _id;
         return fetch(url, {
@@ -129,7 +128,6 @@ var getCharacter = function(_id, link) {
 
 var GET_CHARACTER_SUCCESS = 'GET_CHARACTER_SUCCESS';
 var getCharacterSuccess = function(data) {
-    redirect = false;
     return {
         type: GET_CHARACTER_SUCCESS,
         character: data
@@ -138,16 +136,14 @@ var getCharacterSuccess = function(data) {
 
 var GET_CHARACTER_ERROR = 'GET_CHARACTER_ERROR';
 var getCharacterError = function(error) {
-    redirect.replace('/user');
-    redirect = false;
+    location.assign('#/user');
     return {
         type: GET_CHARACTER_ERROR,
         error: error
     };
 };
 
-var createCharacter = function(name, link) {
-    redirect = link;
+var createCharacter = function(name) {
     if (!'cookie' in document) {
         var error = new Error('cookie is missing');
         return {
@@ -203,8 +199,7 @@ var createCharacter = function(name, link) {
 
 var CREATE_CHARACTER_SUCCESS = 'CREATE_CHARACTER_SUCCESS';
 var createCharacterSuccess = function(data) {
-    redirect.replace('/character/' + data._id)
-    redirect = false;
+    location.assign('#/character/' + data._id);
     return {
         type: CREATE_CHARACTER_SUCCESS,
         character: data
@@ -213,15 +208,13 @@ var createCharacterSuccess = function(data) {
 
 var CREATE_CHARACTER_ERROR = 'CREATE_CHARACTER_ERROR';
 var createCharacterError = function(error) {
-    redirect = false;
     return {
         type: CREATE_CHARACTER_ERROR,
         error: error
     };
 };
 
-var deleteCharacter = function(_characterId, link) {
-    redirect = link;
+var deleteCharacter = function(_characterId) {
     if (!'cookie' in document) {
         var error = new Error('cookie is missing');
         return {
@@ -274,8 +267,7 @@ var deleteCharacter = function(_characterId, link) {
 
 var DELETE_CHARACTER_SUCCESS = 'DELETE_CHARACTER_SUCCESS';
 var deleteCharacterSuccess = function(data) {
-    redirect.replace('/user')
-    redirect = false;
+    location.assign('#/user');
     return {
         type: DELETE_CHARACTER_SUCCESS
     };
@@ -283,7 +275,6 @@ var deleteCharacterSuccess = function(data) {
 
 var DELETE_CHARACTER_ERROR = 'DELETE_CHARACTER_ERROR';
 var deleteCharacterError = function(error) {
-    redirect = false;
     return {
         type: DELETE_CHARACTER_ERROR,
         error: error

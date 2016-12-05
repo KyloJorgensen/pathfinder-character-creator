@@ -10,14 +10,14 @@ var React = require('react'),
 
 var mainPage = React.createClass({
 	componentDidMount: function() {
-		this.props.dispatch(userActions.getUserName(this.props.history));
+		this.props.dispatch(userActions.getUserName());
         this.props.dispatch(characterActions.getListOfCharacters());
 	},
 	render: function() {
 		var characters = [];
 		for (var i = 0; i < this.props.listOfCharacters.length; i++) {
 			this.props.listOfCharacters[i]
-			characters.push(<CharacterName link={this.props.history} character={this.props.listOfCharacters[i]} />);
+			characters.push(<CharacterName key={i} link={this.props.history} character={this.props.listOfCharacters[i]} />);
 		}
 		if (!'cookie' in document) {
 			this.props.history.replace('/');

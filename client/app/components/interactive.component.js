@@ -45,13 +45,20 @@ module.exports = function(label) {
             for (var i = 0; i < keys.length; i++) {
                 if (keys[i] != '_id' && keys[i] != '_characterId' && keys[i] != '_userId' && keys[i] != '__v') {
                     if (typeof this.props.interactive[keys[i]] == 'number') {
-                        items.push(<td><input type="number" inputmode="numeric" pattern="[0-9]*" onFocus={this.focusOn} onKeyPress={this.hitkey} onChange={this.editField} onBlur={this.focusOff} name={keys[i]} value={this.state[keys[i]]} /></td>);
+                        items.push(<td key={i} ><input type="number" inputMode="numeric" pattern="[0-9]*" onFocus={this.focusOn} onKeyPress={this.hitkey} onChange={this.editField} onBlur={this.focusOff} name={keys[i]} value={this.state[keys[i]]} /></td>);
                     } else {
-                        items.push(<td><input type="text"  onFocus={this.focusOn} onKeyPress={this.hitkey} onChange={this.editField} onBlur={this.focusOff} name={keys[i]} value={this.state[keys[i]]} /></td>);
+                        items.push(<td key={i} ><input type="text"  onFocus={this.focusOn} onKeyPress={this.hitkey} onChange={this.editField} onBlur={this.focusOff} name={keys[i]} value={this.state[keys[i]]} /></td>);
                     }
                 }
             }
-            items.push(<button onClick={this.deleteItem} >DELETE</button>);
+            items.push(
+                <td key={keys.length} >
+                    <div className="trash" onClick={this.deleteItem} >
+                        <i className="fa fa-trash" aria-hidden="true" />
+                    </div>
+                </td>
+            );
+
             return (
                 <tr className={label}>
                     {items}

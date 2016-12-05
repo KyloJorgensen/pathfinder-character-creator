@@ -37,16 +37,22 @@ module.exports = function(label) {
             var className = label + '-list';
             return (
                 <table className={className}>
-                    {head}
-                    {interactives}
+                    <thead>
+                        <tr>
+                            {head}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {interactives}
+                    </tbody>
                     <tfoot>
                         <tr>
-                            <input type="text" onKeyPress={this.hitkey} onBlur={this.addInteractive} name="newItem" ref="newItem" placeholder="ADD NEW" />
+                            <td>
+                                <input type="text" onKeyPress={this.hitkey} onBlur={this.addInteractive} name="newItem" ref="newItem" placeholder="ADD NEW" />
+                            </td>
                         </tr>
                     </tfoot>
-
                 </table>
-                
             );
         }
     });

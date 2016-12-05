@@ -87,6 +87,7 @@ ul {
 .character-page table td {
   border-bottom: 1px solid #ddd;
   text-align: center;
+  font-size: small;
 }
 .character-page table input {
   width: 90%;
@@ -99,14 +100,22 @@ ul {
   border: 0px solid red;
   border-radius: 5px;
 }
-.character-page .character-menu > div p {
+.character-page .fa-trash {
+  color: #4499dc;
+}
+.character-page .character-menu > div h1,
+.character-page .character-menu > div h2 {
+  display: inline-block;
+  margin-right: 1rem;
+}
+.character-page .character-menu > div > div > * {
   display: inline-block;
 }
-.character-page .character-menu > div > div {
-  display: inline-block;
+.character-page .character-menu > div > div > div {
   float: right;
 }
 .character-page .character-menu > div > div a {
+  display: inline-block;
   margin-left: 32px;
   background-color: #4499dc;
   text-decoration: none;
@@ -115,7 +124,7 @@ ul {
   color: white;
   border: 0px solid red;
   border-radius: 5px;
-  padding: 4px;
+  padding: 7px 21px;
 }
 .character-page .container > div {
   padding-top: 10px;
@@ -133,9 +142,6 @@ ul {
 }
 .character-page .container .character .character-header div label {
   padding-right: 5px;
-}
-.character-page .container .character main .interactive {
-  overflow-x: scroll;
 }
 .character-page .container .character main section > div {
   padding-bottom: 10px;
@@ -234,6 +240,12 @@ ul {
 }
 .character-page .container .character main section .languages textarea {
   width: 100%;
+}
+.character-page .container .character main section .interactive {
+  overflow-x: auto;
+}
+.character-page .container .character main section .interactive .trash {
+  width: auto;
 }
 .character-page .container .character main div .stuff > div {
   display: inline-block;

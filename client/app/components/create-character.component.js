@@ -8,7 +8,7 @@ var character = React.createClass({
 	handleSubmit: function(event) {
 		event.preventDefault();
 		if (this.refs.name.value) {
-			this.props.dispatch(characterActions.createCharacter(this.refs.name.value, this.props.link));
+			this.props.dispatch(characterActions.createCharacter(this.refs.name.value));
 			this.refs.name.value = '';
 		} else {
 			alert("Name Field required.");
