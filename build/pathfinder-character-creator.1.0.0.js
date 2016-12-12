@@ -32275,6 +32275,7 @@
 	    connect = __webpack_require__(183).connect,
 	    characterActions = __webpack_require__(232),
 	    userActions = __webpack_require__(226),
+	    navActions = __webpack_require__(314),
 	    Nav = __webpack_require__(237),
 	    interactiveContainer = __webpack_require__(310),
 	    interactives = __webpack_require__(235),

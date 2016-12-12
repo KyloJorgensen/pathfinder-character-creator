@@ -244,9 +244,6 @@ ul {
 .character-page .container .character main section .languages textarea {
   width: 100%;
 }
-.character-page .container .character main section .interactive {
-  overflow-x: auto;
-}
 .character-page .container .character main section .interactive .trash {
   width: auto;
 }
@@ -263,6 +260,9 @@ ul {
 .character-page .container .character main div .background textarea {
   width: 100%;
   height: 200px;
+}
+.character-page .container .character main .interactive {
+  overflow-x: auto;
 }
 .login-page,
 .signup-page {
@@ -344,6 +344,7 @@ ul {
 .nav-bar #nav-pop-down {
   display: block;
   text-align: right;
+  float: right;
   padding: 1rem;
 }
 .nav-bar #nav-pop-down > p {
