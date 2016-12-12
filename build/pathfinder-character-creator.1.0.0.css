@@ -40,6 +40,17 @@ ul {
   position: static;
   text-align: center;
 }
+.main-page .container > div .button {
+  display: inline-block;
+  background-color: #4499dc;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-size: 13pt;
+  color: white;
+  border: 0px solid red;
+  border-radius: 5px;
+  padding: 7px 21px;
+}
 .user-page {
   color: black;
 }

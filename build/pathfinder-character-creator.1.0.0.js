@@ -25988,6 +25988,15 @@
 							null,
 							React.createElement(
 								Link,
+								{ to: '/' },
+								'Main'
+							)
+						),
+						React.createElement(
+							'li',
+							null,
+							React.createElement(
+								Link,
 								{ to: '/login' },
 								'LOGIN'
 							)
@@ -26029,7 +26038,8 @@
 	var React = __webpack_require__(1),
 	    connect = __webpack_require__(183).connect,
 	    Nav = __webpack_require__(237),
-	    navActions = __webpack_require__(314);
+	    navActions = __webpack_require__(314),
+	    Link = __webpack_require__(240).Link;
 	
 	var mainPage = React.createClass({
 		displayName: 'mainPage',
@@ -26084,9 +26094,25 @@
 										'Pathfinder Character Creator is a place to make, edit, and save your characters for Pathfinder a Role Playing Game made by Paizo Publishing.'
 									),
 									React.createElement(
+										Link,
+										{ className: 'button', to: '/character' },
+										'sample Character Sheet'
+									),
+									React.createElement(
 										'p',
 										null,
-										'Login or Signup to start using creating today.'
+										React.createElement(
+											'a',
+											{ href: '#/login' },
+											'Login'
+										),
+										' or ',
+										React.createElement(
+											'a',
+											{ href: '#/signup' },
+											'Signup'
+										),
+										' to make, save, and edit mulitple characters.'
 									)
 								)
 							)

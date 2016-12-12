@@ -73,8 +73,12 @@ var mainPage = React.createClass({
 					<p><span onClick={this.changeMenuActivity} >Menu</span> <i className="fa fa-bars" aria-hidden="true"></i></p>
 					<ul style={menuStyle} >
 						<li>
+							<Link to={'/'}>Main</Link>
+						</li>			
+						<li>
 							<Link to={'/login'}>LOGIN</Link>
 						</li>
+
 						<li>
 							<Link to={'/signup'}>SIGNUP</Link>
 						</li>
