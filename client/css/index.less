@@ -395,12 +395,12 @@ ol, ul {
 	#nav-pop-down {
 		display: block;
 		text-align: right;
-		float: right;
     	padding: 1rem;
 
 		> p {
 			margin: 0;
 		}
+
 	    a, p {
 		   	display: block;
 			text-decoration: none;
@@ -416,15 +416,26 @@ ol, ul {
 		    right: 0;
 		    margin: 0;
 		    background-color: #16576B;
+
 			li {
 				display: block;
     			padding: 0px 20px;
     			border-bottom: white solid 2px;
+
     			a, p {
     				text-align: left;
     				margin: 0;
     			}
     		}
+
+    		li:hover {
+				background-color: #1c738e;
+    		}
+
+			.current-user:hover {
+				background-color: #16576B;
+			}
+
     		li:last-child {
 				border-bottom: white solid 0px;
     		}
@@ -438,11 +449,13 @@ ol, ul {
 
 footer {	
 	height: 75px;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
     background-color: #4499dc;
+}
+
+@media screen and (min-width: 500px) {
+	#nav-pop-down {
+		float: right;
+	}
 }
 
 @media screen and (min-width: 1200px) {
@@ -472,9 +485,6 @@ footer {
 		> div {
 			display: inline-block;
 		}
-	}
-	.nav-bar #logo h1 {
-		font-size: 44pt;
 	}
 
 	.character-page .container .character main div .stuff {

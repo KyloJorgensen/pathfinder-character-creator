@@ -143,6 +143,9 @@ var character = React.createClass({
 		};
 		return state;
 	},
+	componentDidMount: function() {
+		this.props.dispatch(navActions.menuDisplay(false));
+	},
 	componentWillReceiveProps: function(nextProps) {
 		this.setState(nextProps.character);
 	},

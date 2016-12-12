@@ -2,9 +2,13 @@
 
 var React = require('react'),
 	connect = require('react-redux').connect,
-	Nav = require('../components/nav.component');
+	Nav = require('../components/nav.component'),
+	navActions = require('../actions/nav.actions');
 
 var mainPage = React.createClass({
+	componentDidMount: function() {
+		this.props.dispatch(navActions.menuDisplay(false));
+	},
 	render: function() {
         if (!'cookie' in document) {
 	        var userKey = document.cookie.split('=');
@@ -14,7 +18,6 @@ var mainPage = React.createClass({
 		        } 
 	        }
         }
-  		
 		return (
 		    <div className="main-page-wrapper">
 		    	<div className="main-page">

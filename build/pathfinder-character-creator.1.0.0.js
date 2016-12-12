@@ -25791,18 +25791,21 @@
 	var React = __webpack_require__(1),
 	    connect = __webpack_require__(183).connect,
 	    Nav = __webpack_require__(237),
-	    navActions = __webpack_require__(314);
+	    navActions = __webpack_require__(314),
+	    userActions = __webpack_require__(226);
 	
 	var App = React.createClass({
 	    displayName: 'App',
 	
+	    componentDidMount: function componentDidMount() {
+	        this.props.dispatch(userActions.getUserName());
+	    },
 	    handleClick: function handleClick() {
 	        if (!this.props.overMenu && this.props.menuDisplay == 'block') {
 	            this.props.dispatch(navActions.menuDisplay(false));
 	        }
 	    },
 	    render: function render() {
-	        console.log(this.props);
 	        return React.createElement(
 	            'div',
 	            { className: 'pathfinder-character-creator', onClick: this.handleClick },
@@ -25868,7 +25871,6 @@
 			this.props.dispatch(navActions.overMenu(false));
 		},
 		render: function render() {
-			console.log(this.props);
 			var menuStyle = {
 				display: this.props.menuDisplay
 			};
@@ -26026,11 +26028,15 @@
 	
 	var React = __webpack_require__(1),
 	    connect = __webpack_require__(183).connect,
-	    Nav = __webpack_require__(237);
+	    Nav = __webpack_require__(237),
+	    navActions = __webpack_require__(314);
 	
 	var mainPage = React.createClass({
 		displayName: 'mainPage',
 	
+		componentDidMount: function componentDidMount() {
+			this.props.dispatch(navActions.menuDisplay(false));
+		},
 		render: function render() {
 			if (!'cookie' in document) {
 				var userKey = document.cookie.split('=');
@@ -26040,7 +26046,6 @@
 					}
 				}
 			}
-	
 			return React.createElement(
 				'div',
 				{ className: 'main-page-wrapper' },
@@ -32066,6 +32071,7 @@
 	    connect = __webpack_require__(183).connect,
 	    userActions = __webpack_require__(226),
 	    characterActions = __webpack_require__(232),
+	    navActions = __webpack_require__(314),
 	    Nav = __webpack_require__(237),
 	    CharacterName = __webpack_require__(307),
 	    CreateCharacter = __webpack_require__(308);
@@ -32076,6 +32082,7 @@
 		componentDidMount: function componentDidMount() {
 			this.props.dispatch(userActions.getUserName());
 			this.props.dispatch(characterActions.getListOfCharacters());
+			this.props.dispatch(navActions.menuDisplay(false));
 		},
 		render: function render() {
 			var characters = [];
@@ -32408,6 +32415,9 @@
 				xp_points: 0
 			};
 			return state;
+		},
+		componentDidMount: function componentDidMount() {
+			this.props.dispatch(navActions.menuDisplay(false));
 		},
 		componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
 			this.setState(nextProps.character);

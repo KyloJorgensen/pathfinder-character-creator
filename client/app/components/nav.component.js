@@ -32,7 +32,6 @@ var mainPage = React.createClass({
 		this.props.dispatch(navActions.overMenu(false));
 	},
 	render: function() {
-		console.log(this.props)
 		var menuStyle = {
 			display: this.props.menuDisplay
 		};	

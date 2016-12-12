@@ -3,17 +3,20 @@
 var React = require('react'),
     connect = require('react-redux').connect,
     Nav = require('./nav.component'),
-    navActions = require('../actions/nav.actions');
+    navActions = require('../actions/nav.actions'),
+    userActions = require('../actions/user.actions');
 
 
 var App = React.createClass({
+    componentDidMount: function() {
+        this.props.dispatch(userActions.getUserName());
+    },
     handleClick: function() {
         if (!this.props.overMenu && this.props.menuDisplay == 'block') {
             this.props.dispatch(navActions.menuDisplay(false));
         }
     },
     render: function() {
-        console.log(this.props);
         return (
             <div className="pathfinder-character-creator" onClick={this.handleClick}>
                 <Nav />
