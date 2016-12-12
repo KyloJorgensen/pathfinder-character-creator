@@ -344,7 +344,6 @@ ul {
 .nav-bar #nav-pop-down {
   display: block;
   text-align: right;
-  float: right;
   padding: 1rem;
 }
 .nav-bar #nav-pop-down > p {
