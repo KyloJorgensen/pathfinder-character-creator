@@ -26081,7 +26081,7 @@
 									React.createElement(
 										'p',
 										null,
-										'Pathfinder Character Creator is a place to make, edit, and save your characters for pathfinder.'
+										'Pathfinder Character Creator is a place to make, edit, and save your characters for Pathfinder a Role Playing Game made by Paizo Publishing.'
 									),
 									React.createElement(
 										'p',
@@ -32303,52 +32303,52 @@
 			var state = {
 				_id: "false",
 				_userId: "false",
-				ability_score_cha: 10,
+				ability_score_cha: 11,
 				ability_score_cha_temp: 0,
-				ability_score_con: 10,
+				ability_score_con: 14,
 				ability_score_con_temp: 0,
-				ability_score_dex: 10,
+				ability_score_dex: 12,
 				ability_score_dex_temp: 0,
-				ability_score_int: 10,
+				ability_score_int: 14,
 				ability_score_int_temp: 0,
-				ability_score_str: 10,
+				ability_score_str: 16,
 				ability_score_str_temp: 0,
 				ability_score_wis: 10,
 				ability_score_wis_temp: 0,
-				ac_armor_bonus: 0,
+				ac_armor_bonus: 3,
 				ac_defelection_mod: 0,
 				ac_misc_mod: 0,
 				ac_natural_armor: 0,
 				ac_shild_bonus: 0,
-				age: 0,
-				alignment: "ALIGNMENT",
-				armor_speed: 0,
+				age: 32,
+				alignment: "good",
+				armor_speed: 15,
 				background_stories: "BACKGROUND",
-				base_attack_bonus: 0,
+				base_attack_bonus: 1,
 				borrow_speed: 0,
-				class: "CLASS",
-				climb_speed: 0,
-				current_hit_points: 0,
+				class: "fighter",
+				climb_speed: 5,
+				current_hit_points: 32,
 				damage_reduction: "0",
-				deity: "DEITY",
+				deity: "none",
 				domain_and_specialty_school: "Domain and/or Specialty School",
-				drag_or_push: "0",
-				eyes: "EYES",
+				drag_or_push: "250",
+				eyes: "Blue",
 				fly_speed: 0,
-				fort_base_save: 0,
+				fort_base_save: 1,
 				fort_magic_mod: 0,
 				fort_misc_mod: 0,
 				fort_temp_mod: 0,
-				gender: "GENDER",
-				hair: "HAIR",
+				gender: "male",
+				hair: "black",
 				heavy_load: "0",
-				height: "0",
-				hit_points: 0,
-				homeland: "HOMELAND",
-				init_misc_mod: 0,
-				land_speed: 0,
-				languages: "LANGUAGES",
-				level: 0,
+				height: "5'2\"",
+				hit_points: 23,
+				homeland: "earth",
+				init_misc_mod: 1,
+				land_speed: 20,
+				languages: "Common",
+				level: 1,
 				level_0_bonus_spells: 0,
 				level_0_spell_per_day: 0,
 				level_0_spell_save_dc: 0,
@@ -32389,31 +32389,31 @@
 				level_9_spell_per_day: 0,
 				level_9_spell_save_dc: 0,
 				level_9_spells_known: 0,
-				lift_off_ground: "0",
-				lift_over_head: "0",
-				light_load: "0",
-				medium_load: "0",
-				money_cp: 0,
-				money_gp: 0,
+				lift_off_ground: "150",
+				lift_over_head: "125",
+				light_load: "100",
+				medium_load: "200",
+				money_cp: 15,
+				money_gp: 1,
 				money_pp: 0,
 				money_sp: 0,
-				name: "asdf",
-				next_level: 0,
-				race: "RACE",
-				ref_base_save: 0,
+				name: "BOB",
+				next_level: 1000,
+				race: "Human",
+				ref_base_save: 1,
 				ref_magic_mod: 0,
 				ref_misc_mod: 0,
 				ref_temp_mod: 0,
 				size: "Medium",
 				size_mod: 0,
 				spell_resistance: "0",
-				swim_speed: 0,
-				weight: "0",
-				will_base_save: 0,
+				swim_speed: 10,
+				weight: "200",
+				will_base_save: 1,
 				will_magic_mod: 0,
 				will_misc_mod: 0,
 				will_temp_mod: 0,
-				xp_points: 0
+				xp_points: 150
 			};
 			return state;
 		},
@@ -32450,7 +32450,1591 @@
 		},
 		render: function render() {
 			if (Object.keys(this.props.params).length == 0) {
-				this.props.history.replace('/user');
+				return React.createElement(
+					'div',
+					{ className: 'character-page-wrapper' },
+					React.createElement(
+						'div',
+						{ className: 'character-page' },
+						React.createElement(
+							'div',
+							{ id: 'banner' },
+							React.createElement(
+								'div',
+								{ className: 'container' },
+								React.createElement(
+									'div',
+									{ className: 'character-menu' },
+									React.createElement(
+										'div',
+										null,
+										React.createElement(
+											'p',
+											{ className: 'sample' },
+											'This is a sample character sheet to save and to have all of the features available please sign up or sign in.'
+										),
+										React.createElement(
+											'h1',
+											null,
+											'Character'
+										),
+										React.createElement(
+											'h2',
+											null,
+											this.state.name,
+											' - ',
+											this.state.race,
+											' ',
+											this.state.class,
+											' ',
+											this.state.level,
+											' '
+										),
+										React.createElement(
+											'div',
+											null,
+											React.createElement(
+												'p',
+												null,
+												'Click on any field you want to edit.'
+											)
+										)
+									)
+								)
+							)
+						),
+						React.createElement(
+							'div',
+							{ id: 'character' },
+							React.createElement(
+								'div',
+								{ className: 'container' },
+								React.createElement(
+									'div',
+									{ className: 'character' },
+									React.createElement(
+										'header',
+										{ className: 'character-header' },
+										React.createElement(
+											'div',
+											null,
+											React.createElement(
+												'label',
+												null,
+												'Name:'
+											),
+											React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'name', onChange: this.editField, value: this.state.name })
+										),
+										React.createElement(
+											'div',
+											null,
+											React.createElement(
+												'label',
+												null,
+												'Class:'
+											),
+											React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'class', onChange: this.editField, value: this.state.class })
+										),
+										React.createElement(
+											'div',
+											null,
+											React.createElement(
+												'label',
+												null,
+												'Level:'
+											),
+											React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'level', onChange: this.editField, value: this.state.level })
+										),
+										React.createElement(
+											'div',
+											null,
+											React.createElement(
+												'label',
+												null,
+												'Race:'
+											),
+											React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'race', onChange: this.editField, value: this.state.race })
+										),
+										React.createElement(
+											'div',
+											null,
+											React.createElement(
+												'label',
+												null,
+												'Alignment:'
+											),
+											React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'alignment', onChange: this.editField, value: this.state.alignment })
+										),
+										React.createElement(
+											'div',
+											null,
+											React.createElement(
+												'label',
+												null,
+												'Deity:'
+											),
+											React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'deity', onChange: this.editField, value: this.state.deity })
+										),
+										React.createElement(
+											'div',
+											null,
+											React.createElement(
+												'label',
+												null,
+												'Homeland:'
+											),
+											React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'homeland', onChange: this.editField, value: this.state.homeland })
+										),
+										React.createElement(
+											'div',
+											null,
+											React.createElement(
+												'label',
+												null,
+												'Size:'
+											),
+											React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'size', onChange: this.editField, value: this.state.size })
+										),
+										React.createElement(
+											'div',
+											null,
+											React.createElement(
+												'label',
+												null,
+												'Gender:'
+											),
+											React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'gender', onChange: this.editField, value: this.state.gender })
+										),
+										React.createElement(
+											'div',
+											null,
+											React.createElement(
+												'label',
+												null,
+												'Age:'
+											),
+											React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'age', onChange: this.editField, value: this.state.age })
+										),
+										React.createElement(
+											'div',
+											null,
+											React.createElement(
+												'label',
+												null,
+												'Weight:'
+											),
+											React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'weight', onChange: this.editField, value: this.state.weight })
+										),
+										React.createElement(
+											'div',
+											null,
+											React.createElement(
+												'label',
+												null,
+												'Height:'
+											),
+											React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'height', onChange: this.editField, value: this.state.height })
+										),
+										React.createElement(
+											'div',
+											null,
+											React.createElement(
+												'label',
+												null,
+												'Hair:'
+											),
+											React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'hair', onChange: this.editField, value: this.state.hair })
+										),
+										React.createElement(
+											'div',
+											null,
+											React.createElement(
+												'label',
+												null,
+												'Eyes:'
+											),
+											React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'eyes', onChange: this.editField, value: this.state.eyes })
+										)
+									),
+									React.createElement(
+										'main',
+										null,
+										React.createElement(
+											'section',
+											{ className: 'column-left' },
+											React.createElement(
+												'div',
+												{ className: 'health' },
+												React.createElement(
+													'div',
+													null,
+													React.createElement(
+														'label',
+														null,
+														'hit points:'
+													),
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'hit_points', onChange: this.editField, value: this.state.hit_points })
+												),
+												React.createElement(
+													'div',
+													null,
+													React.createElement(
+														'label',
+														null,
+														'current:'
+													),
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'current_hit_points', onChange: this.editField, value: this.state.current_hit_points })
+												)
+											),
+											React.createElement(
+												'table',
+												{ className: 'ability-scores' },
+												React.createElement(
+													'thead',
+													null,
+													React.createElement(
+														'tr',
+														null,
+														React.createElement(
+															'th',
+															null,
+															'Ability Name'
+														),
+														React.createElement(
+															'th',
+															null,
+															'Ability Score'
+														),
+														React.createElement(
+															'th',
+															null,
+															'Ability Modifier'
+														),
+														React.createElement(
+															'th',
+															null,
+															'Temp Adjustment'
+														),
+														React.createElement(
+															'th',
+															null,
+															'Temp Modifier'
+														)
+													)
+												),
+												React.createElement(
+													'tbody',
+													null,
+													React.createElement(
+														'tr',
+														null,
+														React.createElement(
+															'td',
+															null,
+															'STR'
+														),
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'ability_score_str', onChange: this.editField, value: this.state.ability_score_str })
+														),
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, type: 'text', value: modifer(this.state.ability_score_str), readOnly: true })
+														),
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'ability_score_str_temp', onChange: this.editField, value: this.state.ability_score_str_temp })
+														),
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, type: 'text', value: modifer(this.state.ability_score_str, this.state.ability_score_str_temp), readOnly: true })
+														)
+													),
+													React.createElement(
+														'tr',
+														null,
+														React.createElement(
+															'td',
+															null,
+															'DEX'
+														),
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'ability_score_dex', onChange: this.editField, value: this.state.ability_score_dex })
+														),
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, type: 'text', value: modifer(this.state.ability_score_dex), readOnly: true })
+														),
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'ability_score_dex_temp', onChange: this.editField, value: this.state.ability_score_dex_temp })
+														),
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, type: 'text', value: modifer(this.state.ability_score_dex, this.state.ability_score_dex_temp), readOnly: true })
+														)
+													),
+													React.createElement(
+														'tr',
+														null,
+														React.createElement(
+															'td',
+															null,
+															'CON'
+														),
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'ability_score_con', onChange: this.editField, value: this.state.ability_score_con })
+														),
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, type: 'text', value: modifer(this.state.ability_score_con), readOnly: true })
+														),
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'ability_score_con_temp', onChange: this.editField, value: this.state.ability_score_con_temp })
+														),
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, type: 'text', value: modifer(this.state.ability_score_con, this.state.ability_score_con_temp), readOnly: true })
+														)
+													),
+													React.createElement(
+														'tr',
+														null,
+														React.createElement(
+															'td',
+															null,
+															'INT'
+														),
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'ability_score_int', onChange: this.editField, value: this.state.ability_score_int })
+														),
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, type: 'text', value: modifer(this.state.ability_score_int), readOnly: true })
+														),
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'ability_score_int_temp', onChange: this.editField, value: this.state.ability_score_int_temp })
+														),
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, type: 'text', value: modifer(this.state.ability_score_int, this.state.ability_score_int_temp), readOnly: true })
+														)
+													),
+													React.createElement(
+														'tr',
+														null,
+														React.createElement(
+															'td',
+															null,
+															'WIS'
+														),
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'ability_score_wis', onChange: this.editField, value: this.state.ability_score_wis })
+														),
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, type: 'text', value: modifer(this.state.ability_score_wis), readOnly: true })
+														),
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'ability_score_wis_temp', onChange: this.editField, value: this.state.ability_score_wis_temp })
+														),
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, type: 'text', value: modifer(this.state.ability_score_wis, this.state.ability_score_wis_temp), readOnly: true })
+														)
+													),
+													React.createElement(
+														'tr',
+														null,
+														React.createElement(
+															'td',
+															null,
+															'CHA'
+														),
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'ability_score_cha', onChange: this.editField, value: this.state.ability_score_cha })
+														),
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, type: 'text', value: modifer(this.state.ability_score_cha), readOnly: true })
+														),
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'ability_score_cha_temp', onChange: this.editField, value: this.state.ability_score_cha_temp })
+														),
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, type: 'text', value: modifer(this.state.ability_score_cha, this.state.ability_score_cha_temp), readOnly: true })
+														)
+													)
+												)
+											),
+											React.createElement(
+												'div',
+												{ className: 'AC-wrapper' },
+												React.createElement(
+													'label',
+													null,
+													'armor class'
+												),
+												React.createElement(
+													'table',
+													{ className: 'AC' },
+													React.createElement(
+														'thead',
+														null,
+														React.createElement(
+															'tr',
+															null,
+															React.createElement(
+																'th',
+																null,
+																'total'
+															),
+															React.createElement(
+																'th',
+																null,
+																'armor'
+															),
+															React.createElement(
+																'th',
+																null,
+																'shild'
+															),
+															React.createElement(
+																'th',
+																null,
+																'dex'
+															),
+															React.createElement(
+																'th',
+																null,
+																'size'
+															),
+															React.createElement(
+																'th',
+																null,
+																'natural'
+															),
+															React.createElement(
+																'th',
+																null,
+																'deflection'
+															),
+															React.createElement(
+																'th',
+																null,
+																'misc'
+															)
+														)
+													),
+													React.createElement(
+														'tbody',
+														null,
+														React.createElement(
+															'tr',
+															null,
+															React.createElement(
+																'td',
+																null,
+																React.createElement('input', { onFocus: this.select, type: 'text', value: Number(this.state.size_mod) + modifer(this.state.ability_score_dex, this.state.ability_score_dex_temp) + Number(this.state.ac_armor_bonus) + Number(this.state.ac_shild_bonus) + Number(this.state.ac_natural_armor) + Number(this.state.ac_defelection_mod) + Number(this.state.ac_misc_mod) + 10, readOnly: true })
+															),
+															React.createElement(
+																'td',
+																null,
+																React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'ac_armor_bonus', onChange: this.editField, value: this.state.ac_armor_bonus })
+															),
+															React.createElement(
+																'td',
+																null,
+																React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'ac_shild_bonus', onChange: this.editField, value: this.state.ac_shild_bonus })
+															),
+															React.createElement(
+																'td',
+																null,
+																React.createElement('input', { onFocus: this.select, type: 'text', value: modifer(this.state.ability_score_dex, this.state.ability_score_dex_temp), readOnly: true })
+															),
+															React.createElement(
+																'td',
+																null,
+																React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'size_mod', onChange: this.editField, value: this.state.size_mod })
+															),
+															React.createElement(
+																'td',
+																null,
+																React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'ac_natural_armor', onChange: this.editField, value: this.state.ac_natural_armor })
+															),
+															React.createElement(
+																'td',
+																null,
+																React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'ac_defelection_mod', onChange: this.editField, value: this.state.ac_defelection_mod })
+															),
+															React.createElement(
+																'td',
+																null,
+																React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'ac_misc_mod', onChange: this.editField, value: this.state.ac_misc_mod })
+															),
+															React.createElement(
+																'td',
+																null,
+																' + 10 '
+															)
+														)
+													)
+												)
+											),
+											React.createElement(
+												'div',
+												{ className: 'babdrsr' },
+												React.createElement(
+													'div',
+													null,
+													React.createElement(
+														'label',
+														null,
+														'BAB:'
+													),
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'base_attack_bonus', onChange: this.editField, value: this.state.base_attack_bonus })
+												),
+												React.createElement(
+													'div',
+													null,
+													React.createElement(
+														'label',
+														null,
+														'DR:'
+													),
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'damage_reduction', onChange: this.editField, value: this.state.damage_reduction })
+												),
+												React.createElement(
+													'div',
+													null,
+													React.createElement(
+														'label',
+														null,
+														'spell resistance:'
+													),
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'spell_resistance', onChange: this.editField, value: this.state.spell_resistance })
+												)
+											),
+											React.createElement(
+												'table',
+												{ className: 'saving-throws' },
+												React.createElement(
+													'thead',
+													null,
+													React.createElement(
+														'tr',
+														null,
+														React.createElement(
+															'th',
+															null,
+															'Saving Throws'
+														),
+														React.createElement(
+															'th',
+															null,
+															'total'
+														),
+														React.createElement(
+															'th',
+															null,
+															'Base'
+														),
+														React.createElement(
+															'th',
+															null,
+															'Ability'
+														),
+														React.createElement(
+															'th',
+															null,
+															'Magic'
+														),
+														React.createElement(
+															'th',
+															null,
+															'Misc'
+														),
+														React.createElement(
+															'th',
+															null,
+															'Temp'
+														)
+													)
+												),
+												React.createElement(
+													'tbody',
+													null,
+													React.createElement(
+														'tr',
+														null,
+														React.createElement(
+															'td',
+															null,
+															'Fortitude'
+														),
+														React.createElement(
+															'td',
+															null,
+															Number(this.state.fort_base_save) + modifer(this.state.ability_score_con, this.state.ability_score_con_temp) + Number(this.state.fort_magic_mod) + Number(this.state.fort_misc_mod) + Number(this.state.fort_temp_mod)
+														),
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'fort_base_save', onChange: this.editField, value: this.state.fort_base_save })
+														),
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, type: 'text', value: modifer(this.state.ability_score_con, this.state.ability_score_con_temp), readOnly: true })
+														),
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'fort_magic_mod', onChange: this.editField, value: this.state.fort_magic_mod })
+														),
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'fort_misc_mod', onChange: this.editField, value: this.state.fort_misc_mod })
+														),
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'fort_temp_mod', onChange: this.editField, value: this.state.fort_temp_mod })
+														)
+													),
+													React.createElement(
+														'tr',
+														null,
+														React.createElement(
+															'td',
+															null,
+															'Reflex'
+														),
+														React.createElement(
+															'td',
+															null,
+															Number(this.state.ref_base_save) + modifer(this.state.ability_score_dex, this.state.ability_score_dex_temp) + Number(this.state.ref_magic_mod) + Number(this.state.ref_misc_mod) + Number(this.state.ref_temp_mod)
+														),
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'ref_base_save', onChange: this.editField, value: this.state.ref_base_save })
+														),
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, type: 'text', value: modifer(this.state.ability_score_dex, this.state.ability_score_dex_temp), readOnly: true })
+														),
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'ref_magic_mod', onChange: this.editField, value: this.state.ref_magic_mod })
+														),
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'ref_misc_mod', onChange: this.editField, value: this.state.ref_misc_mod })
+														),
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'ref_temp_mod', onChange: this.editField, value: this.state.ref_temp_mod })
+														)
+													),
+													React.createElement(
+														'tr',
+														null,
+														React.createElement(
+															'td',
+															null,
+															'Will'
+														),
+														React.createElement(
+															'td',
+															null,
+															Number(this.state.will_base_save) + modifer(this.state.ability_score_wis, this.state.ability_score_wis_temp) + Number(this.state.will_magic_mod) + Number(this.state.will_misc_mod) + Number(this.state.will_temp_mod)
+														),
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'will_base_save', onChange: this.editField, value: this.state.will_base_save })
+														),
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, type: 'text', value: modifer(this.state.ability_score_wis, this.state.ability_score_wis_temp), readOnly: true })
+														),
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'will_magic_mod', onChange: this.editField, value: this.state.will_magic_mod })
+														),
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'will_misc_mod', onChange: this.editField, value: this.state.will_misc_mod })
+														),
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'will_temp_mod', onChange: this.editField, value: this.state.will_temp_mod })
+														)
+													)
+												)
+											),
+											React.createElement(
+												'div',
+												{ className: 'initaitive-wrapper' },
+												React.createElement(
+													'div',
+													null,
+													React.createElement(
+														'p',
+														null,
+														'initaitive'
+													)
+												),
+												React.createElement(
+													'table',
+													{ className: 'initaitive' },
+													React.createElement(
+														'thead',
+														null,
+														React.createElement(
+															'tr',
+															null,
+															React.createElement(
+																'th',
+																null,
+																'total'
+															),
+															React.createElement(
+																'th',
+																null,
+																'dex'
+															),
+															React.createElement(
+																'th',
+																null,
+																'misc'
+															)
+														)
+													),
+													React.createElement(
+														'tbody',
+														null,
+														React.createElement(
+															'tr',
+															null,
+															React.createElement(
+																'td',
+																null,
+																React.createElement('input', { onFocus: this.select, type: 'text', value: modifer(this.state.ability_score_dex, this.state.ability_score_dex_temp) + Number(this.state.init_misc_mod), readOnly: true })
+															),
+															React.createElement(
+																'td',
+																null,
+																React.createElement('input', { onFocus: this.select, type: 'text', value: modifer(this.state.ability_score_dex, this.state.ability_score_dex_temp), readOnly: true })
+															),
+															React.createElement(
+																'td',
+																null,
+																React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'init_misc_mod', onChange: this.editField, value: this.state.init_misc_mod })
+															)
+														)
+													)
+												)
+											),
+											React.createElement(
+												'div',
+												{ className: 'CMB-wrapper' },
+												React.createElement(
+													'div',
+													null,
+													React.createElement(
+														'p',
+														null,
+														'CMB'
+													)
+												),
+												React.createElement(
+													'table',
+													{ className: 'CMB' },
+													React.createElement(
+														'thead',
+														null,
+														React.createElement(
+															'tr',
+															null,
+															React.createElement(
+																'th',
+																null,
+																'total'
+															),
+															React.createElement(
+																'th',
+																null,
+																'bab'
+															),
+															React.createElement(
+																'th',
+																null,
+																'str'
+															),
+															React.createElement(
+																'th',
+																null,
+																'size'
+															)
+														)
+													),
+													React.createElement(
+														'tbody',
+														null,
+														React.createElement(
+															'tr',
+															null,
+															React.createElement(
+																'td',
+																null,
+																React.createElement('input', { onFocus: this.select, type: 'text', value: Number(this.state.base_attack_bonus) + modifer(this.state.ability_score_str, this.state.ability_score_str_temp) + Number(this.state.size_mod), readOnly: true })
+															),
+															React.createElement(
+																'td',
+																null,
+																React.createElement('input', { onFocus: this.select, type: 'text', value: this.state.base_attack_bonus, readOnly: true })
+															),
+															React.createElement(
+																'td',
+																null,
+																React.createElement('input', { onFocus: this.select, type: 'text', value: modifer(this.state.ability_score_str, this.state.ability_score_str_temp), readOnly: true })
+															),
+															React.createElement(
+																'td',
+																null,
+																React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'size_mod', onChange: this.editField, value: this.state.size_mod })
+															)
+														)
+													)
+												)
+											),
+											React.createElement(
+												'div',
+												{ className: 'CMD-wrapper' },
+												React.createElement(
+													'div',
+													null,
+													React.createElement(
+														'p',
+														null,
+														'CMD'
+													)
+												),
+												React.createElement(
+													'table',
+													{ className: 'CMB' },
+													React.createElement(
+														'thead',
+														null,
+														React.createElement(
+															'tr',
+															null,
+															React.createElement(
+																'th',
+																null,
+																'total'
+															),
+															React.createElement(
+																'th',
+																null,
+																'BAB'
+															),
+															React.createElement(
+																'th',
+																null,
+																'str'
+															),
+															React.createElement(
+																'th',
+																null,
+																'dex'
+															),
+															React.createElement(
+																'th',
+																null,
+																'size'
+															)
+														)
+													),
+													React.createElement(
+														'tbody',
+														null,
+														React.createElement(
+															'tr',
+															null,
+															React.createElement(
+																'td',
+																null,
+																React.createElement('input', { onFocus: this.select, type: 'text', value: Number(this.state.base_attack_bonus) + modifer(this.state.ability_score_str, this.state.ability_score_str_temp) + modifer(this.state.ability_score_dex, this.state.ability_score_dex_temp) + Number(this.state.size_mod) + 10, readOnly: true })
+															),
+															React.createElement(
+																'td',
+																null,
+																React.createElement('input', { onFocus: this.select, type: 'text', value: this.state.base_attack_bonus, readOnly: true })
+															),
+															React.createElement(
+																'td',
+																null,
+																React.createElement('input', { onFocus: this.select, type: 'text', value: modifer(this.state.ability_score_str, this.state.ability_score_str_temp), readOnly: true })
+															),
+															React.createElement(
+																'td',
+																null,
+																React.createElement('input', { onFocus: this.select, type: 'text', value: modifer(this.state.ability_score_dex, this.state.ability_score_dex_temp), readOnly: true })
+															),
+															React.createElement(
+																'td',
+																null,
+																React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'size_mod', onChange: this.editField, value: this.state.size_mod })
+															),
+															React.createElement(
+																'td',
+																null,
+																' + 10 '
+															)
+														)
+													)
+												)
+											),
+											React.createElement(
+												'div',
+												{ className: 'carrying-capacity' },
+												React.createElement(
+													'div',
+													null,
+													React.createElement(
+														'label',
+														null,
+														'light load:'
+													),
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'light_load', onChange: this.editField, value: this.state.light_load })
+												),
+												React.createElement(
+													'div',
+													null,
+													React.createElement(
+														'label',
+														null,
+														'medium load:'
+													),
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'medium_load', onChange: this.editField, value: this.state.medium_load })
+												),
+												React.createElement(
+													'div',
+													null,
+													React.createElement(
+														'label',
+														null,
+														'heavy load:'
+													),
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'heavy_load', onChange: this.editField, value: this.state.heavy_load })
+												),
+												React.createElement(
+													'div',
+													null,
+													React.createElement(
+														'label',
+														null,
+														'lift over head:'
+													),
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'lift_over_head', onChange: this.editField, value: this.state.lift_over_head })
+												),
+												React.createElement(
+													'div',
+													null,
+													React.createElement(
+														'label',
+														null,
+														'lift off ground:'
+													),
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'lift_off_ground', onChange: this.editField, value: this.state.lift_off_ground })
+												),
+												React.createElement(
+													'div',
+													null,
+													React.createElement(
+														'label',
+														null,
+														'drag or push:'
+													),
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'drag_or_push', onChange: this.editField, value: this.state.drag_or_push })
+												),
+												React.createElement(
+													'div',
+													null,
+													React.createElement(
+														'label',
+														null,
+														'copper:'
+													),
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'money_cp', onChange: this.editField, value: this.state.money_cp })
+												),
+												React.createElement(
+													'div',
+													null,
+													React.createElement(
+														'label',
+														null,
+														'silver:'
+													),
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'money_sp', onChange: this.editField, value: this.state.money_sp })
+												),
+												React.createElement(
+													'div',
+													null,
+													React.createElement(
+														'label',
+														null,
+														'gold:'
+													),
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'money_gp', onChange: this.editField, value: this.state.money_gp })
+												),
+												React.createElement(
+													'div',
+													null,
+													React.createElement(
+														'label',
+														null,
+														'platinum:'
+													),
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'money_pp', onChange: this.editField, value: this.state.money_pp })
+												)
+											)
+										),
+										React.createElement(
+											'section',
+											{ className: 'column-right' },
+											React.createElement(
+												'div',
+												{ className: 'xp-points' },
+												React.createElement(
+													'div',
+													null,
+													React.createElement(
+														'label',
+														null,
+														'xp points:'
+													),
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'xp_points', onChange: this.editField, value: this.state.xp_points })
+												),
+												React.createElement(
+													'div',
+													null,
+													React.createElement(
+														'label',
+														null,
+														'next level:'
+													),
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'next_level', onChange: this.editField, value: this.state.next_level })
+												)
+											),
+											React.createElement(
+												'div',
+												{ className: 'speed' },
+												React.createElement(
+													'div',
+													null,
+													React.createElement(
+														'label',
+														null,
+														'land speed:'
+													),
+													React.createElement(
+														'p',
+														null,
+														'squares'
+													),
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'land_speed', onChange: this.editField, value: this.state.land_speed })
+												),
+												React.createElement(
+													'div',
+													null,
+													React.createElement(
+														'label',
+														null,
+														'armor speed:'
+													),
+													React.createElement(
+														'p',
+														null,
+														'squares'
+													),
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'armor_speed', onChange: this.editField, value: this.state.armor_speed })
+												),
+												React.createElement(
+													'div',
+													null,
+													React.createElement(
+														'label',
+														null,
+														'fly speed:'
+													),
+													React.createElement(
+														'p',
+														null,
+														'squares'
+													),
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'fly_speed', onChange: this.editField, value: this.state.fly_speed })
+												),
+												React.createElement(
+													'div',
+													null,
+													React.createElement(
+														'label',
+														null,
+														'climb speed:'
+													),
+													React.createElement(
+														'p',
+														null,
+														'squares'
+													),
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'climb_speed', onChange: this.editField, value: this.state.climb_speed })
+												),
+												React.createElement(
+													'div',
+													null,
+													React.createElement(
+														'label',
+														null,
+														'swim speed:'
+													),
+													React.createElement(
+														'p',
+														null,
+														'squares'
+													),
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'swim_speed', onChange: this.editField, value: this.state.swim_speed })
+												),
+												React.createElement(
+													'div',
+													null,
+													React.createElement(
+														'label',
+														null,
+														'borrow speed:'
+													),
+													React.createElement(
+														'p',
+														null,
+														'squares'
+													),
+													React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'borrow_speed', onChange: this.editField, value: this.state.borrow_speed })
+												)
+											),
+											React.createElement(
+												'table',
+												{ className: 'spell-stats' },
+												React.createElement(
+													'thead',
+													null,
+													React.createElement(
+														'tr',
+														null,
+														React.createElement(
+															'th',
+															null,
+															'Spells Known'
+														),
+														React.createElement(
+															'th',
+															null,
+															'Spell Save DC'
+														),
+														React.createElement(
+															'th',
+															null,
+															'Level'
+														),
+														React.createElement(
+															'th',
+															null,
+															'Spells Per Day'
+														),
+														React.createElement(
+															'th',
+															null,
+															'Bonus Spells'
+														)
+													)
+												),
+												React.createElement(
+													'tbody',
+													null,
+													React.createElement(
+														'tr',
+														null,
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'level_0_spells_known', onChange: this.editField, value: this.state.level_0_spells_known })
+														),
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'level_0_spell_save_dc', onChange: this.editField, value: this.state.level_0_spell_save_dc })
+														),
+														React.createElement(
+															'td',
+															null,
+															'0'
+														),
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'level_0_spell_per_day', onChange: this.editField, value: this.state.level_0_spell_per_day })
+														),
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'level_0_bonus_spells', onChange: this.editField, value: this.state.level_0_bonus_spells })
+														)
+													),
+													React.createElement(
+														'tr',
+														null,
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'level_1_spells_known', onChange: this.editField, value: this.state.level_1_spells_known })
+														),
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'level_1_spell_save_dc', onChange: this.editField, value: this.state.level_1_spell_save_dc })
+														),
+														React.createElement(
+															'td',
+															null,
+															'1'
+														),
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'level_1_spell_per_day', onChange: this.editField, value: this.state.level_1_spell_per_day })
+														),
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'level_1_bonus_spells', onChange: this.editField, value: this.state.level_1_bonus_spells })
+														)
+													),
+													React.createElement(
+														'tr',
+														null,
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'level_2_spells_known', onChange: this.editField, value: this.state.level_2_spells_known })
+														),
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'level_2_spell_save_dc', onChange: this.editField, value: this.state.level_2_spell_save_dc })
+														),
+														React.createElement(
+															'td',
+															null,
+															'2'
+														),
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'level_2_spell_per_day', onChange: this.editField, value: this.state.level_2_spell_per_day })
+														),
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'level_2_bonus_spells', onChange: this.editField, value: this.state.level_2_bonus_spells })
+														)
+													),
+													React.createElement(
+														'tr',
+														null,
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'level_3_spells_known', onChange: this.editField, value: this.state.level_3_spells_known })
+														),
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'level_3_spell_save_dc', onChange: this.editField, value: this.state.level_3_spell_save_dc })
+														),
+														React.createElement(
+															'td',
+															null,
+															'3'
+														),
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'level_3_spell_per_day', onChange: this.editField, value: this.state.level_3_spell_per_day })
+														),
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'level_3_bonus_spells', onChange: this.editField, value: this.state.level_3_bonus_spells })
+														)
+													),
+													React.createElement(
+														'tr',
+														null,
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'level_4_spells_known', onChange: this.editField, value: this.state.level_4_spells_known })
+														),
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'level_4_spell_save_dc', onChange: this.editField, value: this.state.level_4_spell_save_dc })
+														),
+														React.createElement(
+															'td',
+															null,
+															'4'
+														),
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'level_4_spell_per_day', onChange: this.editField, value: this.state.level_4_spell_per_day })
+														),
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'level_4_bonus_spells', onChange: this.editField, value: this.state.level_4_bonus_spells })
+														)
+													),
+													React.createElement(
+														'tr',
+														null,
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'level_5_spells_known', onChange: this.editField, value: this.state.level_5_spells_known })
+														),
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'level_5_spell_save_dc', onChange: this.editField, value: this.state.level_5_spell_save_dc })
+														),
+														React.createElement(
+															'td',
+															null,
+															'5'
+														),
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'level_5_spell_per_day', onChange: this.editField, value: this.state.level_5_spell_per_day })
+														),
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'level_5_bonus_spells', onChange: this.editField, value: this.state.level_5_bonus_spells })
+														)
+													),
+													React.createElement(
+														'tr',
+														null,
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'level_6_spells_known', onChange: this.editField, value: this.state.level_6_spells_known })
+														),
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'level_6_spell_save_dc', onChange: this.editField, value: this.state.level_6_spell_save_dc })
+														),
+														React.createElement(
+															'td',
+															null,
+															'6'
+														),
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'level_6_spell_per_day', onChange: this.editField, value: this.state.level_6_spell_per_day })
+														),
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'level_6_bonus_spells', onChange: this.editField, value: this.state.level_6_bonus_spells })
+														)
+													),
+													React.createElement(
+														'tr',
+														null,
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'level_7_spells_known', onChange: this.editField, value: this.state.level_7_spells_known })
+														),
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'level_7_spell_save_dc', onChange: this.editField, value: this.state.level_7_spell_save_dc })
+														),
+														React.createElement(
+															'td',
+															null,
+															'7'
+														),
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'level_7_spell_per_day', onChange: this.editField, value: this.state.level_7_spell_per_day })
+														),
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'level_7_bonus_spells', onChange: this.editField, value: this.state.level_7_bonus_spells })
+														)
+													),
+													React.createElement(
+														'tr',
+														null,
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'level_8_spells_known', onChange: this.editField, value: this.state.level_8_spells_known })
+														),
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'level_8_spell_save_dc', onChange: this.editField, value: this.state.level_8_spell_save_dc })
+														),
+														React.createElement(
+															'td',
+															null,
+															'8'
+														),
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'level_8_spell_per_day', onChange: this.editField, value: this.state.level_8_spell_per_day })
+														),
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'level_8_bonus_spells', onChange: this.editField, value: this.state.level_8_bonus_spells })
+														)
+													),
+													React.createElement(
+														'tr',
+														null,
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'level_9_spells_known', onChange: this.editField, value: this.state.level_9_spells_known })
+														),
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'level_9_spell_save_dc', onChange: this.editField, value: this.state.level_9_spell_save_dc })
+														),
+														React.createElement(
+															'td',
+															null,
+															'9'
+														),
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'level_9_spell_per_day', onChange: this.editField, value: this.state.level_9_spell_per_day })
+														),
+														React.createElement(
+															'td',
+															null,
+															React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'number', inputMode: 'numeric', pattern: '[0-9]*', name: 'level_9_bonus_spells', onChange: this.editField, value: this.state.level_9_bonus_spells })
+														)
+													)
+												)
+											),
+											React.createElement(
+												'label',
+												null,
+												'domain and specialty school:'
+											),
+											React.createElement('input', { onFocus: this.select, onBlur: this.saveCharacter, onKeyPress: this.hitKey, type: 'text', name: 'domain_and_specialty_school', onChange: this.editField, value: this.state.domain_and_specialty_school }),
+											React.createElement(
+												'div',
+												{ className: 'languages' },
+												React.createElement(
+													'p',
+													null,
+													'languages:'
+												),
+												React.createElement('textarea', { rows: '4', cols: '50', onBlur: this.saveCharacter, onKeyPress: this.hitKey, name: 'languages', onChange: this.editField, value: this.state.languages })
+											)
+										),
+										React.createElement(
+											'div',
+											null,
+											React.createElement(
+												'div',
+												{ className: 'background' },
+												React.createElement(
+													'p',
+													null,
+													'background:'
+												),
+												React.createElement('textarea', { rows: '4', cols: '50', onBlur: this.saveCharacter, onKeyPress: this.hitKey, name: 'background_stories', onChange: this.editField, value: this.state.background_stories })
+											)
+										)
+									)
+								)
+							)
+						)
+					)
+				);
 			}
 			return React.createElement(
 				'div',
@@ -32478,13 +34062,13 @@
 									React.createElement(
 										'h2',
 										null,
-										this.props.character.name,
+										this.state.name,
 										' - ',
-										this.props.character.race,
+										this.state.race,
 										' ',
-										this.props.character.class,
+										this.state.class,
 										' ',
-										this.props.character.level,
+										this.state.level,
 										' '
 									),
 									React.createElement(
