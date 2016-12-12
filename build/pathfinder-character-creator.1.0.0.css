@@ -325,45 +325,59 @@ ul {
   color: #4499dc;
   border-radius: 10px;
 }
-.nav-bar {
-  padding-top: 3em;
-}
 .nav-bar #logo {
-  overflow: hidden;
-  text-align: center;
+  display: inline-block;
 }
 .nav-bar #logo h1 {
-  display: block;
-  padding: 30px 0px 0px 0px;
+  padding-top: 1rem;
+  padding-right: 1.5rem;
+  padding-bottom: 1rem;
+  padding-left: 1.5rem;
   letter-spacing: -1px;
-  text-align: center;
   text-decoration: none;
   text-shadow: -1px -1px 0px #2C7485;
   text-transform: uppercase;
-  font-size: 36pt;
+  line-height: 45px;
   font-weight: 200;
   color: #FFFFFF;
-  line-height: 120%;
 }
-.nav-bar #menu {
-  height: 90px;
-}
-.nav-bar #menu ul {
-  text-align: center;
-}
-.nav-bar #menu ul li {
-  display: inline-block;
-  padding: 0px 20px;
-}
-.nav-bar #menu ul li a {
+.nav-bar #nav-pop-down {
   display: block;
-  float: left;
-  margin-right: 2px;
+  text-align: right;
+  float: right;
+  padding: 1rem;
+}
+.nav-bar #nav-pop-down > p {
+  margin: 0;
+}
+.nav-bar #nav-pop-down a,
+.nav-bar #nav-pop-down p {
+  display: block;
   text-decoration: none;
   text-transform: uppercase;
   line-height: 45px;
   font-size: 13pt;
-  color: #16576B;
+  color: #ffffff;
+}
+.nav-bar #nav-pop-down ul {
+  min-width: 250px;
+  position: absolute;
+  right: 0;
+  margin: 0;
+  background-color: #16576B;
+}
+.nav-bar #nav-pop-down ul li {
+  display: block;
+  padding: 0px 20px;
+  border-bottom: white solid 2px;
+}
+.nav-bar #nav-pop-down ul li a,
+.nav-bar #nav-pop-down ul li p {
+  text-align: left;
+  margin: 0;
+}
+.nav-bar #nav-pop-down ul li:last-child {
+  border-bottom: white solid 0px;
 }
 .nav-bar h1 {
   padding: 0.83em;

@@ -19,11 +19,9 @@ var mainPage = React.createClass({
 		    <div className="main-page-wrapper">
 		    	<div className="main-page">
 		    		<div id="banner">
-			    		<div className="container">
-			    			<div>
-				    			<img src="/871506.jpg" />
-					    	</div>
-				    	</div>
+			    		<div>
+				    		<img src="/banner.jpg" />
+					    </div>
 				    </div>
 				    <div id="main">
 			    		<div className="container">
